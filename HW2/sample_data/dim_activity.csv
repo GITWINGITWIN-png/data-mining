@@ -1,0 +1,6 @@
+activity_key,activity_id,activity_name,activity_type,category_th,duration_hours,difficulty_level,base_price
+1,ACT-01,ทัวร์วัดพระแก้วและพระบรมมหาราชวัง,Temple Tour,มรดกวัฒนธรรม,4,Easy,500.00
+2,ACT-02,เวิร์กช็อปเครื่องปั้นดินเผาบ้านเชียง,Art Workshop,หัตถกรรม,3,Medium,800.00
+3,ACT-03,ค่ายวัฒนธรรมอีสานสามวันสองคืน,Cultural Camp,วิถีชุมชน,48,Medium,3500.00
+4,ACT-04,เรียนรู้วิถีชีวิตชาวนาล้านนา,Local Life,วิถีชุมชน,6,Easy,600.00
+5,ACT-05,เวิร์กช็อปผ้าบาติกภาคใต้,Art Workshop,หัตถกรรม,4,Medium,900.00

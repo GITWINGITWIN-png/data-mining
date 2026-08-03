@@ -1,0 +1,6 @@
+location_key,location_id,venue_name,province,region,country
+1,LOC-01,วัดพระศรีรัตนศาสดาราม,กรุงเทพมหานคร,Central,Thailand
+2,LOC-02,แหล่งโบราณคดีบ้านเชียง,อุดรธานี,Northeast,Thailand
+3,LOC-03,หมู่บ้านวัฒนธรรมอีสาน,ขอนแก่น,Northeast,Thailand
+4,LOC-04,เมืองเก่าเชียงใหม่,เชียงใหม่,North,Thailand
+5,LOC-05,ย่านเมืองเก่าภูเก็ต,ภูเก็ต,South,Thailand

@@ -1,0 +1,4 @@
+aircraft_key,aircraft_id,registration,aircraft_model,seat_capacity
+1,501,HS-DAK1,Airbus A320,180
+2,502,HS-DAK2,Boeing 737-800,189
+3,503,HS-DAK5,Boeing 787-9,298

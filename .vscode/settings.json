@@ -1,0 +1,36 @@
+{
+  // ---- LaTeX Workshop: build Thai/XeLaTeX docs on save ----
+  // This project's .tex files use fontspec + Thai fonts, so they MUST be
+  // compiled with XeLaTeX (not the default pdflatex). latexmk auto-reruns
+  // the number of passes needed (page labels / PDF outlines).
+  "latex-workshop.latex.tools": [
+    {
+      "name": "xelatexmk",
+      "command": "latexmk",
+      "args": [
+        "-xelatex",
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "xelatexmk",
+      "tools": ["xelatexmk"]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "first",
+  "latex-workshop.latex.build.forceRecipeUsage": true,
+  "latex-workshop.latex.autoBuild.run": "onSave",
+
+  // Keep the folder tidy: remove aux clutter after a successful build,
+  // but keep the .pdf and .synctex.gz (needed for PDF <-> source sync).
+  "latex-workshop.latex.autoClean.run": "onBuilt",
+  "latex-workshop.latex.clean.fileTypes": [
+    "*.aux", "*.log", "*.out", "*.toc", "*.lof", "*.lot",
+    "*.fls", "*.fdb_latexmk", "*.bbl", "*.blg", "*.bcf", "*.run.xml"
+  ]
+}

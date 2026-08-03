@@ -1,0 +1,10 @@
+date_key,full_date,day_of_week,is_weekend,month_num,month_name,quarter,year,is_holiday
+20240301,2024-03-01,Friday,0,3,March,1,2024,0
+20240302,2024-03-02,Saturday,1,3,March,1,2024,0
+20240305,2024-03-05,Tuesday,0,3,March,1,2024,0
+20240308,2024-03-08,Friday,0,3,March,1,2024,0
+20240309,2024-03-09,Saturday,1,3,March,1,2024,0
+20240310,2024-03-10,Sunday,1,3,March,1,2024,0
+20240312,2024-03-12,Tuesday,0,3,March,1,2024,0
+20240314,2024-03-14,Thursday,0,3,March,1,2024,0
+20240315,2024-03-15,Friday,0,3,March,1,2024,0

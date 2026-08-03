@@ -1,0 +1,5 @@
+time_of_day_key,period_name_th,period_name_en,start_hour,end_hour
+1,เช้า,Morning,5,11
+2,บ่าย,Afternoon,12,16
+3,เย็น,Evening,17,20
+4,กลางคืน,Night,21,4

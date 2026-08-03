@@ -1,0 +1,7 @@
+member_key,member_id,full_name,gender,birth_year,age_group,is_foreigner,membership_level,join_date,home_region_th,home_province
+1,CP-0001,สมชาย ใจดี,M,1988,36-45,FALSE,Platinum,2565-01-10,ภาคกลาง,กรุงเทพมหานคร
+2,CP-0002,Emma Wilson,F,1996,25-35,TRUE,Gold,2566-03-22,-,-
+3,CP-0003,สุดา แสนสุข,F,1979,46-55,FALSE,Platinum,2564-07-01,ภาคอีสาน,ขอนแก่น
+4,CP-0004,Kenji Tanaka,M,1990,36-45,TRUE,Silver,2567-02-14,-,-
+5,CP-0005,วีระ กล้าหาญ,M,2001,18-24,FALSE,Gold,2566-09-30,ภาคเหนือ,เชียงใหม่
+6,CP-0006,นภา ทองดี,F,1995,25-35,FALSE,Platinum,2565-11-05,ภาคใต้,ภูเก็ต

@@ -1,0 +1,5 @@
+route_key,route_id,origin_code,origin_city,origin_country,dest_code,dest_city,dest_country,route_name,distance_km,route_type
+1,101,BKK,Bangkok,Thailand,CNX,Chiang Mai,Thailand,BKK-CNX,588.00,Domestic
+2,102,BKK,Bangkok,Thailand,HKT,Phuket,Thailand,BKK-HKT,689.00,Domestic
+3,103,BKK,Bangkok,Thailand,NRT,Tokyo,Japan,BKK-NRT,4610.00,International
+4,104,BKK,Bangkok,Thailand,SIN,Singapore,Singapore,BKK-SIN,1424.00,International

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="12.1.001" expanded="true" height="68" name="Retrieve OPEN_COURSE" width="90" x="45" y="136">
+        <parameter key="repository_entry" value="//Local Repository/data/ETL2/OPEN_COURSE"/>
+      </operator>
+      <operator activated="true" class="blending:select_attributes" compatibility="12.1.001" expanded="true" height="82" name="Select Attributes" width="90" x="246" y="136">
+        <parameter key="type" value="include attributes"/>
+        <parameter key="attribute_filter_type" value="a subset"/>
+        <parameter key="select_attribute" value=""/>
+        <parameter key="select_subset" value="YEAR_SCHOOL␞SEMESTER"/>
+        <parameter key="also_apply_to_special_attributes_(id,_label..)" value="false"/>
+      </operator>
+      <operator activated="true" class="blending:generate_id" compatibility="12.1.001" expanded="true" height="82" name="Generate ID" width="90" x="380" y="136">
+        <parameter key="create_nominal_ids" value="false"/>
+        <parameter key="offset" value="0"/>
+      </operator>
+      <operator activated="true" class="blending:rename" compatibility="12.1.001" expanded="true" height="82" name="Rename" width="90" x="514" y="136">
+        <list key="rename attributes">
+          <parameter key="id" value="TIME_KEY"/>
+        </list>
+        <parameter key="from_attribute" value=""/>
+        <parameter key="to_attribute" value=""/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" height="82" name="Write CSV" width="90" x="648" y="136">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/W6/DIM/TIME_DIM.csv"/>
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="date_format" value="yyyy-MM-dd HH:mm:ss"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="12.1.001" expanded="true" height="68" name="Retrieve COURSE_PROFILE" width="90" x="45" y="238">
+        <parameter key="repository_entry" value="//Local Repository/data/ETL2/COURSE_PROFILE"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="12.1.001" expanded="true" height="68" name="Retrieve DEPARTMENT_PROFILE" width="90" x="45" y="340">
+        <parameter key="repository_entry" value="//Local Repository/data/ETL2/DEPARTMENT_PROFILE"/>
+      </operator>
+      <operator activated="true" class="concurrency:join" compatibility="12.1.001" expanded="true" height="82" name="Join" width="90" x="246" y="238">
+        <parameter key="remove_double_attributes" value="true"/>
+        <parameter key="join_type" value="inner"/>
+        <parameter key="use_id_attribute_as_key" value="false"/>
+        <list key="key_attributes">
+          <parameter key="DEPARTMENT_ID" value="DEPARTMENT_ID"/>
+        </list>
+        <parameter key="keep_both_join_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="12.1.001" expanded="true" height="68" name="Retrieve FACULTY_PROFILE" width="90" x="246" y="340">
+        <parameter key="repository_entry" value="//Local Repository/data/ETL2/FACULTY_PROFILE"/>
+      </operator>
+      <operator activated="true" class="concurrency:join" compatibility="12.1.001" expanded="true" height="82" name="Join (2)" width="90" x="380" y="238">
+        <parameter key="remove_double_attributes" value="true"/>
+        <parameter key="join_type" value="inner"/>
+        <parameter key="use_id_attribute_as_key" value="false"/>
+        <list key="key_attributes">
+          <parameter key="FACULTY_ID" value="FACULTY_ID"/>
+        </list>
+        <parameter key="keep_both_join_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="blending:select_attributes" compatibility="12.1.001" expanded="true" height="82" name="Select Attributes (2)" width="90" x="514" y="238">
+        <parameter key="type" value="include attributes"/>
+        <parameter key="attribute_filter_type" value="a subset"/>
+        <parameter key="select_attribute" value=""/>
+        <parameter key="select_subset" value="COURSE_NAME␞COURSE_ID␞CREDIT␞DEPARTMENT_ID␞DEPARTMENT_NAME␞FACULTY_NAME"/>
+        <parameter key="also_apply_to_special_attributes_(id,_label..)" value="false"/>
+      </operator>
+      <operator activated="true" class="blending:generate_id" compatibility="12.1.001" expanded="true" height="82" name="Generate ID (2)" width="90" x="648" y="238">
+        <parameter key="create_nominal_ids" value="false"/>
+        <parameter key="offset" value="0"/>
+      </operator>
+      <operator activated="true" class="blending:rename" compatibility="12.1.001" expanded="true" height="82" name="Rename (2)" width="90" x="782" y="238">
+        <list key="rename attributes">
+          <parameter key="id" value="COURSE_KEY"/>
+          <parameter key="DEPARTMENT_ID" value="DEPT_ID"/>
+          <parameter key="DEPARTMENT_NAME" value="DEPT_NAME"/>
+          <parameter key="FACULTY_NAME" value="FAC_NAME"/>
+        </list>
+        <parameter key="from_attribute" value=""/>
+        <parameter key="to_attribute" value=""/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" height="82" name="Write CSV (2)" width="90" x="916" y="238">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/W6/DIM/COURSE_DIM.csv"/>
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="date_format" value="yyyy-MM-dd HH:mm:ss"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <connect from_op="Retrieve OPEN_COURSE" from_port="output" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Generate ID" to_port="example set input"/>
+      <connect from_op="Generate ID" from_port="example set output" to_op="Rename" to_port="example set input"/>
+      <connect from_op="Rename" from_port="example set output" to_op="Write CSV" to_port="input"/>
+      <connect from_op="Write CSV" from_port="through" to_port="result 1"/>
+      <connect from_op="Retrieve COURSE_PROFILE" from_port="output" to_op="Join" to_port="left"/>
+      <connect from_op="Retrieve DEPARTMENT_PROFILE" from_port="output" to_op="Join" to_port="right"/>
+      <connect from_op="Join" from_port="join" to_op="Join (2)" to_port="left"/>
+      <connect from_op="Retrieve FACULTY_PROFILE" from_port="output" to_op="Join (2)" to_port="right"/>
+      <connect from_op="Join (2)" from_port="join" to_op="Select Attributes (2)" to_port="example set input"/>
+      <connect from_op="Select Attributes (2)" from_port="example set output" to_op="Generate ID (2)" to_port="example set input"/>
+      <connect from_op="Generate ID (2)" from_port="example set output" to_op="Rename (2)" to_port="example set input"/>
+      <connect from_op="Rename (2)" from_port="example set output" to_op="Write CSV (2)" to_port="input"/>
+      <connect from_op="Write CSV (2)" from_port="through" to_port="result 2"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+    </process>
+  </operator>
+</process>

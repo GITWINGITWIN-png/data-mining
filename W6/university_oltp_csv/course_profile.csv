@@ -1,0 +1,4 @@
+COURSE_ID,COURSE_NAME,CREDIT,DEPARTMENT_ID
+C001,Database Systems,3,101
+C002,Data Mining,3,102
+C003,Linear Algebra,3,201

@@ -1,0 +1,4 @@
+"STUDENT_KEY";"STUDENT_ID";"STUDENT_NAME";"GENDER";"YEAR_ADMIT";"SEMESTER_ADMIT";"STATUS";"DEPT_ID";"DEPT_NAME";"FAC_NAME"
+1;1;"Mr. Anan Wongchai";"M";2021;1;"Active";101;"Computer Engineering";"Engineering"
+2;2;"Ms. Sirinya Phanurat";"F";2020;2;"Active";102;"Information Technology";"Engineering"
+3;3;"Mr. Preecha Suksan";"M";2019;1;"Inactive";201;"Mathematics";"Science"

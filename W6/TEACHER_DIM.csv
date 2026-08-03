@@ -1,0 +1,4 @@
+"TEACHER_KEY";"TEACHER_ID";"TITLE_NAME";"TEACHER_NAME";"LASTEST_DEGREE";"GRADUATE_FROM";"DEPT_ID";"DEPT_NAME";"FAC_NAME"
+1;1;"Dr.";"Somchai Chaiyasit";"PhD";"MIT";101;"Computer Engineering";"Engineering"
+2;2;"Assoc. Prof.";"Natcha Wattanakul";"MSc";"Stanford";102;"Information Technology";"Engineering"
+3;3;"Prof.";"Prasert Intarapong";"PhD";"Oxford";201;"Mathematics";"Science"

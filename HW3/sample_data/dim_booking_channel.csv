@@ -1,0 +1,4 @@
+channel_key,channel_id,channel_name,channel_group
+1,21,Online,Direct
+2,22,Phone,Direct
+3,23,Agent,Indirect

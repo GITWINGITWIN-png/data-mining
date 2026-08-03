@@ -1,0 +1,4 @@
+CustomerID,Name,Address,Age,Income,Credit
+1,"John Smith","123 Main St, City A",35,50000.00,5000.00
+2,"Jane Doe","456 Oak Ave, City B",28,65000.00,7500.00
+3,"Bob Johnson","789 Pine Rd, City C",42,45000.00,4000.00

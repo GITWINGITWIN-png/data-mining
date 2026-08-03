@@ -1,0 +1,4 @@
+"COURSE_ID";"COURSE_NAME";"CREDIT";"DEPT_ID";"DEPT_NAME";"FAC_NAME";"COURSE_KEY"
+"C001";"Database Systems";3;101;"Computer Engineering";"Engineering";1
+"C002";"Data Mining";3;102;"Information Technology";"Engineering";2
+"C003";"Linear Algebra";3;201;"Mathematics";"Science";3
