@@ -1,0 +1,397 @@
+{
+  "n_rows": 48842,
+  "n_cols": 15,
+  "describe": {
+    "age": {
+      "count": 48842,
+      "mean": 38.6436,
+      "median": 37.0,
+      "mode": 36,
+      "std": 13.7105,
+      "var": 187.9781,
+      "min": 17,
+      "max": 90,
+      "skew": 0.5576,
+      "kurtosis": -0.1843,
+      "cv": 0.3548
+    },
+    "fnlwgt": {
+      "count": 48842,
+      "mean": 189664.1346,
+      "median": 178144.5,
+      "mode": 203488,
+      "std": 105604.0254,
+      "var": 11152210185.5748,
+      "min": 12285,
+      "max": 1490400,
+      "skew": 1.4389,
+      "kurtosis": 6.0578,
+      "cv": 0.5568
+    },
+    "educational-num": {
+      "count": 48842,
+      "mean": 10.0781,
+      "median": 10.0,
+      "mode": 9,
+      "std": 2.571,
+      "var": 6.6099,
+      "min": 1,
+      "max": 16,
+      "skew": -0.3165,
+      "kurtosis": 0.6257,
+      "cv": 0.2551
+    },
+    "capital-gain": {
+      "count": 48842,
+      "mean": 1079.0676,
+      "median": 0.0,
+      "mode": 0,
+      "std": 7452.0191,
+      "var": 55532588.0357,
+      "min": 0,
+      "max": 99999,
+      "skew": 11.8947,
+      "kurtosis": 152.6931,
+      "cv": 6.906
+    },
+    "capital-loss": {
+      "count": 48842,
+      "mean": 87.5023,
+      "median": 0.0,
+      "mode": 0,
+      "std": 403.0046,
+      "var": 162412.669,
+      "min": 0,
+      "max": 4356,
+      "skew": 4.5698,
+      "kurtosis": 20.0143,
+      "cv": 4.6056
+    },
+    "hours-per-week": {
+      "count": 48842,
+      "mean": 40.4224,
+      "median": 40.0,
+      "mode": 40,
+      "std": 12.3914,
+      "var": 153.5479,
+      "min": 1,
+      "max": 99,
+      "skew": 0.2387,
+      "kurtosis": 2.9511,
+      "cv": 0.3065
+    }
+  },
+  "skew_rank": {
+    "capital-gain": 11.895,
+    "capital-loss": 4.57,
+    "fnlwgt": 1.439,
+    "age": 0.558,
+    "educational-num": 0.317,
+    "hours-per-week": 0.239
+  },
+  "var_rank": {
+    "fnlwgt": 11152210185.575,
+    "capital-gain": 55532588.036,
+    "capital-loss": 162412.669,
+    "age": 187.978,
+    "hours-per-week": 153.548,
+    "educational-num": 6.61
+  },
+  "audit": {
+    "age": {
+      "dtype": "int64",
+      "kind": "Numerical",
+      "n_unique": "74"
+    },
+    "workclass": {
+      "dtype": "str",
+      "kind": "Categorical",
+      "n_unique": "9"
+    },
+    "fnlwgt": {
+      "dtype": "int64",
+      "kind": "Numerical",
+      "n_unique": "28523"
+    },
+    "education": {
+      "dtype": "str",
+      "kind": "Categorical",
+      "n_unique": "16"
+    },
+    "educational-num": {
+      "dtype": "int64",
+      "kind": "Numerical",
+      "n_unique": "16"
+    },
+    "marital-status": {
+      "dtype": "str",
+      "kind": "Categorical",
+      "n_unique": "7"
+    },
+    "occupation": {
+      "dtype": "str",
+      "kind": "Categorical",
+      "n_unique": "15"
+    },
+    "relationship": {
+      "dtype": "str",
+      "kind": "Categorical",
+      "n_unique": "6"
+    },
+    "race": {
+      "dtype": "str",
+      "kind": "Categorical",
+      "n_unique": "5"
+    },
+    "gender": {
+      "dtype": "str",
+      "kind": "Categorical",
+      "n_unique": "2"
+    },
+    "capital-gain": {
+      "dtype": "int64",
+      "kind": "Numerical",
+      "n_unique": "123"
+    },
+    "capital-loss": {
+      "dtype": "int64",
+      "kind": "Numerical",
+      "n_unique": "99"
+    },
+    "hours-per-week": {
+      "dtype": "int64",
+      "kind": "Numerical",
+      "n_unique": "96"
+    },
+    "native-country": {
+      "dtype": "str",
+      "kind": "Categorical",
+      "n_unique": "42"
+    },
+    "income": {
+      "dtype": "str",
+      "kind": "Categorical",
+      "n_unique": "2"
+    }
+  },
+  "n_numeric": 6,
+  "n_categorical": 9,
+  "missing": {
+    "occupation": {
+      "n_missing": 2809
+    },
+    "workclass": {
+      "n_missing": 2799
+    },
+    "native-country": {
+      "n_missing": 857
+    },
+    "marital-status": {
+      "n_missing": 0
+    },
+    "education": {
+      "n_missing": 0
+    },
+    "relationship": {
+      "n_missing": 0
+    },
+    "race": {
+      "n_missing": 0
+    },
+    "gender": {
+      "n_missing": 0
+    },
+    "income": {
+      "n_missing": 0
+    }
+  },
+  "n_missing_total": 6465,
+  "rows_with_any_missing": 3620,
+  "pct_rows_with_any_missing": 7.41,
+  "workclass_occupation_overlap": 2799,
+  "cat_levels": {
+    "workclass": [
+      "?",
+      "Federal-gov",
+      "Local-gov",
+      "Never-worked",
+      "Private",
+      "Self-emp-inc",
+      "Self-emp-not-inc",
+      "State-gov",
+      "Without-pay"
+    ],
+    "education": [
+      "10th",
+      "11th",
+      "12th",
+      "1st-4th",
+      "5th-6th",
+      "7th-8th",
+      "9th",
+      "Assoc-acdm",
+      "Assoc-voc",
+      "Bachelors",
+      "Doctorate",
+      "HS-grad",
+      "Masters",
+      "Preschool",
+      "Prof-school",
+      "Some-college"
+    ],
+    "marital-status": [
+      "Divorced",
+      "Married-AF-spouse",
+      "Married-civ-spouse",
+      "Married-spouse-absent",
+      "Never-married",
+      "Separated",
+      "Widowed"
+    ],
+    "occupation": [
+      "?",
+      "Adm-clerical",
+      "Armed-Forces",
+      "Craft-repair",
+      "Exec-managerial",
+      "Farming-fishing",
+      "Handlers-cleaners",
+      "Machine-op-inspct",
+      "Other-service",
+      "Priv-house-serv",
+      "Prof-specialty",
+      "Protective-serv",
+      "Sales",
+      "Tech-support",
+      "Transport-moving"
+    ],
+    "relationship": [
+      "Husband",
+      "Not-in-family",
+      "Other-relative",
+      "Own-child",
+      "Unmarried",
+      "Wife"
+    ],
+    "race": [
+      "Amer-Indian-Eskimo",
+      "Asian-Pac-Islander",
+      "Black",
+      "Other",
+      "White"
+    ],
+    "gender": [
+      "Female",
+      "Male"
+    ],
+    "native-country": [
+      "?",
+      "Cambodia",
+      "Canada",
+      "China",
+      "Columbia",
+      "Cuba",
+      "Dominican-Republic",
+      "Ecuador",
+      "El-Salvador",
+      "England",
+      "France",
+      "Germany",
+      "Greece",
+      "Guatemala",
+      "Haiti",
+      "Holand-Netherlands",
+      "Honduras",
+      "Hong",
+      "Hungary",
+      "India",
+      "Iran",
+      "Ireland",
+      "Italy",
+      "Jamaica",
+      "Japan",
+      "Laos",
+      "Mexico",
+      "Nicaragua",
+      "Outlying-US(Guam-USVI-etc)",
+      "Peru",
+      "Philippines",
+      "Poland",
+      "Portugal",
+      "Puerto-Rico",
+      "Scotland",
+      "South",
+      "Taiwan",
+      "Thailand",
+      "Trinadad&Tobago",
+      "United-States",
+      "Vietnam",
+      "Yugoslavia"
+    ],
+    "income": [
+      "<=50K",
+      ">50K"
+    ]
+  },
+  "cat_level_counts": {
+    "workclass": 9,
+    "education": 16,
+    "marital-status": 7,
+    "occupation": 15,
+    "relationship": 6,
+    "race": 5,
+    "gender": 2,
+    "native-country": 42,
+    "income": 2
+  },
+  "outliers": {
+    "age": {
+      "Q1": 28.0,
+      "Q3": 48.0,
+      "IQR": 20.0,
+      "lower": -2.0,
+      "upper": 78.0,
+      "n_outliers": 216.0
+    },
+    "fnlwgt": {
+      "Q1": 117550.5,
+      "Q3": 237642.0,
+      "IQR": 120091.5,
+      "lower": -62586.75,
+      "upper": 417779.25,
+      "n_outliers": 1453.0
+    },
+    "educational-num": {
+      "Q1": 9.0,
+      "Q3": 12.0,
+      "IQR": 3.0,
+      "lower": 4.5,
+      "upper": 16.5,
+      "n_outliers": 1794.0
+    },
+    "capital-gain": {
+      "Q1": 0.0,
+      "Q3": 0.0,
+      "IQR": 0.0,
+      "lower": 0.0,
+      "upper": 0.0,
+      "n_outliers": 4035.0
+    },
+    "capital-loss": {
+      "Q1": 0.0,
+      "Q3": 0.0,
+      "IQR": 0.0,
+      "lower": 0.0,
+      "upper": 0.0,
+      "n_outliers": 2282.0
+    },
+    "hours-per-week": {
+      "Q1": 40.0,
+      "Q3": 45.0,
+      "IQR": 5.0,
+      "lower": 32.5,
+      "upper": 52.5,
+      "n_outliers": 13496.0
+    }
+  }
+}

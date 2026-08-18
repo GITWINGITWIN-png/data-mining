@@ -1,0 +1,101 @@
+1. Introduction to Data Analytics
+
+    Definition and importance of Data Analytics
+    Data vs. Information vs. Knowledge
+    Types of Analytics:
+    Descriptive Analytics
+    Predictive Analytics
+    Prescriptive Analytics
+
+2. Exploratory Data Analysis (EDA)
+
+    Definition and benefits of EDA
+    EDA procedures:
+    Data Overview
+    Data Quality Assessment
+
+Levels of analysis:
+
+    Univariate Analysis
+    Bivariate Analysis
+    Multivariate Analysis
+
+Data Visualization & Statistics:
+
+    Histogram
+    Boxplot
+    Scatter Plot
+    Heatmap
+
+3. Data Pre-processing
+
+    Row or column deletion
+    Statistical imputation:
+    Mean — numerical data
+    Median — numerical data, especially skewed distributions
+    Mode — categorical data
+    Noise vs. Outliers
+    Smoothing techniques
+    Encoding
+    Discretization
+    Feature Scaling
+
+4. Data Warehouse Design Concepts
+
+    Fundamental concepts and purpose of a Data Warehouse
+    OLTP vs. OLAP
+    Star Schema vs. Snowflake Schema
+    Fact Tables and Dimension Tables
+    Different types of Fact Tables:
+    Transaction Fact Table
+    Periodic Snapshot Fact Table
+    Accumulating Snapshot Fact Table
+    Degenerate Dimension, Role-Playing Dimension, Fact-less Fact Table
+
+5. Multi-Dimensional Design Process
+
+    The 4-Step Design Process:
+    Business Requirements
+    Analyzing Source Systems (OLTP)
+    Star Schema Design
+    Implementation
+    Defining:
+    Business Process
+    Grain
+    Dimensions
+    Facts / Measures
+    Additive vs. Non-additive Measures
+    Dimension and Fact Table design: Primary Keys, Surrogate Keys, Foreign Keys
+
+6. ETL (Extract, Transform, Load)
+
+    ETL definition and workflow
+    Extract, Transform, and Load processes
+    Practical implementation using:
+    RapidMiner
+    SQL Scripts
+    Transforming OLTP data into Dimension and Fact tablesCreating derived structures such as a Date DimensionLoading Dimension and Fact tables
+    7. Reporting
+    Generating reports and analytical results from a Star Schema
+    Possible tools:
+    SQL
+    RapidMiner
+    Python
+    Other reporting / visualization tools
+
+8. Regression Analysis
+
+    Simple Linear Regression
+    Multiple Linear Regression
+    Interpretation of regression coefficients
+    Key assumptions:
+    Linearity
+    No Multicollinearity
+
+Model Evaluation:
+
+    R-Squared ((R^2))
+    Adjusted R-Squared
+    Different types of prediction errors
+
+Training vs. Test performanceOverfitting

@@ -1,0 +1,9 @@
+# Local Python environment for this homework (see PROGRESS.md - the project-root
+# ../.venv is broken, so HW5 carries its own).
+.venv/
+
+# XeLaTeX build artefacts
+*.aux
+*.log
+*.out
+*.toc

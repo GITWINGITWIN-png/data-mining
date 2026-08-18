@@ -1,0 +1,20 @@
+As a data analyst, your task is to EDA and pre-process the Adult dataset.  Here is attribute description
+
+    age: Represents the age of the individual, a variable indicating the person's age in years.
+    workclass: Shows the type or group of work in which the individual is employed, including Private (working in the private sector), Self-emp-not-inc (self-employed but not incorporated), Self-emp-inc (self-employed and incorporated), Federal-gov (working in the federal government), Local-gov (working in local government), State-gov (working in state government), Without-pay (not working and not receiving payment), and Never-worked (never worked before).
+    fnlwgt: Represents the final weight, which is the weight assigned to each individual in the survey. It is used to adjust statistics to improve the selection bias in the survey.
+    education: Indicates the highest level of education attained by the individual, including Bachelors, Some-college, 11th, HS-grad (High School Graduate), Prof-school (Professional School), Assoc-acdm (Associate degree in general studies), Assoc-voc (Associate degree in a vocational field), 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, and Preschool.
+    education-num: Represents the numerical coding of the education level, ranging from 1 to 16. It is used for encoding the education variable for computational purposes.
+    marital-status: Indicates the marital status of the individual, including Married-civ-spouse (married civilian spouse), Divorced, Never-married, Separated, Widowed, Married-spouse-absent (married but spouse is not present), and Married-AF-spouse (married with spouse in the Armed Forces).
+    occupation: Indicates the occupation or type of work of the individual, including Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, and Armed-Forces.
+    relationship: Indicates the relationship status of the individual within the family, including Wife, Own-child, Husband, Not-in-family, Other-relative, and Unmarried.
+    race: Indicates the ethnicity or race of the individual, including White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, and Black.
+    sex: Indicates the gender of the individual, including Female and Male.
+    capital-gain: Shows the profit gained from the sale of property, such as stocks, real estate, or investments.
+    capital-loss: Indicates the loss incurred from the sale of property.
+    hours-per-week: Indicates the number of hours the individual works per week.
+    native-country: Indicates the country of origin or birth of the individual, including United-States, Cambodia, England, Puerto-Rico, Canada, Germany, India, Japan, Greece, China, Mexico, and other countries.
+    Income (class, label): Indicates the income level of the individual, where >50K means an income exceeding $50,000, and <=50K means an income less than or equal to $50,000.
+    Submit the following files =>
+    1) Student_ID_hw#6_preprocess.ipynb (or Student_ID_hw#3_2_preprocess.xml)
+    2) Student_ID_hw#6_preprocess_answer.pdf
