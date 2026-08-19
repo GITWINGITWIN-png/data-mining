@@ -228,6 +228,22 @@ ORDER BY Total_Sales DESC;
 | **Python** | `pandas` (`groupby`, `pivot_table`), `matplotlib`/`seaborn`, notebook | ต่อยอดไป [[09 Regression Analysis]] ได้ทันที |
 | **Power-BI** | dashboard เชิงโต้ตอบ | อยู่ในรายชื่อ *Some ETL Tools* ในสไลด์ด้วย |
 
+### 🖥️ ตัวอย่างที่เป็นรูปธรรม: คำถามเดียวกัน ตอบด้วย 3 เครื่องมือ ⭐
+
+เอาโจทย์จาก [[08 Reporting from Star Schema#8.3 ตัวอย่างที่ 2 — Query ข้าม Fact + Dimension ⭐⭐|§8.3]] มาตอบซ้ำด้วย SQL, RapidMiner และ Python เพื่อพิสูจน์ว่า **แนวคิดเดียวกันทุกเครื่องมือ** — ต่างกันแค่ไวยากรณ์ ผลลัพธ์ต้องตรงกันเป๊ะ
+
+![[reporting_three_tools.png]]
+
+> [!important] แนวคิดเดียวกัน คนละไวยากรณ์ — จับคู่ operation ให้ออก
+> | สิ่งที่ต้องทำ | SQL | RapidMiner | Python (pandas) |
+> |---|---|---|---|
+> | **รวมตาราง** | `JOIN … ON` | operator **`Join`** | `.merge(on=…)` |
+> | **จัดกลุ่ม** | `GROUP BY` | operator **`Aggregate`** (ตั้ง *group by*) | `.groupby(…)` |
+> | **รวมยอด** | `SUM(...)` | ใน `Aggregate` ตั้ง *aggregation function* = sum | `['amount'].sum()` |
+> | **เรียงลำดับ** | `ORDER BY … DESC` | operator **`Sort`** | `.sort_values(ascending=False)` |
+>
+> ⭐ **บทเรียนสำคัญ:** ทั้ง 3 ทางได้ **`soft_drink = 164`, `house_goods = 148`** ตรงกันทุกตัวเลข — เพราะทั้งหมดทำสิ่งเดียวกันทางคณิตศาสตร์ (join แล้ว group แล้ว sum) แค่ **RapidMiner ใช้การลาก operator แทนการพิมพ์โค้ด** ส่วน SQL กับ Python ยังต้องเขียนคำสั่ง — เวลาข้อสอบ Lab ให้เลือกเครื่องมือที่โจทย์ระบุ แล้ว **แปลคำถามเป็น 4 ขั้นนี้เสมอ: join → group → aggregate → sort**
+
 > [!example] เทียบ SQL ↔ pandas (สำหรับ Lab ที่ใช้ Python)
 > ```python
 > # เทียบเท่ากับ: SELECT brand, SUM(amount) FROM sales JOIN product …

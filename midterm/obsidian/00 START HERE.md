@@ -124,6 +124,8 @@ tags: [midterm, MOC, index]
 > | `dw_star_vs_snowflake.png` | Star vs Snowflake วางเทียบกันบนเคสเดียว | 5 |
 > | `dw_fact_types.png` | Fact table 3 ชนิด พร้อมข้อมูลตัวอย่าง | 6 |
 > | `etl_fact_build.png` | ETL 4 ขั้น จาก log ดิบ → fact table (ตัวเลขตรงสไลด์) | 7 |
+> | `etl_rapidminer_canvas.png` | จำลอง RapidMiner canvas จริง 4 แถว จับคู่กับ SQL scripts | 7 |
+> | `reporting_three_tools.png` | คำถามเดียวกันตอบด้วย SQL/RapidMiner/Python — ผลลัพธ์ตรงกัน | 8 |
 > | `reg_ols_r2_overfit.png` | OLS + residuals · SST/SSE/SSR · กราฟ overfitting | 9 |
 >
 > **สร้างภาพใหม่ทั้งหมด:**

@@ -505,6 +505,22 @@ graph LR
 > - **`Join`, `Aggregate`, `Generate Attributes`, `Replace Missing Values`, `Rename`, `Filter Examples`** → **Transform**
 > - **`Write Database`** → **Load**
 
+### 🖥️ ตัวอย่างที่เป็นรูปธรรม: RapidMiner Canvas สำหรับเคส AllElectronics ⭐
+
+สไลด์ไม่มีภาพ RapidMiner ให้ดูเลย มีแค่ชื่ออยู่ในลิสต์เครื่องมือ — ภาพด้านล่างจำลอง **"หน้าตาจริง"** ของ operator บน canvas ให้ตรงกับ SQL scripts ใน §7.6 ทีละบรรทัด เพื่อให้เห็นว่า **การลาก operator ต่อกัน = การเขียน SQL ทีละท่อน** เพียงแค่เปลี่ยนไวยากรณ์
+
+![[etl_rapidminer_canvas.png]]
+
+> [!important] อ่านภาพนี้อย่างไร — จับคู่กับ SQL ที่มีอยู่แล้ว
+> | แถวใน Canvas | เทียบเท่า SQL block ใน §7.6 | อธิบาย |
+> |---|---|---|
+> | **แถว 1** Read Customers → Replace Missing Values → Write CustomerDim | `INSERT INTO CustomerDim SELECT … FROM AllElectronics.Customers` | **ไม่มี Join** — operator `Replace Missing Values` ทำหน้าที่แทน `df.fillna()` ที่เห็นใน [[04 Data Pre-processing]] |
+> | **แถว 2** Read Items+Suppliers → Join → Write ProductDim | `INSERT INTO ProductDim … INNER JOIN Suppliers` | operator **`Join`** = คำสั่ง `INNER JOIN` ตรง ๆ — ผลคือ `SupplierName` ถูก **de-normalize** เข้า ProductDim |
+> | **แถว 3** Read Purchases → Generate Attributes → Write DateDim | `INSERT INTO DateDim … DAY(p.Date), MONTH(p.Date), …` | operator **`Generate Attributes`** ใช้สูตรคำนวณเอง (เหมือน `DAY()`, `QUARTER()` ใน SQL) เพื่อสร้าง **derived structure** |
+> | **แถว 4** (ยาวสุด) Read 3 ตาราง → Join ×3 → Aggregate → Surrogate Lookup → Write ElectFact | `INSERT INTO ElectFact SELECT pd.ProductKey, … SUM(s.Qty) … GROUP BY …` | **`Aggregate`** = `GROUP BY` + `SUM()` · **`Surrogate Lookup`** (เส้นประ) = การ join ย้อนกลับไปหา 3 Dimension ที่โหลดเสร็จแล้ว เพื่อแปลง natural key → surrogate key — **ขั้นตอนเดียวกับที่อธิบายไว้ใน [[07 ETL#Step 4 — Populate Fact Table ⭐⭐⭐ (query สำคัญที่สุดในบท)]]** |
+>
+> ⭐ **ข้อสังเกตสำคัญ:** เส้นประ (dashed) ที่ลากจากทั้ง 3 Dimension เข้าหา operator `Surrogate Lookup` ในแถวล่าง คือภาพที่แสดงกฎ **"ต้อง populate Dimensions ให้เสร็จก่อน แล้วค่อย populate Fact"** ([[07 ETL#Step 3 — Populate Dimensions ⭐]]) — ถ้าลาก operator ผิดลำดับใน RapidMiner (เอา Fact ไปวางก่อน Dimension) จะหา key ไม่เจอเหมือนกับตอน SQL ที่ join ไม่ match
+
 ---
 
 ## 7.8 Why Do We Still Use the Star Schema? (สไลด์ทบทวนหน้า 2)
