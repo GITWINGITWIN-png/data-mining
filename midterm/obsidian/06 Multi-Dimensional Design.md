@@ -20,6 +20,9 @@ tags: [midterm, dimensional-modeling, grain, star-schema, fact-table]
 
 **ลิงก์:** [[00 START HERE|หน้าหลัก]] · ก่อนหน้า [[05 Data Warehouse Concepts]] · ถัดไป [[07 ETL]] · [[11 Glossary EN-TH]]
 
+> [!tip] ไม่มั่นใจว่าเอาหลักการพวกนี้ไปใช้ออกแบบจริงได้ไหม?
+> ไปดู **[[13 Star Schema Design Workshop]]** — เดินตัวอย่างซับซ้อนครบทุกขั้นตอน (2 fact tables, role-playing, conformed, degenerate dimension ในเคสเดียว) แล้วมีโจทย์ให้ลองทำเองพร้อมเฉลยทีละขั้น
+
 ---
 
 ## 6.1 The 4-Step Dimensional Design Process ⭐⭐⭐

@@ -60,6 +60,7 @@ tags: [midterm, MOC, index]
 | **[[10 Formula Sheet]]** | **ทวนรอบสุดท้ายก่อนเข้าห้องสอบ** — สูตรทั้งหมดในหน้าเดียว |
 | **[[11 Glossary EN-TH]]** | เจอศัพท์อังกฤษแล้วนึกไม่ออก · ท้ายหน้ามี **ตารางคู่ศัพท์ที่สับสนบ่อย 14 คู่** |
 | **[[12 Exam Drills]]** | **ฝึกทำจริง** — Part A ทฤษฎี · Part B คำนวณ · Part C ออกแบบ/SQL · Part D สถานการณ์ |
+| **[[13 Star Schema Design Workshop]]** | **ไม่มั่นใจเรื่องออกแบบ star schema** — ตัวอย่างซับซ้อนเดินครบ 5 ขั้นทีละบรรทัด (FoodGo) + โจทย์ให้ลองทำเองพร้อมเฉลยกดดูได้ทีละขั้น (เคสโรงพยาบาลจากบทที่ 5) |
 
 ---
 
@@ -126,6 +127,7 @@ tags: [midterm, MOC, index]
 > | `etl_fact_build.png` | ETL 4 ขั้น จาก log ดิบ → fact table (ตัวเลขตรงสไลด์) | 7 |
 > | `etl_rapidminer_canvas.png` | จำลอง RapidMiner canvas จริง 4 แถว จับคู่กับ SQL scripts | 7 |
 > | `reporting_three_tools.png` | คำถามเดียวกันตอบด้วย SQL/RapidMiner/Python — ผลลัพธ์ตรงกัน | 8 |
+> | `star_design_foodgo_schema.png` | Star schema เต็มรูปแบบ 2 fact tables + role-playing + conformed + degenerate dimension | 13 |
 > | `reg_ols_r2_overfit.png` | OLS + residuals · SST/SSE/SSR · กราฟ overfitting | 9 |
 >
 > **สร้างภาพใหม่ทั้งหมด:**
