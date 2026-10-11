@@ -36,6 +36,8 @@
 - ✅ **FLOW notes (2026-10-11):** `final/obsidian/flow/FLOW 00–12` — flow การแก้โจทย์แต่ละแบบ (data handling · preprocessing/leakage · PCA ·
   imbalanced · KNN · linear · logistic · tree/RF · workflow · clustering · association · โจทย์ผสม/เขียนคำตอบ) แต่ละขั้นบอก ทำอะไร/ทำไม/ถ้าข้าม
   + ลิงก์ T§/R§ + ตัวเลขจริงจากการรัน template · mermaid ทุกภาพ render ผ่าน mermaid-cli · check_links รองรับ [[folder/note]]
+  + **ภาพ canvas แบบ RapidMiner ใต้แต่ละขั้น (69 ภาพ)** สร้างจาก R01–R11 จริงด้วย `final/rm_templates/_build/flow_diagrams.py`
+    (กล่องพับได้ `[!example]+` ระหว่าง `<!-- RM-CANVAS -->` · รันซ้ำแทนที่ของเดิม · ข้างใน CV วาด Training ซ้าย | Testing ขวา) · render ผ่านครบ 81 ภาพ
 - ✅ Mock lab 3 ชุด `final/mock_lab/mock{1,2,3}_*` — question.ipynb / solution.ipynb (executed) / solution*.rmp (batch-run)
 - ✅ RapidMiner recipes 12 ไฟล์ `final/mock_lab/recipes/` (11 batch-run ผ่าน · SMOTE ต้องมี Operator Toolbox)
 - ✅ **ชุด Lecture เสร็จ (2026-10-07):** `final/obsidian/lecture/LEC 00–13` (hub · EDA · preprocessing+leakage · PCA ·
