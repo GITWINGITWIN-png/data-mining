@@ -163,7 +163,7 @@
         <parameter key="enable_parallel_execution" value="true"/>
         <process expanded="true">
           <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (Tree reg)" width="90" x="45" y="85">
-            <parameter key="criterion" value="gini_index"/>
+            <parameter key="criterion" value="least_square"/>
             <parameter key="maximal_depth" value="5"/>
             <parameter key="apply_pruning" value="false"/>
             <parameter key="apply_prepruning" value="false"/>

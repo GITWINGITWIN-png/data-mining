@@ -35,6 +35,7 @@
   **แก้หลังผู้ใช้เปิด R03 ใน Studio:** "Missing label" ที่ CV kNN ← Select Attributes (value_type numeric, include_special_attributes = true) ลบ label `cultivar` (nominal)
   → ตั้ง include_special_attributes = false ทุกตัว (R02 §3, R03, R06) · โน้ตทับ operator → ระยะแถว LANE 150→230 (+ ROW2/LANE2 สำหรับ lane 2 แถว)
   + `_build/check_layout.py` ตรวจกล่องทับกัน (สูตรความสูงจาก ProcessDrawUtils: max(68, 40 + 21·ports)) → ผ่าน 11 ไฟล์
+  **ผลรันจริงในเครื่องผู้ใช้ (run_rm.sh):** 10/11 ผ่าน · R06 Tree reg ใช้ gini_index กับ label ตัวเลข → แก้เป็น least_square + check_rm ตรวจกรณีนี้แล้ว
   ข้อควรรู้: correlation_matrix เป็น operator deprecated (8.1) แต่ยังโหลดได้ · Davies–Bouldin ใน Log ใช้ไม่ได้ (probe เดิมได้ค่าว่าง) → log เฉพาะ avg_within_distance
 - ✅ **FLOW notes (2026-10-11):** `final/obsidian/flow/FLOW 00–12` — flow การแก้โจทย์แต่ละแบบ (data handling · preprocessing/leakage · PCA ·
   imbalanced · KNN · linear · logistic · tree/RF · workflow · clustering · association · โจทย์ผสม/เขียนคำตอบ) แต่ละขั้นบอก ทำอะไร/ทำไม/ถ้าข้าม
