@@ -6,6 +6,9 @@ tags: [final, lecture, MOC, index]
 ---
 
 # 📘 LEC 00 · START HERE
+
+> [!info] 🧭 ใหม่ (11 ต.ค.): **FLOW การแก้โจทย์แต่ละแบบ + เหตุผลของทุกขั้น** (12 บท พร้อม flowchart และผลจริง) → [[FLOW 00 START HERE]]
+
 ## คลังโน้ตเตรียมสอบ **Lecture** (Final) — 01204465
 
 > [!info] ข้อมูลสอบ (จาก `final/69_1_Guideline.pdf`)

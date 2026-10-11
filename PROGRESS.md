@@ -33,6 +33,9 @@
   class (OperatorsCore.xml) · parameter key (PARAMETER_* ใน source) · port (createPort) · ต่อซ้ำ/ต่อไม่ครบ · อ้างชื่อใน Log/Optimize → ผ่านครบ 11 ไฟล์
   (และ process เดิม 24 ไฟล์ที่รันผ่านก็ผ่าน checker) · rm_builder.Proc รองรับ `note()` (workflow annotation `<description>` ตรวจรูปแบบกับ AnnotationProcessXMLFilter)
   ข้อควรรู้: correlation_matrix เป็น operator deprecated (8.1) แต่ยังโหลดได้ · Davies–Bouldin ใน Log ใช้ไม่ได้ (probe เดิมได้ค่าว่าง) → log เฉพาะ avg_within_distance
+- ✅ **FLOW notes (2026-10-11):** `final/obsidian/flow/FLOW 00–12` — flow การแก้โจทย์แต่ละแบบ (data handling · preprocessing/leakage · PCA ·
+  imbalanced · KNN · linear · logistic · tree/RF · workflow · clustering · association · โจทย์ผสม/เขียนคำตอบ) แต่ละขั้นบอก ทำอะไร/ทำไม/ถ้าข้าม
+  + ลิงก์ T§/R§ + ตัวเลขจริงจากการรัน template · mermaid ทุกภาพ render ผ่าน mermaid-cli · check_links รองรับ [[folder/note]]
 - ✅ Mock lab 3 ชุด `final/mock_lab/mock{1,2,3}_*` — question.ipynb / solution.ipynb (executed) / solution*.rmp (batch-run)
 - ✅ RapidMiner recipes 12 ไฟล์ `final/mock_lab/recipes/` (11 batch-run ผ่าน · SMOTE ต้องมี Operator Toolbox)
 - ✅ **ชุด Lecture เสร็จ (2026-10-07):** `final/obsidian/lecture/LEC 00–13` (hub · EDA · preprocessing+leakage · PCA ·

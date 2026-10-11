@@ -51,6 +51,9 @@ def check(md: Path) -> list[str]:
             continue
         name, _, anchor = target.partition("#")
         note = VAULT_NOTES.get(name) if name else md
+        if note is None and name and "/" in name:   # [[folder/note]] = ระบุ path บางส่วน (Obsidian จับคู่ท้าย path)
+            hits = [p for p in ROOT.rglob(name.split("/")[-1] + ".md") if p.with_suffix("").as_posix().endswith(name)]
+            note = hits[0] if len(hits) == 1 else None
         if note is None:
             errors.append(f"โน้ตไม่พบ: [[{target}]]")
         elif anchor and slug(anchor) not in headings(note):
