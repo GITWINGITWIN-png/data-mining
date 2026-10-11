@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="215">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p5_pima_diabetes.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="numerical_to_binominal" compatibility="12.1.001" expanded="true" name="Numerical to Binominal" width="90" x="180" y="215">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="diabetes"/>
+        <parameter key="min" value="0.0"/>
+        <parameter key="max" value="0.0"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="315" y="215">
+        <parameter key="attribute_name" value="diabetes"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="declare_missing_value" compatibility="12.1.001" expanded="true" name="Declare Missing Value" width="90" x="450" y="215">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="glucose|blood_pressure|skin_thickness|insulin|bmi"/>
+        <parameter key="mode" value="numeric"/>
+        <parameter key="numeric_value" value="0.0"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="585" y="215">
+      </operator>
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="720" y="217">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.75"/>
+          <parameter key="ratio" value="0.25"/>
+        </enumeration>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values" width="90" x="855" y="217">
+        <parameter key="default" value="average"/>
+        <parameter key="return_preprocessing_model" value="true"/>
+      </operator>
+      <operator activated="true" class="h2o:logistic_regression" compatibility="12.1.001" expanded="true" name="Logistic Regression" width="90" x="990" y="217">
+        <parameter key="solver" value="AUTO"/>
+        <parameter key="reproducible" value="true"/>
+        <parameter key="use_regularization" value="false"/>
+        <parameter key="standardize" value="true"/>
+        <parameter key="compute_p-values" value="true"/>
+        <parameter key="remove_collinear_columns" value="true"/>
+        <parameter key="add_intercept" value="true"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (impute test)" width="90" x="990" y="295">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (logistic)" width="90" x="1125" y="295">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (model)" width="90" x="1260" y="217">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (scored test)" width="90" x="1260" y="295">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (H2O default)" width="90" x="1260" y="457">
+        <parameter key="main_criterion" value="f_measure"/>
+        <parameter key="accuracy" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="manually_set_positive_class" value="true"/>
+        <parameter key="positive_class" value="true"/>
+      </operator>
+      <operator activated="true" class="create_threshold" compatibility="12.1.001" expanded="true" name="Create Threshold 0.5" width="90" x="990" y="535">
+        <parameter key="threshold" value="0.5"/>
+        <parameter key="first_class" value="false"/>
+        <parameter key="second_class" value="true"/>
+      </operator>
+      <operator activated="true" class="apply_threshold" compatibility="12.1.001" expanded="true" name="Apply Threshold 0.5" width="90" x="1125" y="535">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (t=0.5)" width="90" x="1260" y="535">
+        <parameter key="main_criterion" value="f_measure"/>
+        <parameter key="accuracy" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="manually_set_positive_class" value="true"/>
+        <parameter key="positive_class" value="true"/>
+      </operator>
+      <operator activated="true" class="create_threshold" compatibility="12.1.001" expanded="true" name="Create Threshold 0.3" width="90" x="990" y="625">
+        <parameter key="threshold" value="0.3"/>
+        <parameter key="first_class" value="false"/>
+        <parameter key="second_class" value="true"/>
+      </operator>
+      <operator activated="true" class="apply_threshold" compatibility="12.1.001" expanded="true" name="Apply Threshold 0.3" width="90" x="1125" y="625">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (t=0.3)" width="90" x="1260" y="625">
+        <parameter key="main_criterion" value="f_measure"/>
+        <parameter key="accuracy" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="manually_set_positive_class" value="true"/>
+        <parameter key="positive_class" value="true"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (CV)" width="90" x="45" y="807">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="180" y="807">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (Baseline)" width="90" x="45" y="85">
+            <parameter key="method" value="mode"/>
+          </operator>
+          <connect from_port="training set" to_op="Default Model (Baseline)" to_port="training set"/>
+          <connect from_op="Default Model (Baseline)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Baseline)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (CV Baseline)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Baseline)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Baseline)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Baseline)" from_port="labelled data" to_op="Performance (CV Baseline)" to_port="labelled data"/>
+          <connect from_op="Performance (CV Baseline)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV LogReg" width="90" x="315" y="807">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (LogReg)" width="90" x="45" y="85">
+            <parameter key="default" value="average"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="h2o:logistic_regression" compatibility="12.1.001" expanded="true" name="Logistic Regression (LogReg)" width="90" x="180" y="85">
+            <parameter key="solver" value="AUTO"/>
+            <parameter key="reproducible" value="true"/>
+            <parameter key="use_regularization" value="false"/>
+            <parameter key="standardize" value="true"/>
+            <parameter key="compute_p-values" value="true"/>
+            <parameter key="remove_collinear_columns" value="true"/>
+            <parameter key="add_intercept" value="true"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (LogReg)" width="90" x="315" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Replace Missing Values (LogReg)" to_port="example set input"/>
+          <connect from_op="Replace Missing Values (LogReg)" from_port="example set output" to_op="Logistic Regression (LogReg)" to_port="training set"/>
+          <connect from_op="Replace Missing Values (LogReg)" from_port="preprocessing model" to_op="Group Models (LogReg)" to_port="models in 1"/>
+          <connect from_op="Logistic Regression (LogReg)" from_port="model" to_op="Group Models (LogReg)" to_port="models in 2"/>
+          <connect from_op="Group Models (LogReg)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (LogReg)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (CV LogReg)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (LogReg)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (LogReg)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (LogReg)" from_port="labelled data" to_op="Performance (CV LogReg)" to_port="labelled data"/>
+          <connect from_op="Performance (CV LogReg)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="45" y="957">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_pima.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (impute new)" width="90" x="180" y="957">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (logistic new)" width="90" x="315" y="957">
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Numerical to Binominal" to_port="example set input"/>
+      <connect from_op="Numerical to Binominal" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Declare Missing Value" to_port="example set input"/>
+      <connect from_op="Declare Missing Value" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Split Data" to_port="example set"/>
+      <connect from_op="Split Data" from_port="partition 1" to_op="Replace Missing Values" to_port="example set input"/>
+      <connect from_op="Replace Missing Values" from_port="example set output" to_op="Logistic Regression" to_port="training set"/>
+      <connect from_op="Replace Missing Values" from_port="preprocessing model" to_op="Apply Model (impute test)" to_port="model"/>
+      <connect from_op="Split Data" from_port="partition 2" to_op="Apply Model (impute test)" to_port="unlabelled data"/>
+      <connect from_op="Logistic Regression" from_port="model" to_op="Apply Model (logistic)" to_port="model"/>
+      <connect from_op="Apply Model (impute test)" from_port="labelled data" to_op="Apply Model (logistic)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (logistic)" from_port="model" to_op="Multiply (model)" to_port="input"/>
+      <connect from_op="Multiply (model)" from_port="output 1" to_port="result 1"/>
+      <connect from_op="Apply Model (logistic)" from_port="labelled data" to_op="Multiply (scored test)" to_port="input"/>
+      <connect from_op="Multiply (scored test)" from_port="output 1" to_port="result 2"/>
+      <connect from_op="Multiply (scored test)" from_port="output 2" to_op="Performance (H2O default)" to_port="labelled data"/>
+      <connect from_op="Performance (H2O default)" from_port="performance" to_port="result 3"/>
+      <connect from_op="Multiply (scored test)" from_port="output 3" to_op="Apply Threshold 0.5" to_port="example set"/>
+      <connect from_op="Create Threshold 0.5" from_port="output" to_op="Apply Threshold 0.5" to_port="threshold"/>
+      <connect from_op="Apply Threshold 0.5" from_port="example set" to_op="Performance (t=0.5)" to_port="labelled data"/>
+      <connect from_op="Performance (t=0.5)" from_port="performance" to_port="result 4"/>
+      <connect from_op="Multiply (scored test)" from_port="output 4" to_op="Apply Threshold 0.3" to_port="example set"/>
+      <connect from_op="Create Threshold 0.3" from_port="output" to_op="Apply Threshold 0.3" to_port="threshold"/>
+      <connect from_op="Apply Threshold 0.3" from_port="example set" to_op="Performance (t=0.3)" to_port="labelled data"/>
+      <connect from_op="Performance (t=0.3)" from_port="performance" to_port="result 5"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Multiply (CV)" to_port="input"/>
+      <connect from_op="Multiply (CV)" from_port="output 1" to_op="CV Baseline" to_port="example set"/>
+      <connect from_op="CV Baseline" from_port="performance 1" to_port="result 6"/>
+      <connect from_op="Multiply (CV)" from_port="output 2" to_op="CV LogReg" to_port="example set"/>
+      <connect from_op="CV LogReg" from_port="performance 1" to_port="result 7"/>
+      <connect from_op="Apply Model (impute test)" from_port="model" to_op="Apply Model (impute new)" to_port="model"/>
+      <connect from_op="Read CSV (new)" from_port="output" to_op="Apply Model (impute new)" to_port="unlabelled data"/>
+      <connect from_op="Multiply (model)" from_port="output 2" to_op="Apply Model (logistic new)" to_port="model"/>
+      <connect from_op="Apply Model (impute new)" from_port="labelled data" to_op="Apply Model (logistic new)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (logistic new)" from_port="labelled data" to_port="result 8"/>
+      <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Numerical to Binominal → label 0/1 (label เป็นคำอยู่แล้ว → ลบ) · Set Role → label&lt;br&gt;2. Declare Missing Value → คอลัมน์ที่ค่า 0 เป็นไปไม่ได้ (ข้อมูลอื่น → ลบ operator)&lt;br&gt;3. Create Threshold → threshold · first_class = คลาสลบ · second_class = คลาสบวก (ตอนนี้ false / true)&lt;br&gt;4. Performance → positive_class = คลาสบวก (true)&lt;br&gt;⚠️ H2O Logistic Regression ตัดสินที่ threshold ที่ทำให้ F1 สูงสุด (ไม่ใช่ 0.5) → อยากได้ 0.5 ต้องใช้ Create/Apply Threshold</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="720" y="155">&lt;b&gt;§1–§3 Split 75/25 → Replace Missing (fit train) → Logistic Regression → Apply กับ test&lt;/b&gt;&lt;br&gt;res model = coefficients (+ p-value) · odds ratio = e^coef</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="720" y="395">&lt;b&gt;§5 ⭐ Threshold: default ของ H2O vs 0.5 vs 0.3 → confusion matrix + precision / recall / F1&lt;/b&gt;&lt;br&gt;เพิ่ม threshold อื่น: copy Create Threshold + Apply Threshold + Performance แล้วต่อจาก Multiply (scored test) port ถัดไป</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="900" x="45" y="745">&lt;b&gt;§2 / §6 Baseline vs Logistic ใน 10-fold CV (Replace Missing อยู่ใน Training pane)&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="50" resized="true" width="900" x="45" y="895">&lt;b&gt;§7 ทำนายข้อมูลใหม่ → confidence(true) = ความน่าจะเป็น · prediction ตาม threshold ของ H2O&lt;/b&gt;&lt;br&gt;Read CSV (new) → ไฟล์ข้อมูลใหม่ (ไม่ต้องมี label)</description>
+    </process>
+  </operator>
+</process>

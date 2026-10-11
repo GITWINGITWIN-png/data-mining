@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (หลัก)" width="90" x="45" y="215">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p1_bills_week1.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (append)" width="90" x="45" y="315">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p1_bills_week2.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (lookup)" width="90" x="45" y="415">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p1_day_info.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="append" compatibility="12.1.001" expanded="true" name="Append" width="90" x="180" y="265">
+        <parameter key="merge_type" value="all"/>
+      </operator>
+      <operator activated="true" class="concurrency:join" compatibility="12.1.001" expanded="true" name="Join" width="90" x="315" y="315">
+        <parameter key="join_type" value="left"/>
+        <parameter key="use_id_attribute_as_key" value="false"/>
+        <list key="key_attributes">
+          <parameter key="day" value="day"/>
+        </list>
+        <parameter key="remove_double_attributes" value="true"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="450" y="315">
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes" width="90" x="1000" y="217">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="size"/>
+        <parameter key="invert_selection" value="true"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role (id)" width="90" x="1135" y="217">
+        <parameter key="attribute_name" value="bill_id"/>
+        <parameter key="target_role" value="id"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role (label)" width="90" x="1270" y="217">
+        <parameter key="attribute_name" value="tip"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples" width="90" x="1000" y="367">
+        <parameter key="condition_class" value="custom_filters"/>
+        <parameter key="filters_logic_and" value="true"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="time.equals.Dinner"/>
+          <parameter key="filters_entry_key" value="size.ge.4"/>
+        </list>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="12.1.001" expanded="true" name="Aggregate" width="90" x="1000" y="517">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="group_by_attributes" value="day"/>
+        <list key="aggregation_attributes">
+          <parameter key="total_bill" value="sum"/>
+          <parameter key="total_bill" value="average"/>
+          <parameter key="tip" value="average"/>
+          <parameter key="bill_id" value="count"/>
+        </list>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="12.1.001" expanded="true" name="Generate Attributes (rate)" width="90" x="1000" y="667">
+        <list key="function_descriptions">
+          <parameter key="is_smoker" value='if(smoker=="Yes", 1, 0)'/>
+        </list>
+      </operator>
+      <operator activated="true" class="blending:pivot" compatibility="12.1.001" expanded="true" name="Pivot" width="90" x="1135" y="667">
+        <parameter key="group_by_attributes" value="day"/>
+        <parameter key="column_grouping_attribute" value="time"/>
+        <list key="aggregation_attributes">
+          <parameter key="tip" value="average"/>
+          <parameter key="is_smoker" value="average"/>
+        </list>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="12.1.001" expanded="true" name="Generate Attributes" width="90" x="1000" y="817">
+        <list key="function_descriptions">
+          <parameter key="tip_pct" value="tip / total_bill * 100"/>
+          <parameter key="big_bill" value='if(total_bill &gt; 20, "Yes", "No")'/>
+        </list>
+      </operator>
+      <operator activated="true" class="sort" compatibility="12.1.001" expanded="true" name="Sort" width="90" x="1000" y="967">
+        <parameter key="attribute_name" value="total_bill"/>
+        <parameter key="sorting_direction" value="decreasing"/>
+      </operator>
+      <operator activated="true" class="sample" compatibility="12.1.001" expanded="true" name="Sample (10 rows)" width="90" x="1135" y="967">
+        <parameter key="sample" value="absolute"/>
+        <parameter key="sample_size" value="10"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="correlation_matrix" compatibility="12.1.001" expanded="true" name="Correlation Matrix" width="90" x="1000" y="1117">
+      </operator>
+      <connect from_op="Read CSV (หลัก)" from_port="output" to_op="Append" to_port="example set 1"/>
+      <connect from_op="Read CSV (append)" from_port="output" to_op="Append" to_port="example set 2"/>
+      <connect from_op="Append" from_port="merged set" to_op="Join" to_port="left"/>
+      <connect from_op="Read CSV (lookup)" from_port="output" to_op="Join" to_port="right"/>
+      <connect from_op="Join" from_port="join" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Set Role (id)" to_port="example set input"/>
+      <connect from_op="Set Role (id)" from_port="example set output" to_op="Set Role (label)" to_port="example set input"/>
+      <connect from_op="Set Role (label)" from_port="example set output" to_port="result 2"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Filter Examples" to_port="example set input"/>
+      <connect from_op="Filter Examples" from_port="example set output" to_port="result 3"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="Aggregate" to_port="example set input"/>
+      <connect from_op="Aggregate" from_port="example set output" to_port="result 4"/>
+      <connect from_op="Multiply" from_port="output 5" to_op="Generate Attributes (rate)" to_port="example set input"/>
+      <connect from_op="Generate Attributes (rate)" from_port="example set output" to_op="Pivot" to_port="input"/>
+      <connect from_op="Pivot" from_port="output" to_port="result 5"/>
+      <connect from_op="Multiply" from_port="output 6" to_op="Generate Attributes" to_port="example set input"/>
+      <connect from_op="Generate Attributes" from_port="example set output" to_port="result 6"/>
+      <connect from_op="Multiply" from_port="output 7" to_op="Sort" to_port="example set input"/>
+      <connect from_op="Sort" from_port="example set output" to_op="Sample (10 rows)" to_port="example set input"/>
+      <connect from_op="Sample (10 rows)" from_port="example set output" to_port="result 7"/>
+      <connect from_op="Multiply" from_port="output 8" to_op="Correlation Matrix" to_port="example set"/>
+      <connect from_op="Correlation Matrix" from_port="matrix" to_port="result 8"/>
+      <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV (หลัก) → csv_file = ไฟล์โจทย์ (หรือใช้ Import Configuration Wizard)&lt;br&gt;2. Read CSV (append) / Read CSV (lookup) → ไฟล์ที่ 2 / ตาราง lookup · ไม่ใช้ → ลบ operator + ลบ Append/Join แล้วต่อเส้นตรง&lt;br&gt;3. Join → key_attributes (คู่คอลัมน์ key) + join_type (inner / left / right / outer)&lt;br&gt;4. Set Role → attribute_name = คอลัมน์ id / label&lt;br&gt;ดูสถิติ: Results → แท็บ Statistics · กราฟ: Results → Visualizations (Histogram / Boxplot / Bar / Scatter)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="45" y="155">&lt;b&gt;§1 Import · §4 Append (ต่อแถว) · §5 Join (เพิ่มคอลัมน์ด้วย key) → res 1 = ข้อมูลหลังรวม&lt;/b&gt;&lt;br&gt;คลิก res 1 → Statistics (missing / min / max / mean / ค่าที่พบบ่อย) · Visualizations วาดกราฟ</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="155">&lt;b&gt;§2 Select Attributes + Set Role&lt;/b&gt;&lt;br&gt;Select Attributes → attributes (คั่นด้วย |) · invert_selection = true คือ 'ตัด' · Set Role → id / label</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="305">&lt;b&gt;§3 Filter Examples (กรองแถว)&lt;/b&gt;&lt;br&gt;condition_class = custom_filters → Add Entry: คอลัมน์ · เงื่อนไข (equals / &gt; / ≥ / is missing) · ค่า · filters_logic_and = AND/OR</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="455">&lt;b&gt;§6 Aggregate (group by)&lt;/b&gt;&lt;br&gt;group_by_attributes = คอลัมน์กลุ่ม · aggregation_attributes → Edit List: คอลัมน์ + ฟังก์ชัน (sum / average / count / maximum …)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="605">&lt;b&gt;§7 Pivot&lt;/b&gt;&lt;br&gt;group_by_attributes = แถว · column_grouping_attribute = คอลัมน์ · aggregation_attributes = ค่า + ฟังก์ชัน · สัดส่วนคลาส: Generate Attributes สร้าง 0/1 ก่อนแล้ว average</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="755">&lt;b&gt;§8 Generate Attributes (สร้างคอลัมน์ใหม่)&lt;/b&gt;&lt;br&gt;function_descriptions → Edit List: ชื่อใหม่ = สูตร เช่น tip / total_bill * 100 · if(x &gt; 20, "high", "low")</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="905">&lt;b&gt;§9 Sort + Sample (ดูตัวอย่าง)&lt;/b&gt;&lt;br&gt;Sort → attribute_name + sorting_direction · Sample → sample = absolute / relative</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="1055">&lt;b&gt;§10 Correlation Matrix&lt;/b&gt;&lt;br&gt;ใช้ได้กับคอลัมน์ตัวเลข · ผล = ตาราง r ทุกคู่ (Results → Correlation Matrix / Pairwise Table)</description>
+    </process>
+  </operator>
+</process>

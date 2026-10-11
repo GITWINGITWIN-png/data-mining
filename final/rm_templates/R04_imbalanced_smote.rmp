@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="215">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p3_breast_cancer_imbalanced.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="215">
+        <parameter key="attribute_name" value="diagnosis"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="315" y="215">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="600" y="217">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (Baseline)" width="90" x="45" y="85">
+            <parameter key="method" value="mode"/>
+          </operator>
+          <connect from_port="training set" to_op="Default Model (Baseline)" to_port="training set"/>
+          <connect from_op="Default Model (Baseline)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Baseline)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Baseline)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="malignant"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Baseline)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Baseline)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Baseline)" from_port="labelled data" to_op="Performance (Baseline)" to_port="labelled data"/>
+          <connect from_op="Performance (Baseline)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Tree" width="90" x="600" y="367">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (Tree)" width="90" x="45" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="4"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (Tree)" to_port="training set"/>
+          <connect from_op="Decision Tree (Tree)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Tree)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Tree)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="malignant"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Tree)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Tree)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Tree)" from_port="labelled data" to_op="Performance (Tree)" to_port="labelled data"/>
+          <connect from_op="Performance (Tree)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Undersample" width="90" x="600" y="517">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="sample" compatibility="12.1.001" expanded="true" name="Sample (undersample) (Undersample)" width="90" x="45" y="85">
+            <parameter key="sample" value="absolute"/>
+            <parameter key="balance_data" value="true"/>
+            <list key="sample_size_per_class">
+              <parameter key="benign" value="32"/>
+              <parameter key="malignant" value="32"/>
+            </list>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+          </operator>
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (Undersample)" width="90" x="180" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="4"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Sample (undersample) (Undersample)" to_port="example set input"/>
+          <connect from_op="Sample (undersample) (Undersample)" from_port="example set output" to_op="Decision Tree (Undersample)" to_port="training set"/>
+          <connect from_op="Decision Tree (Undersample)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Undersample)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Undersample)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="malignant"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Undersample)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Undersample)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Undersample)" from_port="labelled data" to_op="Performance (Undersample)" to_port="labelled data"/>
+          <connect from_op="Performance (Undersample)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV SMOTE" width="90" x="600" y="667">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="operator_toolbox:smote" compatibility="12.1.001" expanded="true" name="SMOTE Upsampling (SMOTE)" width="90" x="45" y="85">
+            <parameter key="number_of_neighbours" value="5"/>
+            <parameter key="normalize" value="true"/>
+            <parameter key="equalize_classes" value="true"/>
+            <parameter key="auto_detect_minority_class" value="true"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+          </operator>
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (SMOTE)" width="90" x="180" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="4"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="SMOTE Upsampling (SMOTE)" to_port="exa"/>
+          <connect from_op="SMOTE Upsampling (SMOTE)" from_port="ups" to_op="Decision Tree (SMOTE)" to_port="training set"/>
+          <connect from_op="Decision Tree (SMOTE)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (SMOTE)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (SMOTE)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="malignant"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (SMOTE)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (SMOTE)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (SMOTE)" from_port="labelled data" to_op="Performance (SMOTE)" to_port="labelled data"/>
+          <connect from_op="Performance (SMOTE)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="operator_toolbox:smote" compatibility="12.1.001" expanded="true" name="SMOTE (WRONG, before CV)" width="90" x="600" y="817">
+        <parameter key="number_of_neighbours" value="5"/>
+        <parameter key="normalize" value="true"/>
+        <parameter key="equalize_classes" value="true"/>
+        <parameter key="auto_detect_minority_class" value="true"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV WRONG" width="90" x="735" y="817">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (WRONG)" width="90" x="45" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="4"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (WRONG)" to_port="training set"/>
+          <connect from_op="Decision Tree (WRONG)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (WRONG)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (WRONG)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="malignant"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (WRONG)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (WRONG)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (WRONG)" from_port="labelled data" to_op="Performance (WRONG)" to_port="labelled data"/>
+          <connect from_op="Performance (WRONG)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="CV Baseline" to_port="example set"/>
+      <connect from_op="CV Baseline" from_port="performance 1" to_port="result 2"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="CV Tree" to_port="example set"/>
+      <connect from_op="CV Tree" from_port="performance 1" to_port="result 3"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="CV Undersample" to_port="example set"/>
+      <connect from_op="CV Undersample" from_port="performance 1" to_port="result 4"/>
+      <connect from_op="Multiply" from_port="output 5" to_op="CV SMOTE" to_port="example set"/>
+      <connect from_op="CV SMOTE" from_port="performance 1" to_port="result 5"/>
+      <connect from_op="Multiply" from_port="output 6" to_op="SMOTE (WRONG, before CV)" to_port="exa"/>
+      <connect from_op="SMOTE (WRONG, before CV)" from_port="ups" to_op="CV WRONG" to_port="example set"/>
+      <connect from_op="CV WRONG" from_port="performance 1" to_port="result 6"/>
+      <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Set Role → label&lt;br&gt;2. ทุก Performance (ในแต่ละ CV) → positive_class = คลาสส่วนน้อย/ที่สนใจ (ตอนนี้ = malignant)&lt;br&gt;3. Sample (undersample) → sample_size_per_class: ใส่ชื่อคลาส + จำนวน (= จำนวนของคลาสส่วนน้อยใน training fold)&lt;br&gt;4. SMOTE ต้องติดตั้ง Operator Toolbox (Extensions → Marketplace) · ไม่มี → ลบแถว SMOTE ทั้ง 2 แถว&lt;br&gt;ดู res: recall / precision / F1 ของคลาสส่วนน้อย ไม่ใช่ accuracy อย่างเดียว · resample อยู่ใน Training pane = ไม่แตะ test fold</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="300" x="45" y="155">&lt;b&gt;§1 ดูความไม่สมดุล → res 1 (Statistics ของ label)&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="155">&lt;b&gt;§2 Baseline (Default Model = mode) → accuracy สูงแต่ recall = 0&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="305">&lt;b&gt;§4a ไม่ resample (Decision Tree)&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="455">&lt;b&gt;§4b Undersampling: Sample (balance_data) ใน Training pane&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="605">&lt;b&gt;§4c SMOTE ใน Training pane (Operator Toolbox)&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
+      <description align="left" color="red" colored="true" height="56" resized="true" width="760" x="600" y="755">&lt;b&gt;§6 ❌ วิธีผิด: SMOTE ทั้งตารางก่อน CV (leak) → ผลดีเกินจริง (ไว้ตอบคำถาม 'ทำไมห้าม')&lt;/b&gt;&lt;br&gt;เทียบ res กับ §4c · synthetic ที่สร้างจากจุดใน test fold รั่วเข้า training</description>
+    </process>
+  </operator>
+</process>

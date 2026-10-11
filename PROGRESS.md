@@ -26,6 +26,16 @@
   ทดสอบ robustness: ทุกไฟล์ Run All บนข้อมูลอื่น (churn W14, heart, housing, wine, BeautyCo, bank) แก้แค่ CONFIG → 0 error
   (✏️ ที่อ้างคอลัมน์ตัวอย่างใช้ `fix_col()` เลือกคอลัมน์แทนชั่วคราว + ⚠️) · ตรวจผลตรงกับงานเดิม: T11 groceries 122 itemsets/37 rules (=PR09),
   bank 215 rules (=HW8 Ex3), T10 §9 = HW9 Exercise I
+- ✅ **RapidMiner templates R01–R11 (2026-10-11):** `final/rm_templates/` — process สำเร็จรูปคู่กับ T01–T11 (เลข § ตรงกัน)
+  มีโน้ตบน canvas (เขียว = CONFIG, เหลือง = แต่ละ §) · ข้อมูลใหม่ตัวอย่างใน `rm_templates/data/` · คู่มือ 00_INDEX / 01_MANUAL / 02_OPERATOR_MAP (สร้างจาก .rmp)
+  Build: `python final/rm_templates/_build/build_rm.py` (path default `/home/panguin/Projects/data mining`, เปลี่ยนด้วย `RM_ROOT`)
+  **ยังไม่ได้รันใน RapidMiner** (container ดาวน์โหลด RapidMiner ไม่ได้) → ตรวจ static ด้วย `_build/check_rm.py <rapidminer-studio source>`:
+  class (OperatorsCore.xml) · parameter key (PARAMETER_* ใน source) · port (createPort) · ต่อซ้ำ/ต่อไม่ครบ · อ้างชื่อใน Log/Optimize → ผ่านครบ 11 ไฟล์
+  (และ process เดิม 24 ไฟล์ที่รันผ่านก็ผ่าน checker) · rm_builder.Proc รองรับ `note()` (workflow annotation `<description>` ตรวจรูปแบบกับ AnnotationProcessXMLFilter)
+  ข้อควรรู้: correlation_matrix เป็น operator deprecated (8.1) แต่ยังโหลดได้ · Davies–Bouldin ใน Log ใช้ไม่ได้ (probe เดิมได้ค่าว่าง) → log เฉพาะ avg_within_distance
+- ✅ **FLOW notes (2026-10-11):** `final/obsidian/flow/FLOW 00–12` — flow การแก้โจทย์แต่ละแบบ (data handling · preprocessing/leakage · PCA ·
+  imbalanced · KNN · linear · logistic · tree/RF · workflow · clustering · association · โจทย์ผสม/เขียนคำตอบ) แต่ละขั้นบอก ทำอะไร/ทำไม/ถ้าข้าม
+  + ลิงก์ T§/R§ + ตัวเลขจริงจากการรัน template · mermaid ทุกภาพ render ผ่าน mermaid-cli · check_links รองรับ [[folder/note]]
 - ✅ Mock lab 3 ชุด `final/mock_lab/mock{1,2,3}_*` — question.ipynb / solution.ipynb (executed) / solution*.rmp (batch-run)
 - ✅ RapidMiner recipes 12 ไฟล์ `final/mock_lab/recipes/` (11 batch-run ผ่าน · SMOTE ต้องมี Operator Toolbox)
 - ✅ **ชุด Lecture เสร็จ (2026-10-07):** `final/obsidian/lecture/LEC 00–13` (hub · EDA · preprocessing+leakage · PCA ·
