@@ -29,15 +29,72 @@ flowchart TD
 
 ## ทีละขั้น
 
+<!-- RM-CANVAS -->
+
+> [!info]- 🖥️ วิธีอ่านภาพ RapidMiner ใต้แต่ละขั้น (สร้างจาก `R11_association_rules.rmp` จริง)
+> กล่อง = operator (บน: ชื่อบน canvas · ล่าง: ชนิด) · ⧉ = มี subprocess (ดับเบิลคลิกเข้าไป) · ป้ายบนเส้น = port ย่อ (exa = example set · mod = model · pre = preprocessing model · per = performance · lab = labelled data · tra = training set · tes = test set · out = output · par = partition ของ Split Data / parameter set ของ Optimize · thr = threshold · wei = weights · fre = frequent sets · rul = rules) · ◯ res = ต่อออกผลลัพธ์ · กล่องเส้นประ = port ขอบ pane · สี: 🟪 อ่านข้อมูล · 🟦 จัดการข้อมูล · 🟩 preprocessing · 🟧 โมเดล · 🟨 apply · 🟥 ประเมิน/validation · ⬜ utility · มีเฉพาะ operator ของขั้นนั้น (ไฟล์จริงมี operator อื่นต่ออยู่ด้วย)
+
+<!-- /RM-CANVAS -->
+
 ### ① แปลงเป็นตาราง transaction
 - **ทำไม:** algorithm นับ "item อยู่ในตะกร้าไหม" → ต้องเป็นตาราง True/False
 - รูปแบบที่พบ: ตะกร้าต่อบรรทัด · ตาราง 0/1 · `tid,item` · ตารางลูกค้า (age, income, pep) → item = `attr=value`
 - RapidMiner: 0/1 → Numerical to Binominal · yes/no → Nominal to Binominal (`transform_binominal`) · **อยู่ที่:** T11 §1 · R11 A/B/C
 
+<!-- RM-CANVAS -->
+
+> [!example]+ 🖥️ RapidMiner: ตาราง 0/1 (A): Read Excel → Set Role id → Numerical to Binominal
+> ```mermaid
+> flowchart LR
+>   n0["Read Excel (A)<br/><i>Read Excel</i>"]:::data
+>   n1["Set Role (A)<br/><i>Set Role</i>"]:::blend
+>   n2["Numerical to Binominal (A)<br/><i>Numerical to Binominal</i>"]:::clean
+>   n0 -->|"out"| n1
+>   n1 -->|"exa"| n2
+>   classDef data fill:#e8dcf5,stroke:#7b52ab,color:#000
+>   classDef blend fill:#dceefb,stroke:#3a7bbf,color:#000
+>   classDef clean fill:#d9f2e6,stroke:#2e8b57,color:#000
+>   classDef model fill:#ffe7c2,stroke:#d4860b,color:#000
+>   classDef score fill:#fff6b3,stroke:#b8a400,color:#000
+>   classDef eval fill:#fcd9d9,stroke:#c0392b,color:#000
+>   classDef util fill:#eeeeee,stroke:#777,color:#000
+>   classDef port fill:#ffffff,stroke:#999,stroke-dasharray:3 3,color:#555
+>   classDef res fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+> ```
+
+<!-- /RM-CANVAS -->
+
 ### ② ตัด attribute ที่ไม่ให้ข้อมูล + discretize
 - **id:** ไม่ซ้ำเลย → support ต่ำทุกค่า ไม่มีทาง frequent
 - **ค่าเกือบคงที่** (เช่น current_act = YES 76%): จะโผล่ในกฎเกือบทุกข้อโดยไม่มีความหมาย
 - **ตัวเลขต่อเนื่อง:** ทุกค่าแทบไม่ซ้ำ → ต้อง discretize (equal frequency ถ้าเบ้) ก่อน · ดู [[FLOW 02 Preprocessing & Leakage]]
+
+<!-- RM-CANVAS -->
+
+> [!example]+ 🖥️ RapidMiner: ตารางลูกค้า (B): ตัด id/คอลัมน์ไม่ให้ข้อมูล → Discretize → Nominal to Binominal
+> ```mermaid
+> flowchart LR
+>   n0["Read CSV (B)<br/><i>Read CSV</i>"]:::data
+>   n1["Select Attributes (B)<br/><i>Select Attributes</i>"]:::blend
+>   n2["Discretize by Frequency (B)<br/><i>Discretize by Frequency</i>"]:::clean
+>   n3["Discretize by User Specification (B)<br/><i>Discretize by User Spec.</i>"]:::clean
+>   n4["Nominal to Binominal (B)<br/><i>Nominal to Binominal</i>"]:::clean
+>   n0 -->|"out"| n1
+>   n1 -->|"exa"| n2
+>   n2 -->|"exa"| n3
+>   n3 -->|"exa"| n4
+>   classDef data fill:#e8dcf5,stroke:#7b52ab,color:#000
+>   classDef blend fill:#dceefb,stroke:#3a7bbf,color:#000
+>   classDef clean fill:#d9f2e6,stroke:#2e8b57,color:#000
+>   classDef model fill:#ffe7c2,stroke:#d4860b,color:#000
+>   classDef score fill:#fff6b3,stroke:#b8a400,color:#000
+>   classDef eval fill:#fcd9d9,stroke:#c0392b,color:#000
+>   classDef util fill:#eeeeee,stroke:#777,color:#000
+>   classDef port fill:#ffffff,stroke:#999,stroke-dasharray:3 3,color:#555
+>   classDef res fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+> ```
+
+<!-- /RM-CANVAS -->
 
 ### ③ item เดี่ยว
 - ดูว่าอะไรขายดี และกี่ item ผ่าน min support · ตัวอย่าง T11 (groceries 9,835 ตะกร้า): whole milk 25.6% · 110 จาก 169 item ไม่ถึง 2% → ถูกตัดตั้งแต่รอบแรก
@@ -49,9 +106,55 @@ flowchart TD
 - FP-Growth ได้ผลเหมือนกันแต่เร็วกว่า (ไม่สร้าง candidate) — RapidMiner ใช้ตัวนี้
 - ตัวอย่าง: min support 2% → 122 itemsets (1 item 59 · 2 item 61 · 3 item 2) · **อยู่ที่:** T11 §3, §7 (ทีละขั้น)
 
+<!-- RM-CANVAS -->
+
+> [!example]+ 🖥️ RapidMiner: FP-Growth (min support) → fre = frequent itemsets
+> ```mermaid
+> flowchart LR
+>   n0["Numerical to Binominal (A)<br/><i>Numerical to Binominal</i>"]:::clean
+>   n1["FP-Growth (A)<br/><i>FP-Growth</i>"]:::model
+>   n0 -->|"exa"| n1
+>   classDef data fill:#e8dcf5,stroke:#7b52ab,color:#000
+>   classDef blend fill:#dceefb,stroke:#3a7bbf,color:#000
+>   classDef clean fill:#d9f2e6,stroke:#2e8b57,color:#000
+>   classDef model fill:#ffe7c2,stroke:#d4860b,color:#000
+>   classDef score fill:#fff6b3,stroke:#b8a400,color:#000
+>   classDef eval fill:#fcd9d9,stroke:#c0392b,color:#000
+>   classDef util fill:#eeeeee,stroke:#777,color:#000
+>   classDef port fill:#ffffff,stroke:#999,stroke-dasharray:3 3,color:#555
+>   classDef res fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+> ```
+
+<!-- /RM-CANVAS -->
+
 ### ⑤ สร้างกฎ (min confidence)
 - จาก itemset {A, B, C} สร้าง {A,B}→{C}, {A}→{B,C}, … เก็บที่ confidence ≥ min
 - **ทำไมสองเกณฑ์:** support กรอง "เกิดบ่อยพอ" · confidence กรอง "เชื่อถือได้พอ"
+
+<!-- RM-CANVAS -->
+
+> [!example]+ 🖥️ RapidMiner: Create Association Rules (min confidence) → rul = rules (Support · Confidence · Lift)
+> ```mermaid
+> flowchart LR
+>   n0["FP-Growth (A)<br/><i>FP-Growth</i>"]:::model
+>   n1["Create Association Rules (A)<br/><i>Create Association Rules</i>"]:::model
+>   n0 -->|"fre"| n1
+>   nR0(("res")):::res
+>   n1 -->|"rul"| nR0
+>   nR1(("res")):::res
+>   n1 -->|"ite"| nR1
+>   classDef data fill:#e8dcf5,stroke:#7b52ab,color:#000
+>   classDef blend fill:#dceefb,stroke:#3a7bbf,color:#000
+>   classDef clean fill:#d9f2e6,stroke:#2e8b57,color:#000
+>   classDef model fill:#ffe7c2,stroke:#d4860b,color:#000
+>   classDef score fill:#fff6b3,stroke:#b8a400,color:#000
+>   classDef eval fill:#fcd9d9,stroke:#c0392b,color:#000
+>   classDef util fill:#eeeeee,stroke:#777,color:#000
+>   classDef port fill:#ffffff,stroke:#999,stroke-dasharray:3 3,color:#555
+>   classDef res fill:#ffffff,stroke:#333,stroke-width:2px,color:#000
+> ```
+
+<!-- /RM-CANVAS -->
 
 ### ⑥ เรียงด้วย lift ⭐
 - **ทำไมไม่พอแค่ confidence:** ถ้า B ขายดีอยู่แล้ว (whole milk 25.6%) กฎ "อะไรก็ได้ → whole milk" จะ confidence สูงโดยไม่ได้สัมพันธ์จริง · lift หารด้วย support(B) ออก
