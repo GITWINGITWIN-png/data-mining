@@ -62,7 +62,15 @@ def load_data(path, sheet=None, sep=None, na_values=None):
     if str(path).lower().endswith((".xlsx", ".xls")):
         df = pd.read_excel(path, sheet_name=sheet)
     else:
-        df = pd.read_csv(path, sep=sep)
+        for enc in ["utf-8-sig", "cp874", "latin1"]:      # utf-8 (ตัด BOM) → ภาษาไทยจาก Excel (cp874) → อื่น ๆ
+            try:
+                df = pd.read_csv(path, sep=sep, encoding=enc)
+                break
+            except UnicodeDecodeError:
+                continue
+        if df.shape[1] == 1 and ";" in str(df.columns[0]):  # ไฟล์คั่นด้วย ; แต่ตั้ง CSV_SEP = ","
+            df = pd.read_csv(path, sep=";", encoding=enc)
+            print("ℹ️ ไฟล์นี้คั่นด้วย ';' → อ่านใหม่ด้วย sep=';'")
     df.columns = [str(c).strip() for c in df.columns]
     for c in df.columns:
         if not pd.api.types.is_numeric_dtype(df[c]) and not pd.api.types.is_bool_dtype(df[c]):
@@ -95,6 +103,25 @@ def check(df, target=None):
                        axis=1, keys=["count", "ratio"])
         print(f"การกระจายของ target '{target}':")
         display(vc)
+
+
+def fix_col(df, col, kind="any", i=0):
+    """คอลัมน์ที่ตั้งไว้ใน ✏️ ไม่มีในข้อมูลนี้ → เลือกคอลัมน์ชนิดเดียวกันให้ชั่วคราว (Run All ไม่หยุด) — ควรแก้ ✏️ ให้ตรงโจทย์
+    kind: "num" = ตัวเลขต่อเนื่อง · "cat" = หมวดหมู่ (ค่าไม่เกิน 20 แบบ) · "any" """
+    if col is None or col in df.columns:
+        return col
+    skip = {ID_COL}
+    nums = [c for c in num_cols(df) if c not in skip]
+    if kind == "num":
+        pool = [c for c in nums if df[c].nunique() > 10] or nums
+    elif kind == "cat":
+        few = [c for c in df.columns if c not in skip and df[c].nunique() <= 20]
+        pool = [c for c in few if c not in nums] + [c for c in few if c in nums]
+    else:
+        pool = [c for c in df.columns if c not in skip]
+    new = pool[min(i, len(pool) - 1)] if pool else None
+    print(f"⚠️ ไม่มีคอลัมน์ {col!r} ในข้อมูลนี้ → ใช้ {new!r} แทนชั่วคราว (แก้บรรทัด ✏️ ให้ตรงโจทย์)")
+    return new
 
 
 def num_cols(df):

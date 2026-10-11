@@ -144,7 +144,7 @@ print(f"✍️ ต้นไม้เต็ม: train {full.train_acc:.4f} vs CV 
 md(r"""## §4 Tune Decision Tree (GridSearchCV: max_depth × min_samples_leaf × criterion)"""),
 code(r'''g_dt = GridSearchCV(make_pipe(DecisionTreeClassifier(random_state=SEED), X, scale=None),
                     {"model__max_depth": [2, 3, 4, 5, 6, 8, 10, None], "model__min_samples_leaf": [1, 2, 5, 10, 20],
-                     "model__criterion": ["gini", "entropy"]}, cv=cv, scoring=cls_scoring(y), refit="f1").fit(X, y)
+                     "model__criterion": ["gini", "entropy"]}, cv=cv, scoring=cls_scoring(y), refit="f1", n_jobs=-1).fit(X, y)
 print("best:", g_dt.best_params_, "| CV F1 =", round(g_dt.best_score_, 4)); display(top_k(g_dt, 8))'''),
 
 md(r"""
@@ -153,14 +153,14 @@ md(r"""
 """),
 code(r'''rf = make_pipe(RandomForestClassifier(n_estimators=N_TREES, random_state=SEED), X, scale=None)
 g_rf = GridSearchCV(make_pipe(RandomForestClassifier(random_state=SEED), X, scale=None),
-                    {"model__n_estimators": [100, 300], "model__max_depth": [None, 5, 10],
+                    {"model__n_estimators": [100, 200], "model__max_depth": [None, 5, 10],
                      "model__min_samples_leaf": [1, 3, 5], "model__max_features": ["sqrt", None]},
                     cv=cv, scoring=cls_scoring(y), refit="f1", n_jobs=-1).fit(X, y)
 print("RF best:", g_rf.best_params_, "| CV F1 =", round(g_rf.best_score_, 4)); display(top_k(g_rf, 5))
 # ผลของจำนวนต้น
 nt = []
 for n in [1, 5, 10, 25, 50, 100, 200, 400]:
-    r = cross_validate(make_pipe(RandomForestClassifier(n_estimators=n, random_state=SEED), X, scale=None), X, y, cv=cv, scoring="accuracy")
+    r = cross_validate(make_pipe(RandomForestClassifier(n_estimators=n, random_state=SEED), X, scale=None), X, y, cv=cv, scoring="accuracy", n_jobs=-1)
     nt.append({"n_estimators": n, "cv_acc": r["test_score"].mean()})
 nt = pd.DataFrame(nt); display(nt.T.round(4))
 plt.figure(figsize=(6, 3)); plt.plot(nt.n_estimators, nt.cv_acc, "o-"); plt.xscale("log"); plt.xlabel("n_estimators"); plt.ylabel("CV acc"); plt.title("RF: number of trees"); plt.show()'''),

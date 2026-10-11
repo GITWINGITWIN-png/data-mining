@@ -17,6 +17,9 @@ tags: [final, lab, MOC, index]
 > [!danger] ทำก่อนอย่างอื่น → [[LAB 01 Setup & Exam-Day#✅ Checklist คืนนี้ (7 ต.ค.)]]
 > ~~ติดตั้ง Operator Toolbox~~ ✅ ติดตั้งแล้ว (ตรวจ 10 ต.ค. — SMOTE recipe รันผ่าน) · ทดสอบ kernel **Python (dm-exam)** · ทดสอบ export PDF
 
+> [!tip] 🧰 ใหม่ (11 ต.ค.): **Template สอบ Python T01–T11** (เปลี่ยนแค่ CONFIG → Run All → ได้คำตอบ) อยู่ที่ `final/exam_templates/`
+> [[00_INDEX|📇 INDEX: โจทย์ถามอะไร → ไฟล์ไหน]] · [[01_MANUAL|📘 คู่มือการใช้ cell]] · [[02_CELL_MAP|🗺️ ทุกจุดที่ต้องแก้]]
+
 > [!example] 🏋️ ใหม่ (10 ต.ค.): **โจทย์ฝึก 9 ชุด แบบทำตามทีละขั้น** แยก Python / RapidMiner → [[PR 00 START HERE]]
 > ข้อมูลใหม่ (tips, penguins, wine, breast cancer, pima, heart, insurance, groceries) · ผลที่ควรได้ทุกขั้นมาจากการรันจริง
 

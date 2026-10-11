@@ -18,6 +18,14 @@
   + ภาพ canvas mermaid หลังทุกขั้น (60 ภาพ) จาก `.rmp` จริง ด้วย `rm_diagrams.py` (กำหนดว่าขั้นไหนเพิ่ม operator อะไรใน `STEPS`) · ตรวจ render ด้วย mermaid-cli ผ่านครบ
   Findings ใหม่: **H2O Logistic Regression ตัดที่ threshold F1-max ไม่ใช่ 0.5** · SMOTE Upsampling ports `exa`/`ups` ·
   Operator Toolbox ติดตั้งแล้ว (smote recipe ผ่าน) · Filter Examples list format `attr.equals.val` / `attr.ge.4` / `attr.is_not_missing.`
+- ✅ **Exam templates T01–T11 (2026-10-11):** `final/exam_templates/` — notebook สำเร็จรูป 11 ไฟล์ (แก้ ⚙️ CONFIG → Run All)
+  T01 data handling · T02 preprocessing · T03 PCA · T04 imbalanced/SMOTE · T05 KNN · T06 linear reg · T07 logistic ·
+  T08 tree/RF · T09 classification workflow · T10 clustering (+K-Means มือ §9) · T11 association (basket/onehot/long/table + Apriori มือ §7, fallback ไม่ใช้ mlxtend)
+  คู่มือ `00_INDEX.md` (โจทย์ → ไฟล์ §) · `01_MANUAL.md` (วิธีใช้ทีละ cell) · `02_CELL_MAP.md` (สร้างอัตโนมัติจาก notebook ด้วย `_build/make_cellmap.py`)
+  Build: `bash _build/run.sh t01 … t11` (สร้าง + execute + cell map) · ต้องมี `final/.venv` + kernel `dm-exam`
+  ทดสอบ robustness: ทุกไฟล์ Run All บนข้อมูลอื่น (churn W14, heart, housing, wine, BeautyCo, bank) แก้แค่ CONFIG → 0 error
+  (✏️ ที่อ้างคอลัมน์ตัวอย่างใช้ `fix_col()` เลือกคอลัมน์แทนชั่วคราว + ⚠️) · ตรวจผลตรงกับงานเดิม: T11 groceries 122 itemsets/37 rules (=PR09),
+  bank 215 rules (=HW8 Ex3), T10 §9 = HW9 Exercise I
 - ✅ Mock lab 3 ชุด `final/mock_lab/mock{1,2,3}_*` — question.ipynb / solution.ipynb (executed) / solution*.rmp (batch-run)
 - ✅ RapidMiner recipes 12 ไฟล์ `final/mock_lab/recipes/` (11 batch-run ผ่าน · SMOTE ต้องมี Operator Toolbox)
 - ✅ **ชุด Lecture เสร็จ (2026-10-07):** `final/obsidian/lecture/LEC 00–13` (hub · EDA · preprocessing+leakage · PCA ·
