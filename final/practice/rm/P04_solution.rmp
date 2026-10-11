@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p4_wine.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="85">
+        <parameter key="attribute_name" value="cultivar"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="315" y="85">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p4_baseline" width="90" x="450" y="34">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (p4_baseline)" width="90" x="45" y="85">
+            <parameter key="method" value="mode"/>
+          </operator>
+          <connect from_port="training set" to_op="Default Model (p4_baseline)" to_port="training set"/>
+          <connect from_op="Default Model (p4_baseline)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p4_baseline)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="12.1.001" expanded="true" name="Performance (p4_baseline)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="kappa" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p4_baseline)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p4_baseline)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p4_baseline)" from_port="labelled data" to_op="Performance (p4_baseline)" to_port="labelled data"/>
+          <connect from_op="Performance (p4_baseline)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p4_baseline)" width="90" x="585" y="34">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p4_baseline)" width="90" x="720" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p4_baseline.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p4_knn_raw" width="90" x="450" y="136">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (p4_knn_raw)" width="90" x="45" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <connect from_port="training set" to_op="k-NN (p4_knn_raw)" to_port="training set"/>
+          <connect from_op="k-NN (p4_knn_raw)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p4_knn_raw)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="12.1.001" expanded="true" name="Performance (p4_knn_raw)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="kappa" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p4_knn_raw)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p4_knn_raw)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p4_knn_raw)" from_port="labelled data" to_op="Performance (p4_knn_raw)" to_port="labelled data"/>
+          <connect from_op="Performance (p4_knn_raw)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p4_knn_raw)" width="90" x="585" y="136">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p4_knn_raw)" width="90" x="720" y="136">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p4_knn_raw.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p4_knn_norm" width="90" x="450" y="238">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (p4_knn_norm)" width="90" x="45" y="85">
+            <parameter key="method" value="Z-transformation"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (p4_knn_norm)" width="90" x="180" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (p4_knn_norm)" width="90" x="315" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Normalize (p4_knn_norm)" to_port="example set input"/>
+          <connect from_op="Normalize (p4_knn_norm)" from_port="example set output" to_op="k-NN (p4_knn_norm)" to_port="training set"/>
+          <connect from_op="Normalize (p4_knn_norm)" from_port="preprocessing model" to_op="Group Models (p4_knn_norm)" to_port="models in 1"/>
+          <connect from_op="k-NN (p4_knn_norm)" from_port="model" to_op="Group Models (p4_knn_norm)" to_port="models in 2"/>
+          <connect from_op="Group Models (p4_knn_norm)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p4_knn_norm)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="12.1.001" expanded="true" name="Performance (p4_knn_norm)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="kappa" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p4_knn_norm)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p4_knn_norm)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p4_knn_norm)" from_port="labelled data" to_op="Performance (p4_knn_norm)" to_port="labelled data"/>
+          <connect from_op="Performance (p4_knn_norm)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p4_knn_norm)" width="90" x="585" y="238">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p4_knn_norm)" width="90" x="720" y="238">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p4_knn_norm.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (p4_opt_log)" width="90" x="450" y="340">
+        <list key="parameters">
+          <parameter key="k-NN (p4_opt).k" value="[1.0;30.0;29;linear]"/>
+        </list>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p4_opt" width="90" x="600" y="85">
+            <parameter key="split_on_batch_attribute" value="false"/>
+            <parameter key="leave_one_out" value="false"/>
+            <parameter key="number_of_folds" value="10"/>
+            <parameter key="sampling_type" value="stratified sampling"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (p4_opt)" width="90" x="45" y="85">
+                <parameter key="method" value="Z-transformation"/>
+              </operator>
+              <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (p4_opt)" width="90" x="180" y="85">
+                <parameter key="k" value="5"/>
+              </operator>
+              <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (p4_opt)" width="90" x="315" y="85">
+              </operator>
+              <connect from_port="training set" to_op="Normalize (p4_opt)" to_port="example set input"/>
+              <connect from_op="Normalize (p4_opt)" from_port="example set output" to_op="k-NN (p4_opt)" to_port="training set"/>
+              <connect from_op="Normalize (p4_opt)" from_port="preprocessing model" to_op="Group Models (p4_opt)" to_port="models in 1"/>
+              <connect from_op="k-NN (p4_opt)" from_port="model" to_op="Group Models (p4_opt)" to_port="models in 2"/>
+              <connect from_op="Group Models (p4_opt)" from_port="model out" to_port="model"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p4_opt)" width="90" x="45" y="85">
+              </operator>
+              <operator activated="true" class="performance_classification" compatibility="12.1.001" expanded="true" name="Performance (p4_opt)" width="90" x="180" y="85">
+                <parameter key="main_criterion" value="accuracy"/>
+                <parameter key="accuracy" value="true"/>
+                <parameter key="kappa" value="true"/>
+              </operator>
+              <connect from_port="model" to_op="Apply Model (p4_opt)" to_port="model"/>
+              <connect from_port="test set" to_op="Apply Model (p4_opt)" to_port="unlabelled data"/>
+              <connect from_op="Apply Model (p4_opt)" from_port="labelled data" to_op="Performance (p4_opt)" to_port="labelled data"/>
+              <connect from_op="Performance (p4_opt)" from_port="performance" to_port="performance 1"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log" compatibility="12.1.001" expanded="true" name="Log" width="90" x="180" y="85">
+            <list key="log">
+              <parameter key="k" value="operator.k-NN (p4_opt).parameter.k"/>
+              <parameter key="accuracy" value="operator.CV p4_opt.value.performance main criterion"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="CV p4_opt" to_port="example set"/>
+          <connect from_op="CV p4_opt" from_port="performance 1" to_op="Log" to_port="through 1"/>
+          <connect from_op="Log" from_port="through 1" to_port="performance"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (p4_opt_log)" width="90" x="585" y="340">
+        <parameter key="log_name" value="Log"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p4_opt_log)" width="90" x="720" y="340">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p4_opt_log.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="CV p4_baseline" to_port="example set"/>
+      <connect from_op="CV p4_baseline" from_port="performance 1" to_op="Performance to Data (p4_baseline)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p4_baseline)" from_port="example set" to_op="Write CSV (p4_baseline)" to_port="input"/>
+      <connect from_op="Performance to Data (p4_baseline)" from_port="performance vector" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="CV p4_knn_raw" to_port="example set"/>
+      <connect from_op="CV p4_knn_raw" from_port="performance 1" to_op="Performance to Data (p4_knn_raw)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p4_knn_raw)" from_port="example set" to_op="Write CSV (p4_knn_raw)" to_port="input"/>
+      <connect from_op="Performance to Data (p4_knn_raw)" from_port="performance vector" to_port="result 2"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="CV p4_knn_norm" to_port="example set"/>
+      <connect from_op="CV p4_knn_norm" from_port="performance 1" to_op="Performance to Data (p4_knn_norm)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p4_knn_norm)" from_port="example set" to_op="Write CSV (p4_knn_norm)" to_port="input"/>
+      <connect from_op="Performance to Data (p4_knn_norm)" from_port="performance vector" to_port="result 3"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="Optimize Parameters (p4_opt_log)" to_port="input 1"/>
+      <connect from_op="Log to Data (p4_opt_log)" from_port="exampleSet" to_op="Write CSV (p4_opt_log)" to_port="input"/>
+      <connect from_op="Write CSV (p4_opt_log)" from_port="through" to_port="result 4"/>
+      <connect from_op="Optimize Parameters (p4_opt_log)" from_port="performance" to_port="result 5"/>
+    </process>
+  </operator>
+</process>

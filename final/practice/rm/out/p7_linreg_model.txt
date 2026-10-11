@@ -1,0 +1,10 @@
+10.10.2026 21:23:54 Results of ResultWriter 'Write as Text (p7_linreg_model)' [1]: 
+10.10.2026 21:23:54 - 276.452 * sex = male
++ 24038.867 * smoker = yes
+- 856.469 * region = southwest
+- 1183.450 * region = southeast
+- 461.414 * region = northwest
++ 255.972 * age
++ 348.976 * bmi
++ 457.374 * children
+- 11972.799

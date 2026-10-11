@@ -1,0 +1,18 @@
+07.10.2026 20:50:30 Results of ResultWriter 'Write PCA as Text' [1]: 
+07.10.2026 20:50:30 
+Principal Components:
+Variance Threshold: 0.8
+PC 1:  + 0.251 * crim - 0.256 * zn + 0.346 * indus + 0.005 * chas + 0.343 * nox - 0.189 * rm + 0.314 * age - 0.321 * dis + 0.320 * rad + 0.339 * tax + 0.205 * ptratio - 0.203 * black + 0.310 * lstat
+PC 2:  - 0.317 * crim - 0.326 * zn + 0.115 * indus + 0.455 * chas + 0.218 * nox + 0.148 * rm + 0.310 * age - 0.348 * dis - 0.270 * rad - 0.238 * tax - 0.303 * ptratio + 0.242 * black - 0.076 * lstat
+PC 3:  + 0.244 * crim + 0.292 * zn - 0.016 * indus + 0.291 * chas + 0.122 * nox + 0.596 * rm - 0.018 * age - 0.052 * dis + 0.288 * rad + 0.222 * tax - 0.321 * ptratio - 0.297 * black - 0.271 * lstat
+PC 4:  - 0.071 * crim - 0.155 * zn - 0.014 * indus - 0.820 * chas + 0.118 * nox + 0.313 * rm + 0.172 * age - 0.223 * dis - 0.114 * rad - 0.091 * tax - 0.237 * ptratio - 0.138 * black - 0.103 * lstat
+PC 5:  - 0.073 * crim - 0.309 * zn + 0.004 * indus - 0.023 * chas - 0.151 * nox + 0.399 * rm - 0.027 * age - 0.079 * dis + 0.211 * rad + 0.134 * tax + 0.612 * ptratio + 0.357 * black - 0.381 * lstat
+PC 6:  - 0.226 * crim - 0.323 * zn - 0.072 * indus + 0.166 * chas - 0.152 * nox + 0.057 * rm - 0.075 * age + 0.023 * dis - 0.142 * rad - 0.191 * tax + 0.268 * ptratio - 0.805 * black - 0.053 * lstat
+PC 7:  - 0.778 * crim + 0.286 * zn + 0.337 * indus - 0.073 * chas + 0.200 * nox - 0.057 * rm - 0.105 * age + 0.107 * dis + 0.138 * rad + 0.316 * tax + 0.011 * ptratio - 0.061 * black - 0.082 * lstat
+PC 8:  + 0.141 * crim - 0.394 * zn + 0.185 * indus - 0.026 * chas + 0.087 * nox - 0.328 * rm - 0.605 * age - 0.119 * dis + 0.082 * rad + 0.089 * tax - 0.307 * ptratio + 0.000 * black - 0.430 * lstat
+PC 9:  - 0.261 * crim - 0.359 * zn - 0.645 * indus + 0.013 * chas + 0.026 * nox - 0.054 * rm + 0.064 * age + 0.153 * dis + 0.472 * rad + 0.176 * tax - 0.254 * ptratio + 0.045 * black + 0.187 * lstat
+PC 10:  - 0.022 * crim - 0.269 * zn + 0.355 * indus + 0.006 * chas - 0.216 * nox + 0.433 * rm - 0.371 * age + 0.174 * dis - 0.019 * rad + 0.036 * tax - 0.152 * ptratio + 0.098 * black + 0.604 * lstat
+PC 11:  - 0.109 * crim + 0.264 * zn - 0.306 * indus + 0.014 * chas + 0.116 * nox + 0.050 * rm - 0.456 * age - 0.696 * dis + 0.037 * rad - 0.108 * tax + 0.176 * ptratio + 0.019 * black + 0.268 * lstat
+PC 12:  + 0.090 * crim - 0.066 * zn - 0.116 * indus - 0.004 * chas + 0.806 * nox + 0.148 * rm - 0.201 * age + 0.390 * dis - 0.111 * rad - 0.218 * tax + 0.214 * ptratio + 0.039 * black + 0.046 * lstat
+PC 13:  - 0.046 * crim + 0.081 * zn + 0.254 * indus - 0.036 * chas - 0.044 * nox - 0.045 * rm + 0.039 * age + 0.021 * dis + 0.633 * rad - 0.719 * tax - 0.024 * ptratio + 0.005 * black - 0.024 * lstat
+

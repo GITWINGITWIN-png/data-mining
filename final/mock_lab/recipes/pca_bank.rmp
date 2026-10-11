@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/W9/bank_dataset.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes" width="90" x="180" y="85">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="ID|ZIP Code"/>
+        <parameter key="invert_selection" value="true"/>
+      </operator>
+      <operator activated="true" class="numerical_to_binominal" compatibility="12.1.001" expanded="true" name="Numerical to Binominal" width="90" x="315" y="85">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Personal Loan"/>
+        <parameter key="min" value="0.0"/>
+        <parameter key="max" value="0.0"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="450" y="85">
+        <parameter key="attribute_name" value="Personal Loan"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize" width="90" x="585" y="85">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="principal_component_analysis" compatibility="12.1.001" expanded="true" name="PCA" width="90" x="720" y="85">
+        <parameter key="dimensionality_reduction" value="fixed number"/>
+        <parameter key="number_of_components" value="2"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV pcs" width="90" x="855" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/out/pca_bank_scores.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="write_as_text" compatibility="12.1.001" expanded="true" name="Write PCA as Text" width="90" x="855" y="200">
+        <parameter key="result_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/out/pca_bank_model.txt"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Numerical to Binominal" to_port="example set input"/>
+      <connect from_op="Numerical to Binominal" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Normalize" to_port="example set input"/>
+      <connect from_op="Normalize" from_port="example set output" to_op="PCA" to_port="example set input"/>
+      <connect from_op="PCA" from_port="example set output" to_op="Write CSV pcs" to_port="input"/>
+      <connect from_op="Write CSV pcs" from_port="through" to_port="result 1"/>
+      <connect from_op="PCA" from_port="preprocessing model" to_op="Write PCA as Text" to_port="input 1"/>
+      <connect from_op="Write PCA as Text" from_port="input 1" to_port="result 2"/>
+    </process>
+  </operator>
+</process>

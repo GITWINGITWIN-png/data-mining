@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read utilities" width="90" x="45" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock3_cluster_assoc/data/utilities.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="34">
+        <parameter key="attribute_name" value="Company"/>
+        <parameter key="target_role" value="id"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize" width="90" x="315" y="34">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="concurrency:k_means" compatibility="12.1.001" expanded="true" name="Clustering" width="90" x="450" y="34">
+        <parameter key="add_cluster_attribute" value="true"/>
+        <parameter key="k" value="4"/>
+        <parameter key="max_runs" value="50"/>
+        <parameter key="determine_good_start_values" value="true"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="cluster_distance_performance" compatibility="12.1.001" expanded="true" name="Cluster Distance Performance" width="90" x="585" y="34">
+        <parameter key="main_criterion" value="Davies Bouldin"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (Cluster)" width="90" x="720" y="34">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (Cluster)" width="90" x="855" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock3_cluster_assoc/rm_out/kmeans_perf.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (clusters)" width="90" x="720" y="136">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock3_cluster_assoc/rm_out/kmeans_clusters.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read bank" width="90" x="45" y="289">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock3_cluster_assoc/data/bank-data.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes" width="90" x="180" y="289">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="id|region|sex|current_act"/>
+        <parameter key="invert_selection" value="true"/>
+      </operator>
+      <operator activated="true" class="discretize_by_frequency" compatibility="12.1.001" expanded="true" name="Discretize by Frequency" width="90" x="315" y="289">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="age|income"/>
+        <parameter key="number_of_bins" value="3"/>
+        <parameter key="range_name_type" value="short"/>
+      </operator>
+      <operator activated="true" class="discretize_by_user_specification" compatibility="12.1.001" expanded="true" name="Discretize by User Specification" width="90" x="450" y="289">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="children"/>
+        <list key="classes">
+          <parameter key="0" value="0.5"/>
+          <parameter key="1-2" value="2.5"/>
+          <parameter key="3+" value="Infinity"/>
+        </list>
+      </operator>
+      <operator activated="true" class="nominal_to_binominal" compatibility="12.1.001" expanded="true" name="Nominal to Binominal" width="90" x="585" y="289">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="transform_binominal" value="true"/>
+      </operator>
+      <operator activated="true" class="concurrency:fp_growth" compatibility="12.1.001" expanded="true" name="FP-Growth" width="90" x="720" y="289">
+        <parameter key="input_format" value="items in dummy coded columns"/>
+        <parameter key="positive_value" value="true"/>
+        <parameter key="min_requirement" value="support"/>
+        <parameter key="min_support" value="0.1"/>
+        <parameter key="find_min_number_of_itemsets" value="false"/>
+      </operator>
+      <operator activated="true" class="create_association_rules" compatibility="12.1.001" expanded="true" name="Create Association Rules" width="90" x="855" y="289">
+        <parameter key="criterion" value="confidence"/>
+        <parameter key="min_confidence" value="0.7"/>
+      </operator>
+      <operator activated="true" class="write_as_text" compatibility="12.1.001" expanded="true" name="Write Rules as Text" width="90" x="990" y="289">
+        <parameter key="result_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock3_cluster_assoc/rm_out/bank_rules.txt"/>
+      </operator>
+      <connect from_op="Read utilities" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Normalize" to_port="example set input"/>
+      <connect from_op="Normalize" from_port="example set output" to_op="Clustering" to_port="example set"/>
+      <connect from_op="Clustering" from_port="clustered set" to_op="Cluster Distance Performance" to_port="example set"/>
+      <connect from_op="Clustering" from_port="cluster model" to_op="Cluster Distance Performance" to_port="cluster model"/>
+      <connect from_op="Cluster Distance Performance" from_port="performance" to_op="Performance to Data (Cluster)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (Cluster)" from_port="example set" to_op="Write CSV (Cluster)" to_port="input"/>
+      <connect from_op="Performance to Data (Cluster)" from_port="performance vector" to_port="result 1"/>
+      <connect from_op="Cluster Distance Performance" from_port="example set" to_op="Write CSV (clusters)" to_port="input"/>
+      <connect from_op="Write CSV (clusters)" from_port="through" to_port="result 2"/>
+      <connect from_op="Read bank" from_port="output" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Discretize by Frequency" to_port="example set input"/>
+      <connect from_op="Discretize by Frequency" from_port="example set output" to_op="Discretize by User Specification" to_port="example set input"/>
+      <connect from_op="Discretize by User Specification" from_port="example set output" to_op="Nominal to Binominal" to_port="example set input"/>
+      <connect from_op="Nominal to Binominal" from_port="example set output" to_op="FP-Growth" to_port="example set"/>
+      <connect from_op="FP-Growth" from_port="frequent sets" to_op="Create Association Rules" to_port="item sets"/>
+      <connect from_op="Create Association Rules" from_port="rules" to_op="Write Rules as Text" to_port="input 1"/>
+      <connect from_op="Write Rules as Text" from_port="input 1" to_port="result 3"/>
+    </process>
+  </operator>
+</process>

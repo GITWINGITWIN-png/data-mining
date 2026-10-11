@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/W12/Social_Network_Ads_2.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes" width="90" x="180" y="85">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="User ID"/>
+        <parameter key="invert_selection" value="true"/>
+      </operator>
+      <operator activated="true" class="numerical_to_binominal" compatibility="12.1.001" expanded="true" name="Numerical to Binominal" width="90" x="315" y="85">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Purchased"/>
+        <parameter key="min" value="0.0"/>
+        <parameter key="max" value="0.0"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="450" y="85">
+        <parameter key="attribute_name" value="Purchased"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical" width="90" x="585" y="85">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="Gender"/>
+        <parameter key="coding_type" value="dummy coding"/>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="720" y="85">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.8"/>
+          <parameter key="ratio" value="0.2"/>
+        </enumeration>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="42"/>
+      </operator>
+      <operator activated="true" class="h2o:logistic_regression" compatibility="12.1.001" expanded="true" name="Logistic Regression" width="90" x="855" y="34">
+        <parameter key="solver" value="AUTO"/>
+        <parameter key="reproducible" value="true"/>
+        <parameter key="use_regularization" value="false"/>
+        <parameter key="standardize" value="true"/>
+        <parameter key="compute_p-values" value="true"/>
+        <parameter key="remove_collinear_columns" value="true"/>
+        <parameter key="add_intercept" value="true"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model" width="90" x="990" y="136">
+      </operator>
+      <operator activated="true" class="create_threshold" compatibility="12.1.001" expanded="true" name="Create Threshold" width="90" x="990" y="34">
+        <parameter key="threshold" value="0.3"/>
+        <parameter key="first_class" value="false"/>
+        <parameter key="second_class" value="true"/>
+      </operator>
+      <operator activated="true" class="apply_threshold" compatibility="12.1.001" expanded="true" name="Apply Threshold" width="90" x="1125" y="136">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (t=0.3)" width="90" x="1260" y="136">
+        <parameter key="main_criterion" value="f_measure"/>
+        <parameter key="accuracy" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data LogReg" width="90" x="1395" y="136">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV LogReg" width="90" x="1530" y="136">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/out/logreg_threshold_0.3.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Numerical to Binominal" to_port="example set input"/>
+      <connect from_op="Numerical to Binominal" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Nominal to Numerical" to_port="example set input"/>
+      <connect from_op="Nominal to Numerical" from_port="example set output" to_op="Split Data" to_port="example set"/>
+      <connect from_op="Split Data" from_port="partition 1" to_op="Logistic Regression" to_port="training set"/>
+      <connect from_op="Logistic Regression" from_port="model" to_op="Apply Model" to_port="model"/>
+      <connect from_op="Split Data" from_port="partition 2" to_op="Apply Model" to_port="unlabelled data"/>
+      <connect from_op="Apply Model" from_port="labelled data" to_op="Apply Threshold" to_port="example set"/>
+      <connect from_op="Create Threshold" from_port="output" to_op="Apply Threshold" to_port="threshold"/>
+      <connect from_op="Apply Threshold" from_port="example set" to_op="Performance (t=0.3)" to_port="labelled data"/>
+      <connect from_op="Performance (t=0.3)" from_port="performance" to_op="Performance to Data LogReg" to_port="performance vector"/>
+      <connect from_op="Performance to Data LogReg" from_port="example set" to_op="Write CSV LogReg" to_port="input"/>
+      <connect from_op="Performance to Data LogReg" from_port="performance vector" to_port="result 1"/>
+      <connect from_op="Write CSV LogReg" from_port="through" to_port="result 2"/>
+      <connect from_op="Apply Model" from_port="model" to_port="result 3"/>
+    </process>
+  </operator>
+</process>

@@ -1,0 +1,131 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{fontspec}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{booktabs}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\setmainfont{DejaVu Serif}
+\setsansfont{DejaVu Sans}
+\newfontfamily\codefont{DejaVu Sans Mono}
+\newcommand{\pcode}[1]{{\codefont\small #1}}
+
+\definecolor{headblue}{HTML}{2E5C8A}
+\titleformat{\section}{\sffamily\large\bfseries\color{headblue}}{\thesection.}{0.5em}{}
+\titlespacing{\section}{0pt}{12pt}{6pt}
+\setlist{itemsep=1pt,topsep=3pt,parsep=0pt}
+\renewcommand{\arraystretch}{1.15}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\begin{document}
+
+\begin{center}
+{\sffamily\large\bfseries BeautyCo — Association Rules: Answers to Questions 3--5}\\[3pt]
+{\sffamily\small Student ID: 6710503739 \quad$\vert$\quad 1{,}000 transactions, 14 products
+\quad$\vert$\quad FP-Growth (support $\geq$ 0.2), rules (confidence $\geq$ 0.7)}
+\end{center}
+\vspace{2pt}\hrule
+
+\section{EDA}
+
+\textbf{What does each row represent?}\\
+One customer's purchase transaction (one basket). Each column is a product:
+\pcode{1} = purchased, \pcode{0} = not purchased. 1,000 baskets, 14 products, no missing values,
+4.39 items per basket on average.
+
+\textbf{Which products are most frequently purchased together?}
+
+\begin{center}
+\begin{tabular}{llcc}
+\toprule
+\textbf{Product A} & \textbf{Product B} & \textbf{Support} & \textbf{Lift} \\
+\midrule
+Base\_Makeup   & Glossy\_Lips  & 0.356 & 1.36 \\
+Eye\_Enhancer  & Eye\_Palette  & 0.321 & 2.36 \\
+Coverage\_Base & Eye\_Liner    & 0.297 & 1.47 \\
+Base\_Makeup   & Eye\_Liner    & 0.238 & 0.97 \\
+Coverage\_Base & Base\_Makeup  & 0.231 & 0.98 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\pcode{Base\_Makeup + Glossy\_Lips} is the largest by volume (0.356), but its lift is only 1.36.
+\pcode{Eye\_Enhancer + Eye\_Palette} (0.321, lift 2.36) is the genuinely related pair.
+
+\textbf{Are there any unexpected product combinations?}
+
+\begin{itemize}[leftmargin=*]
+  \item \pcode{Nail\_Art + Makeup\_Tools} — \textbf{lift 3.57}, the highest in the dataset, but
+  support 0.149 is below the 0.2 threshold, so FP-Growth never reports it.
+  \item \pcode{Lip\_Liner + Base\_Makeup} — \textbf{lift 0.69}, a negative association: these two
+  are avoided together, even though Base\_Makeup is the best seller.
+\end{itemize}
+
+\section{Association Rule Modeling}
+
+\textbf{How many frequent itemsets were discovered?}\\
+\textbf{23} — 11 single items and 12 pairs. Nothing of size 3 or larger reaches 0.2 support.
+
+\textbf{Identify the maximal frequent itemsets.}\\
+\textbf{16 of 23} — all 12 pairs, plus 4 single items that pair with nothing at 0.2 support.
+
+\begin{center}\small
+\begin{tabular}{lc@{\hspace{1.1cm}}lc}
+\toprule
+\textbf{Maximal pair} & \textbf{Support} & \textbf{Maximal pair} & \textbf{Support} \\
+\midrule
+Base\_Makeup, Glossy\_Lips    & 0.356 & Eye\_Liner, Glossy\_Lips      & 0.227 \\
+Eye\_Enhancer, Eye\_Palette   & 0.321 & Cheek\_Color, Coverage\_Base  & 0.220 \\
+Coverage\_Base, Eye\_Liner    & 0.297 & Coverage\_Base, Glossy\_Lips  & 0.218 \\
+Base\_Makeup, Eye\_Liner      & 0.238 & Base\_Makeup, Eye\_Palette    & 0.211 \\
+Base\_Makeup, Coverage\_Base  & 0.231 & Coverage\_Base, Eye\_Enhancer & 0.204 \\
+                              &       & Coverage\_Base, Eye\_Palette  & 0.201 \\
+                              &       & Eye\_Palette, Glossy\_Lips    & 0.201 \\
+\midrule
+\textbf{Maximal singleton} & \textbf{Support} & \textbf{Maximal singleton} & \textbf{Support} \\
+\midrule
+Lip\_Color  & 0.322 & Contouring & 0.279 \\
+Nail\_Art   & 0.280 & Lip\_Liner  & 0.234 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Deployment and Interpretation}
+
+\textbf{Rule with the highest confidence}\\
+Only 3 rules reach confidence 0.7. The highest is:
+
+\begin{center}
+\textbf{IF \pcode{Eye\_Enhancer} (mascara) \quad THEN \quad \pcode{Eye\_Palette} (eyeshadow palette)}
+\end{center}
+
+\begin{center}
+\begin{tabular}{lcl}
+\toprule
+\textbf{Metric} & \textbf{Value} & \textbf{Calculation} \\
+\midrule
+Support    & 0.321 & $321 / 1{,}000$ transactions \\
+Confidence & 0.899 & $321 / 357$ mascara buyers \\
+Lift       & 2.36  & $0.899 / 0.381$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Meaning}\\
+32.1\% of all baskets contain both products. Of the customers who buy mascara, 89.9\% also buy an
+eyeshadow palette — against 38.1\% for customers in general, so mascara buyers are 2.36$\times$
+more likely than average to buy a palette. Lift $> 1$ confirms a real association, not coincidence.
+
+\textbf{Marketing strategy}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{Product bundle:} sell \pcode{Eye\_Enhancer + Eye\_Palette} together as an
+  ``Eye Look Set''. One basket in three already contains both.
+  \item \textbf{TikTok content:} eye-makeup tutorials that apply the palette and then the mascara,
+  so one clip sells both products.
+  \item \textbf{Promotional campaign:} recommend the palette whenever mascara is added to the cart,
+  and retarget the 36 mascara buyers who did not buy one.
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,6 @@
+10.10.2026 21:24:00 Results of ResultWriter 'Write as Text (p8_centroids)' [1]: 
+10.10.2026 21:24:00 Cluster 0: 62 items
+Cluster 1: 65 items
+Cluster 2: 51 items
+Total number of items: 178
+

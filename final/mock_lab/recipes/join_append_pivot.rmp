@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read customers" width="90" x="45" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/data/customers.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read orders" width="90" x="45" y="136">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/data/orders.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read orders Q2" width="90" x="45" y="238">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/data/orders_q2.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="append" compatibility="12.1.001" expanded="true" name="Append" width="90" x="180" y="187">
+        <parameter key="merge_type" value="all"/>
+      </operator>
+      <operator activated="true" class="concurrency:join" compatibility="12.1.001" expanded="true" name="Join" width="90" x="315" y="85">
+        <parameter key="join_type" value="left"/>
+        <parameter key="use_id_attribute_as_key" value="false"/>
+        <list key="key_attributes">
+          <parameter key="cust_id" value="cust_id"/>
+        </list>
+        <parameter key="remove_double_attributes" value="true"/>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values" width="90" x="450" y="85">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="amount"/>
+        <parameter key="default" value="zero"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="12.1.001" expanded="true" name="Aggregate" width="90" x="585" y="85">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="group_by_attributes" value="segment"/>
+        <list key="aggregation_attributes">
+          <parameter key="amount" value="sum"/>
+          <parameter key="cust_id" value="count"/>
+        </list>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV agg" width="90" x="720" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/out/join_append_aggregate.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read churn" width="90" x="45" y="340">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/W14/customer_churn_69_1(in).csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="generate_attributes" compatibility="12.1.001" expanded="true" name="Generate Attributes" width="90" x="180" y="340">
+        <list key="function_descriptions">
+          <parameter key="is_churn" value='if(Churn=="Yes", 1, 0)'/>
+        </list>
+      </operator>
+      <operator activated="true" class="blending:pivot" compatibility="12.1.001" expanded="true" name="Pivot" width="90" x="315" y="340">
+        <parameter key="group_by_attributes" value="Contract"/>
+        <parameter key="column_grouping_attribute" value="InternetService"/>
+        <list key="aggregation_attributes">
+          <parameter key="is_churn" value="average"/>
+        </list>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV pivot" width="90" x="450" y="340">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/out/pivot_churn.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <connect from_op="Read orders" from_port="output" to_op="Append" to_port="example set 1"/>
+      <connect from_op="Read orders Q2" from_port="output" to_op="Append" to_port="example set 2"/>
+      <connect from_op="Read customers" from_port="output" to_op="Join" to_port="left"/>
+      <connect from_op="Append" from_port="merged set" to_op="Join" to_port="right"/>
+      <connect from_op="Join" from_port="join" to_op="Replace Missing Values" to_port="example set input"/>
+      <connect from_op="Replace Missing Values" from_port="example set output" to_op="Aggregate" to_port="example set input"/>
+      <connect from_op="Aggregate" from_port="example set output" to_op="Write CSV agg" to_port="input"/>
+      <connect from_op="Write CSV agg" from_port="through" to_port="result 1"/>
+      <connect from_op="Read churn" from_port="output" to_op="Generate Attributes" to_port="example set input"/>
+      <connect from_op="Generate Attributes" from_port="example set output" to_op="Pivot" to_port="input"/>
+      <connect from_op="Pivot" from_port="output" to_op="Write CSV pivot" to_port="input"/>
+      <connect from_op="Write CSV pivot" from_port="through" to_port="result 2"/>
+    </process>
+  </operator>
+</process>

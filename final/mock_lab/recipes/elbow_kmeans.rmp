@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/data/utilities.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="85">
+        <parameter key="attribute_name" value="Company"/>
+        <parameter key="target_role" value="id"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize" width="90" x="315" y="85">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (Grid)" width="90" x="450" y="85">
+        <list key="parameters">
+          <parameter key="Clustering.k" value="[2.0;10.0;8;linear]"/>
+        </list>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:k_means" compatibility="12.1.001" expanded="true" name="Clustering" width="90" x="45" y="85">
+            <parameter key="add_cluster_attribute" value="true"/>
+            <parameter key="k" value="2"/>
+            <parameter key="max_runs" value="50"/>
+            <parameter key="determine_good_start_values" value="true"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="42"/>
+          </operator>
+          <operator activated="true" class="cluster_distance_performance" compatibility="12.1.001" expanded="true" name="Cluster Distance Performance" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="Avg. within centroid distance"/>
+          </operator>
+          <operator activated="true" class="log" compatibility="12.1.001" expanded="true" name="Log" width="90" x="315" y="85">
+            <list key="log">
+              <parameter key="k" value="operator.Clustering.parameter.k"/>
+              <parameter key="avg_within_centroid_distance" value="operator.Cluster Distance Performance.value.avg_within_distance"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="Clustering" to_port="example set"/>
+          <connect from_op="Clustering" from_port="clustered set" to_op="Cluster Distance Performance" to_port="example set"/>
+          <connect from_op="Clustering" from_port="cluster model" to_op="Cluster Distance Performance" to_port="cluster model"/>
+          <connect from_op="Cluster Distance Performance" from_port="performance" to_op="Log" to_port="through 1"/>
+          <connect from_op="Log" from_port="through 1" to_port="performance"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data" width="90" x="585" y="34">
+        <parameter key="log_name" value="Log"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV log" width="90" x="720" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/out/elbow_utilities_log.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Normalize" to_port="example set input"/>
+      <connect from_op="Normalize" from_port="example set output" to_op="Optimize Parameters (Grid)" to_port="input 1"/>
+      <connect from_op="Log to Data" from_port="exampleSet" to_op="Write CSV log" to_port="input"/>
+      <connect from_op="Write CSV log" from_port="through" to_port="result 1"/>
+      <connect from_op="Optimize Parameters (Grid)" from_port="parameter set" to_port="result 2"/>
+    </process>
+  </operator>
+</process>

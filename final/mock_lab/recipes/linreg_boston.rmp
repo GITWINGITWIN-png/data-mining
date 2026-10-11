@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/W8/boston_r.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes" width="90" x="180" y="85">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="lstat|rm|medv"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="315" y="85">
+        <parameter key="attribute_name" value="medv"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="450" y="85">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.8"/>
+          <parameter key="ratio" value="0.2"/>
+        </enumeration>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="42"/>
+      </operator>
+      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression" width="90" x="585" y="34">
+        <parameter key="feature_selection" value="none"/>
+        <parameter key="eliminate_colinear_features" value="true"/>
+        <parameter key="use_bias" value="true"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model" width="90" x="720" y="136">
+      </operator>
+      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (Regression)" width="90" x="855" y="136">
+        <parameter key="main_criterion" value="root_mean_squared_error"/>
+        <parameter key="root_mean_squared_error" value="true"/>
+        <parameter key="absolute_error" value="true"/>
+        <parameter key="squared_error" value="true"/>
+        <parameter key="squared_correlation" value="true"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data LinReg" width="90" x="990" y="136">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV LinReg" width="90" x="1125" y="136">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/out/linreg_boston.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="write_as_text" compatibility="12.1.001" expanded="true" name="Write Model as Text" width="90" x="855" y="34">
+        <parameter key="result_file" value="/home/panguin/Projects/data mining/final/mock_lab/recipes/out/linreg_model.txt"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Split Data" to_port="example set"/>
+      <connect from_op="Split Data" from_port="partition 1" to_op="Linear Regression" to_port="training set"/>
+      <connect from_op="Linear Regression" from_port="model" to_op="Apply Model" to_port="model"/>
+      <connect from_op="Split Data" from_port="partition 2" to_op="Apply Model" to_port="unlabelled data"/>
+      <connect from_op="Apply Model" from_port="labelled data" to_op="Performance (Regression)" to_port="labelled data"/>
+      <connect from_op="Performance (Regression)" from_port="performance" to_op="Performance to Data LinReg" to_port="performance vector"/>
+      <connect from_op="Performance to Data LinReg" from_port="example set" to_op="Write CSV LinReg" to_port="input"/>
+      <connect from_op="Performance to Data LinReg" from_port="performance vector" to_port="result 1"/>
+      <connect from_op="Write CSV LinReg" from_port="through" to_port="result 2"/>
+      <connect from_op="Apply Model" from_port="model" to_op="Write Model as Text" to_port="input 1"/>
+      <connect from_op="Write Model as Text" from_port="input 1" to_port="result 3"/>
+    </process>
+  </operator>
+</process>

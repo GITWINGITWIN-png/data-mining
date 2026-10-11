@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read people" width="90" x="45" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock1_classification/data/people.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read work H1" width="90" x="45" y="136">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock1_classification/data/work_2025H1.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read work H2" width="90" x="45" y="238">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock1_classification/data/work_2025H2.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="append" compatibility="12.1.001" expanded="true" name="Append" width="90" x="180" y="187">
+        <parameter key="merge_type" value="all"/>
+      </operator>
+      <operator activated="true" class="concurrency:join" compatibility="12.1.001" expanded="true" name="Join" width="90" x="315" y="85">
+        <parameter key="join_type" value="inner"/>
+        <parameter key="use_id_attribute_as_key" value="false"/>
+        <list key="key_attributes">
+          <parameter key="person_id" value="person_id"/>
+        </list>
+        <parameter key="remove_double_attributes" value="true"/>
+      </operator>
+      <operator activated="true" class="declare_missing_value" compatibility="12.1.001" expanded="true" name="Declare Missing Value" width="90" x="450" y="85">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="mode" value="nominal"/>
+        <parameter key="nominal_value" value="?"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes" width="90" x="585" y="85">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="fnlwgt|educational-num"/>
+        <parameter key="invert_selection" value="true"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="720" y="85">
+        <parameter key="attribute_name" value="income"/>
+        <parameter key="target_role" value="label"/>
+        <list key="set_additional_roles">
+          <parameter key="person_id" value="id"/>
+        </list>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="855" y="85">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="1125" y="34">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (Baseline)" width="90" x="45" y="85">
+            <parameter key="method" value="mode"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (Baseline)" width="90" x="180" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Default Model (Baseline)" to_port="training set"/>
+          <connect from_op="Default Model (Baseline)" from_port="model" to_op="Group Models (Baseline)" to_port="models in 1"/>
+          <connect from_op="Group Models (Baseline)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Baseline)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Baseline)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="&gt;50K"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Baseline)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Baseline)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Baseline)" from_port="labelled data" to_op="Performance (Baseline)" to_port="labelled data"/>
+          <connect from_op="Performance (Baseline)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (Baseline)" width="90" x="1260" y="34">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (Baseline)" width="90" x="1395" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock1_classification/rm_out/partC_Baseline.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV k-NN" width="90" x="1125" y="187">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (k-NN)" width="90" x="45" y="85">
+            <parameter key="default" value="average"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical (k-NN)" width="90" x="180" y="85">
+            <parameter key="coding_type" value="dummy coding"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (k-NN)" width="90" x="315" y="85">
+            <parameter key="method" value="Z-transformation"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (k-NN)" width="90" x="450" y="85">
+            <parameter key="k" value="25"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (k-NN)" width="90" x="585" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Replace Missing Values (k-NN)" to_port="example set input"/>
+          <connect from_op="Replace Missing Values (k-NN)" from_port="example set output" to_op="Nominal to Numerical (k-NN)" to_port="example set input"/>
+          <connect from_op="Nominal to Numerical (k-NN)" from_port="example set output" to_op="Normalize (k-NN)" to_port="example set input"/>
+          <connect from_op="Normalize (k-NN)" from_port="example set output" to_op="k-NN (k-NN)" to_port="training set"/>
+          <connect from_op="Replace Missing Values (k-NN)" from_port="preprocessing model" to_op="Group Models (k-NN)" to_port="models in 1"/>
+          <connect from_op="Nominal to Numerical (k-NN)" from_port="preprocessing model" to_op="Group Models (k-NN)" to_port="models in 2"/>
+          <connect from_op="Normalize (k-NN)" from_port="preprocessing model" to_op="Group Models (k-NN)" to_port="models in 3"/>
+          <connect from_op="k-NN (k-NN)" from_port="model" to_op="Group Models (k-NN)" to_port="models in 4"/>
+          <connect from_op="Group Models (k-NN)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (k-NN)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (k-NN)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="&gt;50K"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (k-NN)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (k-NN)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (k-NN)" from_port="labelled data" to_op="Performance (k-NN)" to_port="labelled data"/>
+          <connect from_op="Performance (k-NN)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (k-NN)" width="90" x="1260" y="187">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (k-NN)" width="90" x="1395" y="187">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock1_classification/rm_out/partC_k-NN.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV RF" width="90" x="1125" y="340">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (RF)" width="90" x="45" y="85">
+            <parameter key="default" value="average"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="concurrency:parallel_random_forest" compatibility="12.1.001" expanded="true" name="Random Forest (RF)" width="90" x="180" y="85">
+            <parameter key="number_of_trees" value="100"/>
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="20"/>
+            <parameter key="guess_subset_ratio" value="true"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (RF)" width="90" x="315" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Replace Missing Values (RF)" to_port="example set input"/>
+          <connect from_op="Replace Missing Values (RF)" from_port="example set output" to_op="Random Forest (RF)" to_port="training set"/>
+          <connect from_op="Replace Missing Values (RF)" from_port="preprocessing model" to_op="Group Models (RF)" to_port="models in 1"/>
+          <connect from_op="Random Forest (RF)" from_port="model" to_op="Group Models (RF)" to_port="models in 2"/>
+          <connect from_op="Group Models (RF)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (RF)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (RF)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="&gt;50K"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (RF)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (RF)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (RF)" from_port="labelled data" to_op="Performance (RF)" to_port="labelled data"/>
+          <connect from_op="Performance (RF)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (RF)" width="90" x="1260" y="340">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (RF)" width="90" x="1395" y="340">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock1_classification/rm_out/partC_RF.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <connect from_op="Read work H1" from_port="output" to_op="Append" to_port="example set 1"/>
+      <connect from_op="Read work H2" from_port="output" to_op="Append" to_port="example set 2"/>
+      <connect from_op="Read people" from_port="output" to_op="Join" to_port="left"/>
+      <connect from_op="Append" from_port="merged set" to_op="Join" to_port="right"/>
+      <connect from_op="Join" from_port="join" to_op="Declare Missing Value" to_port="example set input"/>
+      <connect from_op="Declare Missing Value" from_port="example set output" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="CV Baseline" to_port="example set"/>
+      <connect from_op="CV Baseline" from_port="performance 1" to_op="Performance to Data (Baseline)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (Baseline)" from_port="example set" to_op="Write CSV (Baseline)" to_port="input"/>
+      <connect from_op="Performance to Data (Baseline)" from_port="performance vector" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="CV k-NN" to_port="example set"/>
+      <connect from_op="CV k-NN" from_port="performance 1" to_op="Performance to Data (k-NN)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (k-NN)" from_port="example set" to_op="Write CSV (k-NN)" to_port="input"/>
+      <connect from_op="Performance to Data (k-NN)" from_port="performance vector" to_port="result 2"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="CV RF" to_port="example set"/>
+      <connect from_op="CV RF" from_port="performance 1" to_op="Performance to Data (RF)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (RF)" from_port="example set" to_op="Write CSV (RF)" to_port="input"/>
+      <connect from_op="Performance to Data (RF)" from_port="performance vector" to_port="result 3"/>
+    </process>
+  </operator>
+</process>

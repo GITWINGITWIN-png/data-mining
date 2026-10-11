@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p6_heart.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="numerical_to_binominal" compatibility="12.1.001" expanded="true" name="Numerical to Binominal" width="90" x="180" y="85">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="target"/>
+        <parameter key="min" value="0.0"/>
+        <parameter key="max" value="0.0"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="315" y="85">
+        <parameter key="attribute_name" value="target"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="450" y="85">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p6_tree_full" width="90" x="585" y="34">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (p6_tree_full)" width="90" x="45" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="30"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (p6_tree_full)" to_port="training set"/>
+          <connect from_op="Decision Tree (p6_tree_full)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p6_tree_full)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (p6_tree_full)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p6_tree_full)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p6_tree_full)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p6_tree_full)" from_port="labelled data" to_op="Performance (p6_tree_full)" to_port="labelled data"/>
+          <connect from_op="Performance (p6_tree_full)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p6_tree_full)" width="90" x="720" y="34">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p6_tree_full)" width="90" x="855" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p6_tree_full.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p6_tree_d3" width="90" x="585" y="136">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (p6_tree_d3)" width="90" x="45" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="3"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (p6_tree_d3)" to_port="training set"/>
+          <connect from_op="Decision Tree (p6_tree_d3)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p6_tree_d3)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (p6_tree_d3)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p6_tree_d3)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p6_tree_d3)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p6_tree_d3)" from_port="labelled data" to_op="Performance (p6_tree_d3)" to_port="labelled data"/>
+          <connect from_op="Performance (p6_tree_d3)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p6_tree_d3)" width="90" x="720" y="136">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p6_tree_d3)" width="90" x="855" y="136">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p6_tree_d3.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p6_rf" width="90" x="585" y="238">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_random_forest" compatibility="12.1.001" expanded="true" name="Random Forest (p6_rf)" width="90" x="45" y="85">
+            <parameter key="number_of_trees" value="300"/>
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="10"/>
+            <parameter key="guess_subset_ratio" value="true"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+          </operator>
+          <connect from_port="training set" to_op="Random Forest (p6_rf)" to_port="training set"/>
+          <connect from_op="Random Forest (p6_rf)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p6_rf)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (p6_rf)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p6_rf)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p6_rf)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p6_rf)" from_port="labelled data" to_op="Performance (p6_rf)" to_port="labelled data"/>
+          <connect from_op="Performance (p6_rf)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p6_rf)" width="90" x="720" y="238">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p6_rf)" width="90" x="855" y="238">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p6_rf.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (train acc)" width="90" x="585" y="340">
+        <parameter key="criterion" value="gini_index"/>
+        <parameter key="maximal_depth" value="30"/>
+        <parameter key="apply_pruning" value="false"/>
+        <parameter key="apply_prepruning" value="false"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (train acc)" width="90" x="720" y="340">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (p6_train_full)" width="90" x="855" y="340">
+        <parameter key="main_criterion" value="accuracy"/>
+        <parameter key="accuracy" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="manually_set_positive_class" value="true"/>
+        <parameter key="positive_class" value="true"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p6_train_full)" width="90" x="990" y="340">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p6_train_full)" width="90" x="1125" y="340">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p6_train_full.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (p6_opt_log)" width="90" x="585" y="442">
+        <list key="parameters">
+          <parameter key="Decision Tree (p6_opt).maximal_depth" value="[1.0;12.0;11;linear]"/>
+        </list>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p6_opt" width="90" x="600" y="85">
+            <parameter key="split_on_batch_attribute" value="false"/>
+            <parameter key="leave_one_out" value="false"/>
+            <parameter key="number_of_folds" value="10"/>
+            <parameter key="sampling_type" value="stratified sampling"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (p6_opt)" width="90" x="45" y="85">
+                <parameter key="criterion" value="gini_index"/>
+                <parameter key="maximal_depth" value="3"/>
+                <parameter key="apply_pruning" value="false"/>
+                <parameter key="apply_prepruning" value="false"/>
+              </operator>
+              <connect from_port="training set" to_op="Decision Tree (p6_opt)" to_port="training set"/>
+              <connect from_op="Decision Tree (p6_opt)" from_port="model" to_port="model"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p6_opt)" width="90" x="45" y="85">
+              </operator>
+              <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (p6_opt)" width="90" x="180" y="85">
+                <parameter key="main_criterion" value="accuracy"/>
+                <parameter key="accuracy" value="true"/>
+                <parameter key="precision" value="true"/>
+                <parameter key="recall" value="true"/>
+                <parameter key="f_measure" value="true"/>
+                <parameter key="manually_set_positive_class" value="true"/>
+                <parameter key="positive_class" value="true"/>
+              </operator>
+              <connect from_port="model" to_op="Apply Model (p6_opt)" to_port="model"/>
+              <connect from_port="test set" to_op="Apply Model (p6_opt)" to_port="unlabelled data"/>
+              <connect from_op="Apply Model (p6_opt)" from_port="labelled data" to_op="Performance (p6_opt)" to_port="labelled data"/>
+              <connect from_op="Performance (p6_opt)" from_port="performance" to_port="performance 1"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log" compatibility="12.1.001" expanded="true" name="Log" width="90" x="180" y="85">
+            <list key="log">
+              <parameter key="depth" value="operator.Decision Tree (p6_opt).parameter.maximal_depth"/>
+              <parameter key="accuracy" value="operator.CV p6_opt.value.performance main criterion"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="CV p6_opt" to_port="example set"/>
+          <connect from_op="CV p6_opt" from_port="performance 1" to_op="Log" to_port="through 1"/>
+          <connect from_op="Log" from_port="through 1" to_port="performance"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (p6_opt_log)" width="90" x="720" y="442">
+        <parameter key="log_name" value="Log"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p6_opt_log)" width="90" x="855" y="442">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p6_opt_log.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Numerical to Binominal" to_port="example set input"/>
+      <connect from_op="Numerical to Binominal" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="CV p6_tree_full" to_port="example set"/>
+      <connect from_op="CV p6_tree_full" from_port="performance 1" to_op="Performance to Data (p6_tree_full)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p6_tree_full)" from_port="example set" to_op="Write CSV (p6_tree_full)" to_port="input"/>
+      <connect from_op="Performance to Data (p6_tree_full)" from_port="performance vector" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="CV p6_tree_d3" to_port="example set"/>
+      <connect from_op="CV p6_tree_d3" from_port="performance 1" to_op="Performance to Data (p6_tree_d3)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p6_tree_d3)" from_port="example set" to_op="Write CSV (p6_tree_d3)" to_port="input"/>
+      <connect from_op="Performance to Data (p6_tree_d3)" from_port="performance vector" to_port="result 2"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="CV p6_rf" to_port="example set"/>
+      <connect from_op="CV p6_rf" from_port="performance 1" to_op="Performance to Data (p6_rf)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p6_rf)" from_port="example set" to_op="Write CSV (p6_rf)" to_port="input"/>
+      <connect from_op="Performance to Data (p6_rf)" from_port="performance vector" to_port="result 3"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="Decision Tree (train acc)" to_port="training set"/>
+      <connect from_op="Decision Tree (train acc)" from_port="model" to_op="Apply Model (train acc)" to_port="model"/>
+      <connect from_op="Multiply" from_port="output 6" to_op="Apply Model (train acc)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (train acc)" from_port="labelled data" to_op="Performance (p6_train_full)" to_port="labelled data"/>
+      <connect from_op="Performance (p6_train_full)" from_port="performance" to_op="Performance to Data (p6_train_full)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p6_train_full)" from_port="example set" to_op="Write CSV (p6_train_full)" to_port="input"/>
+      <connect from_op="Performance to Data (p6_train_full)" from_port="performance vector" to_port="result 4"/>
+      <connect from_op="Multiply" from_port="output 5" to_op="Optimize Parameters (p6_opt_log)" to_port="input 1"/>
+      <connect from_op="Log to Data (p6_opt_log)" from_port="exampleSet" to_op="Write CSV (p6_opt_log)" to_port="input"/>
+      <connect from_op="Write CSV (p6_opt_log)" from_port="through" to_port="result 5"/>
+      <connect from_op="Optimize Parameters (p6_opt_log)" from_port="performance" to_port="result 6"/>
+    </process>
+  </operator>
+</process>

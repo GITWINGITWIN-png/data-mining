@@ -1,0 +1,6 @@
+07.10.2026 17:17:50 Results of ResultWriter 'Write Rules as Text' [1]: 
+07.10.2026 17:17:50 Association Rules
+[Glossy_Lips] --> [Base_Makeup] (confidence: 0.727)
+[Eye_Palette] --> [Eye_Enhancer] (confidence: 0.843)
+[Eye_Enhancer] --> [Eye_Palette] (confidence: 0.899)
+
