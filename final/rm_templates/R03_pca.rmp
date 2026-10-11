@@ -23,7 +23,7 @@
       <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes" width="90" x="315" y="198">
         <parameter key="attribute_filter_type" value="value_type"/>
         <parameter key="value_type" value="numeric"/>
-        <parameter key="include_special_attributes" value="true"/>
+        <parameter key="include_special_attributes" value="false"/>
       </operator>
       <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="450" y="198">
       </operator>
@@ -34,16 +34,16 @@
         <parameter key="dimensionality_reduction" value="keep variance"/>
         <parameter key="variance_threshold" value="0.95"/>
       </operator>
-      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (2D)" width="90" x="600" y="350">
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (2D)" width="90" x="600" y="430">
         <parameter key="method" value="Z-transformation"/>
       </operator>
-      <operator activated="true" class="principal_component_analysis" compatibility="12.1.001" expanded="true" name="PCA (2 components)" width="90" x="735" y="350">
+      <operator activated="true" class="principal_component_analysis" compatibility="12.1.001" expanded="true" name="PCA (2 components)" width="90" x="735" y="430">
         <parameter key="dimensionality_reduction" value="fixed number"/>
         <parameter key="number_of_components" value="2"/>
       </operator>
-      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="600" y="500">
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="600" y="660">
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN" width="90" x="735" y="500">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN" width="90" x="735" y="660">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -80,7 +80,7 @@
           <connect from_op="Performance (kNN)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN + PCA" width="90" x="870" y="500">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN + PCA" width="90" x="870" y="660">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -140,8 +140,8 @@
       <connect from_op="CV kNN + PCA" from_port="performance 1" to_port="result 5"/>
       <description align="left" color="green" colored="true" height="108" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Set Role → label (ไว้ระบายสีกราฟ · ไม่มี label → ลบ Set Role)&lt;br&gt;2. Select Attributes → ตัด id / คอลัมน์ที่ไม่ใช่ตัวเลข (PCA ใช้ตัวเลขเท่านั้น)&lt;br&gt;3. PCA → dimensionality_reduction = keep variance (variance_threshold 0.8/0.9/0.95) หรือ fixed number (number_of_components)&lt;br&gt;ผล PCA model (res) → แท็บ Eigenvalues (variance / cumulative) · Eigenvectors (loadings) · กราฟ 2D: res scores → Visualizations → Scatter pc_1 × pc_2 สีตาม label</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="138">&lt;b&gt;§2–§3 Normalize → PCA (keep variance 0.95) → res: scores + model (eigenvalues / loadings)&lt;/b&gt;&lt;br&gt;จำนวน PC ที่ต้องใช้ = ดู Cumulative Variance ใน Eigenvalues · loadings = Eigenvectors</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="288">&lt;b&gt;§4 PCA 2 components → scatter 2D&lt;/b&gt;&lt;br&gt;number_of_components = 2 · res → Visualizations → Scatter: x = pc_1, y = pc_2, color = label</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="438">&lt;b&gt;§5 ⭐ เทียบโมเดลก่อน/หลัง PCA (Normalize + PCA อยู่ใน Training pane ของ CV = ไม่ leak)&lt;/b&gt;&lt;br&gt;เปลี่ยนจำนวน PC: ดับเบิลคลิก CV kNN + PCA → PCA → number_of_components</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="368">&lt;b&gt;§4 PCA 2 components → scatter 2D&lt;/b&gt;&lt;br&gt;number_of_components = 2 · res → Visualizations → Scatter: x = pc_1, y = pc_2, color = label</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="598">&lt;b&gt;§5 ⭐ เทียบโมเดลก่อน/หลัง PCA (Normalize + PCA อยู่ใน Training pane ของ CV = ไม่ leak)&lt;/b&gt;&lt;br&gt;เปลี่ยนจำนวน PC: ดับเบิลคลิก CV kNN + PCA → PCA → number_of_components</description>
     </process>
   </operator>
 </process>

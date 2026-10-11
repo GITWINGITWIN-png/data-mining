@@ -56,15 +56,15 @@
         <parameter key="remove_collinear_columns" value="true"/>
         <parameter key="add_intercept" value="true"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (impute test)" width="90" x="990" y="295">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (impute test)" width="90" x="990" y="365">
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (logistic)" width="90" x="1125" y="295">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (logistic)" width="90" x="1125" y="365">
       </operator>
       <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (model)" width="90" x="1260" y="217">
       </operator>
-      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (scored test)" width="90" x="1260" y="295">
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (scored test)" width="90" x="1260" y="365">
       </operator>
-      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (H2O default)" width="90" x="1260" y="457">
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (H2O default)" width="90" x="1260" y="607">
         <parameter key="main_criterion" value="f_measure"/>
         <parameter key="accuracy" value="true"/>
         <parameter key="precision" value="true"/>
@@ -73,14 +73,14 @@
         <parameter key="manually_set_positive_class" value="true"/>
         <parameter key="positive_class" value="true"/>
       </operator>
-      <operator activated="true" class="create_threshold" compatibility="12.1.001" expanded="true" name="Create Threshold 0.5" width="90" x="990" y="535">
+      <operator activated="true" class="create_threshold" compatibility="12.1.001" expanded="true" name="Create Threshold 0.5" width="90" x="990" y="755">
         <parameter key="threshold" value="0.5"/>
         <parameter key="first_class" value="false"/>
         <parameter key="second_class" value="true"/>
       </operator>
-      <operator activated="true" class="apply_threshold" compatibility="12.1.001" expanded="true" name="Apply Threshold 0.5" width="90" x="1125" y="535">
+      <operator activated="true" class="apply_threshold" compatibility="12.1.001" expanded="true" name="Apply Threshold 0.5" width="90" x="1125" y="755">
       </operator>
-      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (t=0.5)" width="90" x="1260" y="535">
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (t=0.5)" width="90" x="1260" y="755">
         <parameter key="main_criterion" value="f_measure"/>
         <parameter key="accuracy" value="true"/>
         <parameter key="precision" value="true"/>
@@ -89,14 +89,14 @@
         <parameter key="manually_set_positive_class" value="true"/>
         <parameter key="positive_class" value="true"/>
       </operator>
-      <operator activated="true" class="create_threshold" compatibility="12.1.001" expanded="true" name="Create Threshold 0.3" width="90" x="990" y="625">
+      <operator activated="true" class="create_threshold" compatibility="12.1.001" expanded="true" name="Create Threshold 0.3" width="90" x="990" y="905">
         <parameter key="threshold" value="0.3"/>
         <parameter key="first_class" value="false"/>
         <parameter key="second_class" value="true"/>
       </operator>
-      <operator activated="true" class="apply_threshold" compatibility="12.1.001" expanded="true" name="Apply Threshold 0.3" width="90" x="1125" y="625">
+      <operator activated="true" class="apply_threshold" compatibility="12.1.001" expanded="true" name="Apply Threshold 0.3" width="90" x="1125" y="905">
       </operator>
-      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (t=0.3)" width="90" x="1260" y="625">
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (t=0.3)" width="90" x="1260" y="905">
         <parameter key="main_criterion" value="f_measure"/>
         <parameter key="accuracy" value="true"/>
         <parameter key="precision" value="true"/>
@@ -105,9 +105,9 @@
         <parameter key="manually_set_positive_class" value="true"/>
         <parameter key="positive_class" value="true"/>
       </operator>
-      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (CV)" width="90" x="45" y="807">
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (CV)" width="90" x="45" y="1107">
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="180" y="807">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="180" y="1107">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="10"/>
@@ -140,7 +140,7 @@
           <connect from_op="Performance (CV Baseline)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV LogReg" width="90" x="315" y="807">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV LogReg" width="90" x="315" y="1107">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="10"/>
@@ -188,7 +188,7 @@
           <connect from_op="Performance (CV LogReg)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="45" y="957">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="45" y="1337">
         <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_pima.csv"/>
         <parameter key="column_separators" value=","/>
         <parameter key="first_row_as_names" value="true"/>
@@ -196,9 +196,9 @@
         <parameter key="decimal_character" value="."/>
         <parameter key="encoding" value="UTF-8"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (impute new)" width="90" x="180" y="957">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (impute new)" width="90" x="180" y="1337">
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (logistic new)" width="90" x="315" y="957">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (logistic new)" width="90" x="315" y="1337">
       </operator>
       <connect from_op="Read CSV" from_port="output" to_op="Numerical to Binominal" to_port="example set input"/>
       <connect from_op="Numerical to Binominal" from_port="example set output" to_op="Set Role" to_port="example set input"/>
@@ -237,9 +237,9 @@
       <connect from_op="Apply Model (logistic new)" from_port="labelled data" to_port="result 8"/>
       <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Numerical to Binominal → label 0/1 (label เป็นคำอยู่แล้ว → ลบ) · Set Role → label&lt;br&gt;2. Declare Missing Value → คอลัมน์ที่ค่า 0 เป็นไปไม่ได้ (ข้อมูลอื่น → ลบ operator)&lt;br&gt;3. Create Threshold → threshold · first_class = คลาสลบ · second_class = คลาสบวก (ตอนนี้ false / true)&lt;br&gt;4. Performance → positive_class = คลาสบวก (true)&lt;br&gt;⚠️ H2O Logistic Regression ตัดสินที่ threshold ที่ทำให้ F1 สูงสุด (ไม่ใช่ 0.5) → อยากได้ 0.5 ต้องใช้ Create/Apply Threshold</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="720" y="155">&lt;b&gt;§1–§3 Split 75/25 → Replace Missing (fit train) → Logistic Regression → Apply กับ test&lt;/b&gt;&lt;br&gt;res model = coefficients (+ p-value) · odds ratio = e^coef</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="720" y="395">&lt;b&gt;§5 ⭐ Threshold: default ของ H2O vs 0.5 vs 0.3 → confusion matrix + precision / recall / F1&lt;/b&gt;&lt;br&gt;เพิ่ม threshold อื่น: copy Create Threshold + Apply Threshold + Performance แล้วต่อจาก Multiply (scored test) port ถัดไป</description>
-      <description align="left" color="yellow" colored="true" height="40" resized="true" width="900" x="45" y="745">&lt;b&gt;§2 / §6 Baseline vs Logistic ใน 10-fold CV (Replace Missing อยู่ใน Training pane)&lt;/b&gt;&lt;br&gt;</description>
-      <description align="left" color="yellow" colored="true" height="50" resized="true" width="900" x="45" y="895">&lt;b&gt;§7 ทำนายข้อมูลใหม่ → confidence(true) = ความน่าจะเป็น · prediction ตาม threshold ของ H2O&lt;/b&gt;&lt;br&gt;Read CSV (new) → ไฟล์ข้อมูลใหม่ (ไม่ต้องมี label)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="720" y="545">&lt;b&gt;§5 ⭐ Threshold: default ของ H2O vs 0.5 vs 0.3 → confusion matrix + precision / recall / F1&lt;/b&gt;&lt;br&gt;เพิ่ม threshold อื่น: copy Create Threshold + Apply Threshold + Performance แล้วต่อจาก Multiply (scored test) port ถัดไป</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="900" x="45" y="1045">&lt;b&gt;§2 / §6 Baseline vs Logistic ใน 10-fold CV (Replace Missing อยู่ใน Training pane)&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="50" resized="true" width="900" x="45" y="1275">&lt;b&gt;§7 ทำนายข้อมูลใหม่ → confidence(true) = ความน่าจะเป็น · prediction ตาม threshold ของ H2O&lt;/b&gt;&lt;br&gt;Read CSV (new) → ไฟล์ข้อมูลใหม่ (ไม่ต้องมี label)</description>
     </process>
   </operator>
 </process>

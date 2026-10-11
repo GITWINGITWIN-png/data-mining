@@ -35,14 +35,14 @@
       <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes (simple)" width="90" x="600" y="217">
         <parameter key="attribute_filter_type" value="subset"/>
         <parameter key="attributes" value="age|charges"/>
-        <parameter key="include_special_attributes" value="true"/>
+        <parameter key="include_special_attributes" value="false"/>
       </operator>
       <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression (simple)" width="90" x="735" y="217">
         <parameter key="feature_selection" value="none"/>
         <parameter key="eliminate_colinear_features" value="true"/>
         <parameter key="use_bias" value="true"/>
       </operator>
-      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="600" y="367">
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="600" y="447">
         <enumeration key="partitions">
           <parameter key="ratio" value="0.8"/>
           <parameter key="ratio" value="0.2"/>
@@ -51,39 +51,39 @@
         <parameter key="use_local_random_seed" value="true"/>
         <parameter key="local_random_seed" value="1992"/>
       </operator>
-      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (train)" width="90" x="735" y="367">
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (train)" width="90" x="735" y="447">
       </operator>
-      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (test)" width="90" x="735" y="455">
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (test)" width="90" x="735" y="595">
       </operator>
-      <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (mean)" width="90" x="870" y="367">
+      <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (mean)" width="90" x="870" y="447">
         <parameter key="method" value="average"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Baseline mean)" width="90" x="1005" y="367">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Baseline mean)" width="90" x="1005" y="447">
       </operator>
-      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (Baseline mean)" width="90" x="1140" y="367">
+      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (Baseline mean)" width="90" x="1140" y="447">
         <parameter key="main_criterion" value="root_mean_squared_error"/>
         <parameter key="root_mean_squared_error" value="true"/>
         <parameter key="absolute_error" value="true"/>
         <parameter key="squared_error" value="true"/>
         <parameter key="squared_correlation" value="true"/>
       </operator>
-      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression" width="90" x="870" y="455">
+      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression" width="90" x="870" y="595">
         <parameter key="feature_selection" value="none"/>
         <parameter key="eliminate_colinear_features" value="true"/>
         <parameter key="use_bias" value="true"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Linear Regression)" width="90" x="1005" y="455">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Linear Regression)" width="90" x="1005" y="595">
       </operator>
-      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (Linear Regression)" width="90" x="1140" y="455">
+      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (Linear Regression)" width="90" x="1140" y="595">
         <parameter key="main_criterion" value="root_mean_squared_error"/>
         <parameter key="root_mean_squared_error" value="true"/>
         <parameter key="absolute_error" value="true"/>
         <parameter key="squared_error" value="true"/>
         <parameter key="squared_correlation" value="true"/>
       </operator>
-      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="600" y="607">
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="600" y="797">
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV LR" width="90" x="735" y="607">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV LR" width="90" x="735" y="797">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -114,7 +114,7 @@
           <connect from_op="Performance (CV LR)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN reg" width="90" x="870" y="607">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN reg" width="90" x="870" y="797">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -153,7 +153,7 @@
           <connect from_op="Performance (CV kNN reg)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Tree reg" width="90" x="1005" y="607">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Tree reg" width="90" x="1005" y="797">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -187,10 +187,10 @@
           <connect from_op="Performance (CV Tree reg)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression (final)" width="90" x="600" y="757">
+      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression (final)" width="90" x="600" y="1027">
         <parameter key="feature_selection" value="none"/>
       </operator>
-      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="835">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="1175">
         <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_insurance.csv"/>
         <parameter key="column_separators" value=","/>
         <parameter key="first_row_as_names" value="true"/>
@@ -198,9 +198,9 @@
         <parameter key="decimal_character" value="."/>
         <parameter key="encoding" value="UTF-8"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (dummy new)" width="90" x="735" y="835">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (dummy new)" width="90" x="735" y="1175">
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (LR new)" width="90" x="870" y="835">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (LR new)" width="90" x="870" y="1175">
       </operator>
       <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
       <connect from_op="Set Role" from_port="example set output" to_op="Nominal to Numerical" to_port="example set input"/>
@@ -237,9 +237,9 @@
       <connect from_op="Apply Model (LR new)" from_port="labelled data" to_port="result 8"/>
       <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Set Role → label (ตัวเลขที่จะทำนาย)&lt;br&gt;2. Nominal to Numerical → comparison_groups: คอลัมน์หมวดหมู่ + ค่าอ้างอิง (reference) · ไม่มีคอลัมน์หมวดหมู่ → ลบ&lt;br&gt;3. Select Attributes (simple) → x ตัวเดียว + label&lt;br&gt;4. Read CSV (new) → ข้อมูลใหม่ (คอลัมน์เดียวกัน)&lt;br&gt;สมการ: res model → แท็บ Description/Data: Coefficient · p-value · y = intercept + Σ coef × x</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="155">&lt;b&gt;§3 Simple linear regression (x ตัวเดียว) บนข้อมูลทั้งหมด → สมการ y = b0 + b1·x&lt;/b&gt;&lt;br&gt;Select Attributes → attributes = age|charges (x|label)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="305">&lt;b&gt;§4–§5 ⭐ Multiple LR + baseline (mean) บน hold-out 80/20 → MAE / RMSE / R² (squared_correlation)&lt;/b&gt;&lt;br&gt;Split Data → partitions · Linear Regression → feature_selection = none (ใช้ทุกตัว) / M5 prime · model = สมการเต็ม</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="545">&lt;b&gt;§6 เทียบใน CV: LR vs k-NN regression vs Decision Tree regression&lt;/b&gt;&lt;br&gt;ดู RMSE ต่ำสุด / R² สูงสุด</description>
-      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="695">&lt;b&gt;§7 ทำนายข้อมูลใหม่: dummy coding เดิม (preprocessing model) → Linear Regression (ทั้งชุด)&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="385">&lt;b&gt;§4–§5 ⭐ Multiple LR + baseline (mean) บน hold-out 80/20 → MAE / RMSE / R² (squared_correlation)&lt;/b&gt;&lt;br&gt;Split Data → partitions · Linear Regression → feature_selection = none (ใช้ทุกตัว) / M5 prime · model = สมการเต็ม</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="735">&lt;b&gt;§6 เทียบใน CV: LR vs k-NN regression vs Decision Tree regression&lt;/b&gt;&lt;br&gt;ดู RMSE ต่ำสุด / R² สูงสุด</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="965">&lt;b&gt;§7 ทำนายข้อมูลใหม่: dummy coding เดิม (preprocessing model) → Linear Regression (ทั้งชุด)&lt;/b&gt;&lt;br&gt;</description>
     </process>
   </operator>
 </process>

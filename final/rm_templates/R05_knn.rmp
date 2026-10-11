@@ -39,7 +39,7 @@
         <parameter key="k" value="3"/>
         <parameter key="search_for" value="nearest"/>
       </operator>
-      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="600" y="350">
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="600" y="430">
         <enumeration key="partitions">
           <parameter key="ratio" value="0.7"/>
           <parameter key="ratio" value="0.3"/>
@@ -48,17 +48,17 @@
         <parameter key="use_local_random_seed" value="true"/>
         <parameter key="local_random_seed" value="1992"/>
       </operator>
-      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (hold-out)" width="90" x="735" y="350">
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (hold-out)" width="90" x="735" y="430">
         <parameter key="method" value="Z-transformation"/>
       </operator>
-      <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (hold-out)" width="90" x="870" y="350">
+      <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (hold-out)" width="90" x="870" y="430">
         <parameter key="k" value="3"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize test)" width="90" x="870" y="438">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize test)" width="90" x="870" y="578">
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN test)" width="90" x="1005" y="438">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN test)" width="90" x="1005" y="578">
       </operator>
-      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (hold-out)" width="90" x="1140" y="438">
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (hold-out)" width="90" x="1140" y="578">
         <parameter key="main_criterion" value="f_measure"/>
         <parameter key="accuracy" value="true"/>
         <parameter key="precision" value="true"/>
@@ -67,9 +67,9 @@
         <parameter key="manually_set_positive_class" value="true"/>
         <parameter key="positive_class" value="Owner"/>
       </operator>
-      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="600" y="580">
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="600" y="780">
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="735" y="580">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="735" y="780">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -102,7 +102,7 @@
           <connect from_op="Performance (Baseline)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN raw" width="90" x="870" y="580">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN raw" width="90" x="870" y="780">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -135,7 +135,7 @@
           <connect from_op="Performance (kNN raw)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN normalized" width="90" x="1005" y="580">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN normalized" width="90" x="1005" y="780">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -176,7 +176,7 @@
           <connect from_op="Performance (kNN normalized)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (k)" width="90" x="600" y="730">
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (k)" width="90" x="600" y="1010">
         <list key="parameters">
           <parameter key="k-NN (opt).k" value="[1.0;15.0;14;linear]"/>
         </list>
@@ -236,20 +236,20 @@
           <connect from_op="Log (k)" from_port="through 1" to_port="performance"/>
         </process>
       </operator>
-      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (k)" width="90" x="735" y="730">
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (k)" width="90" x="735" y="1010">
         <parameter key="log_name" value="Log (k)"/>
       </operator>
-      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (final)" width="90" x="600" y="880">
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (final)" width="90" x="600" y="1240">
         <parameter key="method" value="Z-transformation"/>
       </operator>
-      <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (final)" width="90" x="735" y="880">
+      <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (final)" width="90" x="735" y="1240">
         <parameter key="k" value="3"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize new)" width="90" x="735" y="968">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize new)" width="90" x="735" y="1388">
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN new)" width="90" x="870" y="968">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN new)" width="90" x="870" y="1388">
       </operator>
-      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (regression)" width="90" x="45" y="1110">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (regression)" width="90" x="45" y="1590">
         <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock2_regression_pca/data/housing.csv"/>
         <parameter key="column_separators" value=","/>
         <parameter key="first_row_as_names" value="true"/>
@@ -257,11 +257,11 @@
         <parameter key="decimal_character" value="."/>
         <parameter key="encoding" value="UTF-8"/>
       </operator>
-      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role (regression)" width="90" x="180" y="1110">
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role (regression)" width="90" x="180" y="1590">
         <parameter key="attribute_name" value="medv"/>
         <parameter key="target_role" value="label"/>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN regression" width="90" x="315" y="1110">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN regression" width="90" x="315" y="1590">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="10"/>
@@ -338,11 +338,11 @@
       <connect from_op="CV kNN regression" from_port="performance 1" to_port="result 10"/>
       <description align="left" color="green" colored="true" height="108" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Set Role → label · (label เป็น 0/1 → เพิ่ม Numerical to Binominal ก่อน Set Role)&lt;br&gt;2. Read CSV (new point) → ไฟล์ข้อมูลใหม่ (คอลัมน์เดียวกัน ไม่ต้องมี label) — สร้างใน Excel/Notepad 1 แถว&lt;br&gt;3. k-NN → k · measure_types = NumericalMeasures · numerical_measure = EuclideanDistance / ManhattanDistance&lt;br&gt;4. Performance → positive_class = คลาสที่สนใจ (ตอนนี้ = Owner)</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="138">&lt;b&gt;§2 ระยะจากจุดใหม่ถึงทุกจุด (Cross Distances) → k จุดใกล้สุด&lt;/b&gt;&lt;br&gt;only_top_k = true · k = 3 · ไม่ normalize ตามตำรา (ถ้าโจทย์ให้ normalize ต้อง Normalize ทั้งสองฝั่งด้วยค่าจากข้อมูล train)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="288">&lt;b&gt;§3 Hold-out: Split Data 70/30 → Normalize (fit train) → k-NN → Apply กับ test → Performance&lt;/b&gt;&lt;br&gt;partitions = 0.7 / 0.3 · ไม่ normalize → ลบ Normalize + Apply Model (normalize) แล้วต่อเส้นตรง</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="518">&lt;b&gt;§4 ⭐ CV: baseline vs k-NN ไม่ normalize vs k-NN + normalize (เทียบก่อน/หลัง preprocessing)&lt;/b&gt;&lt;br&gt;number_of_folds ใน CV แต่ละตัว · k ใน k-NN ข้างใน CV</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="668">&lt;b&gt;§5 ⭐ Optimize Parameters (Grid): k = 1…15 + Log → ตาราง k vs F1 · parameter set = k ที่ดีที่สุด&lt;/b&gt;&lt;br&gt;แก้ช่วง: Optimize Parameters → Edit Parameter Settings (k-NN (opt).k: min, max, steps) · กราฟ: Log to Data → Visualizations → Line</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="818">&lt;b&gt;§6 โมเดลสุดท้าย (ทั้งชุด) → ทำนายจุดใหม่ (prediction + confidence = สัดส่วน vote)&lt;/b&gt;&lt;br&gt;k ของ k-NN (final) = ค่าที่ดีที่สุดจาก §5 หรือค่าที่โจทย์กำหนด</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="45" y="1048">&lt;b&gt;§7 KNN Regression (label ตัวเลข) → Performance (Regression): RMSE / MAE / R²&lt;/b&gt;&lt;br&gt;Read CSV (regression) → ไฟล์ · Set Role (regression) → label ตัวเลข · k ใน k-NN</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="368">&lt;b&gt;§3 Hold-out: Split Data 70/30 → Normalize (fit train) → k-NN → Apply กับ test → Performance&lt;/b&gt;&lt;br&gt;partitions = 0.7 / 0.3 · ไม่ normalize → ลบ Normalize + Apply Model (normalize) แล้วต่อเส้นตรง</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="718">&lt;b&gt;§4 ⭐ CV: baseline vs k-NN ไม่ normalize vs k-NN + normalize (เทียบก่อน/หลัง preprocessing)&lt;/b&gt;&lt;br&gt;number_of_folds ใน CV แต่ละตัว · k ใน k-NN ข้างใน CV</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="948">&lt;b&gt;§5 ⭐ Optimize Parameters (Grid): k = 1…15 + Log → ตาราง k vs F1 · parameter set = k ที่ดีที่สุด&lt;/b&gt;&lt;br&gt;แก้ช่วง: Optimize Parameters → Edit Parameter Settings (k-NN (opt).k: min, max, steps) · กราฟ: Log to Data → Visualizations → Line</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="1178">&lt;b&gt;§6 โมเดลสุดท้าย (ทั้งชุด) → ทำนายจุดใหม่ (prediction + confidence = สัดส่วน vote)&lt;/b&gt;&lt;br&gt;k ของ k-NN (final) = ค่าที่ดีที่สุดจาก §5 หรือค่าที่โจทย์กำหนด</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="45" y="1528">&lt;b&gt;§7 KNN Regression (label ตัวเลข) → Performance (Regression): RMSE / MAE / R²&lt;/b&gt;&lt;br&gt;Read CSV (regression) → ไฟล์ · Set Role (regression) → label ตัวเลข · k ใน k-NN</description>
     </process>
   </operator>
 </process>

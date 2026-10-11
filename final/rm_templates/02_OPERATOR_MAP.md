@@ -71,7 +71,7 @@
 | Multiply | `multiply` |  |
 | Replace Missing Values | `replace_missing_values` | `default`=average |
 | Filter Examples (not missing) | `filter_examples` | `condition_class`=custom_filters · `filters_list`=[filters_entry_key:body_mass_g.is_not_missing.] |
-| Select Attributes (numeric) | `select_attributes` | `attribute_filter_type`=value_type · `value_type`=numeric · `include_special_attributes`=true |
+| Select Attributes (numeric) | `select_attributes` | `attribute_filter_type`=value_type · `value_type`=numeric · `include_special_attributes`=false |
 | Replace Missing (outlier) | `replace_missing_values` | `default`=average |
 | Detect Outlier (Distances) | `detect_outlier_distances` | `number_of_neighbors`=10 · `number_of_outliers`=10 · `distance_function`=euclidian distance |
 | Filter Examples (no outlier) | `filter_examples` | `condition_class`=custom_filters · `filters_list`=[filters_entry_key:outlier.equals.false] |
@@ -122,7 +122,7 @@
 |---|---|---|
 | Read CSV | `read_csv` | `csv_file`=…/p4_wine.csv |
 | Set Role | `set_role` | `attribute_name`=cultivar · `target_role`=label |
-| Select Attributes | `select_attributes` | `attribute_filter_type`=value_type · `value_type`=numeric · `include_special_attributes`=true |
+| Select Attributes | `select_attributes` | `attribute_filter_type`=value_type · `value_type`=numeric · `include_special_attributes`=false |
 | Multiply | `multiply` |  |
 | Normalize (pca) | `normalize` | `method`=Z-transformation |
 | PCA (keep variance) | `principal_component_analysis` | `dimensionality_reduction`=keep variance · `variance_threshold`=0.95 |
@@ -269,7 +269,7 @@
 | Set Role | `set_role` | `attribute_name`=charges · `target_role`=label |
 | Nominal to Numerical | `nominal_to_numerical` | `coding_type`=dummy coding · `use_comparison_groups`=true · `return_preprocessing_model`=true · `comparison_groups`=[sex:female, smoker:no, region:northeast] |
 | Multiply | `multiply` |  |
-| Select Attributes (simple) | `select_attributes` | `attribute_filter_type`=subset · `attributes`=age\|charges · `include_special_attributes`=true |
+| Select Attributes (simple) | `select_attributes` | `attribute_filter_type`=subset · `attributes`=age\|charges · `include_special_attributes`=false |
 | Linear Regression (simple) | `linear_regression` | `feature_selection`=none · `eliminate_colinear_features`=true · `use_bias`=true |
 | Split Data | `split_data` | `partitions`=[0.8, 0.2] · `sampling_type`=shuffled sampling |
 | Multiply (train) | `multiply` |  |

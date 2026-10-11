@@ -196,7 +196,7 @@
 |---|---|
 | `File ... does not exist` / Read CSV สีแดง | csv_file ผิด → เลือกไฟล์ใหม่ |
 | `The attribute 'xxx' is missing` | ชื่อคอลัมน์ใน Set Role / Select / Filter ไม่ตรง (ตัวพิมพ์ / ช่องว่าง) |
-| `... does not have a label attribute` | ยังไม่ Set Role label / Set Role อยู่หลัง operator ที่ต้องการ label |
+| `... does not have a label attribute` | ยังไม่ Set Role label / Set Role อยู่หลัง operator ที่ต้องการ label / **Select Attributes ตัด label ทิ้ง**: ถ้า `include_special_attributes` = true ตัวกรอง (เช่น value_type = numeric) จะลบ label ที่เป็นคำด้วย → ตั้งเป็น **false** (special attribute ผ่านไปเสมอ) |
 | `... cannot handle numerical label` / `polynominal label` | label เป็นตัวเลข → Numerical to Binominal · label 3 คลาสขึ้นไป → ใช้ **Performance (Classification)** แทน Binominal |
 | `... cannot handle nominal attributes` | Nominal to Numerical ก่อน learner (ใน Training pane) |
 | `... cannot handle missing values` | Replace Missing Values ก่อน learner |

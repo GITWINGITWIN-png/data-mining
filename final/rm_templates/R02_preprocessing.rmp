@@ -30,55 +30,55 @@
       <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values" width="90" x="1000" y="200">
         <parameter key="default" value="average"/>
       </operator>
-      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples (not missing)" width="90" x="1000" y="350">
+      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples (not missing)" width="90" x="1000" y="430">
         <parameter key="condition_class" value="custom_filters"/>
         <list key="filters_list">
           <parameter key="filters_entry_key" value="body_mass_g.is_not_missing."/>
         </list>
       </operator>
-      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes (numeric)" width="90" x="1000" y="500">
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes (numeric)" width="90" x="1000" y="660">
         <parameter key="attribute_filter_type" value="value_type"/>
         <parameter key="value_type" value="numeric"/>
-        <parameter key="include_special_attributes" value="true"/>
+        <parameter key="include_special_attributes" value="false"/>
       </operator>
-      <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing (outlier)" width="90" x="1135" y="500">
+      <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing (outlier)" width="90" x="1135" y="660">
         <parameter key="default" value="average"/>
       </operator>
-      <operator activated="true" class="detect_outlier_distances" compatibility="12.1.001" expanded="true" name="Detect Outlier (Distances)" width="90" x="1270" y="500">
+      <operator activated="true" class="detect_outlier_distances" compatibility="12.1.001" expanded="true" name="Detect Outlier (Distances)" width="90" x="1270" y="660">
         <parameter key="number_of_neighbors" value="10"/>
         <parameter key="number_of_outliers" value="10"/>
         <parameter key="distance_function" value="euclidian distance"/>
       </operator>
-      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples (no outlier)" width="90" x="1405" y="500">
+      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples (no outlier)" width="90" x="1405" y="660">
         <parameter key="condition_class" value="custom_filters"/>
         <list key="filters_list">
           <parameter key="filters_entry_key" value="outlier.equals.false"/>
         </list>
       </operator>
-      <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical" width="90" x="1000" y="650">
+      <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical" width="90" x="1000" y="890">
         <parameter key="coding_type" value="dummy coding"/>
       </operator>
-      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (Z)" width="90" x="1000" y="800">
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (Z)" width="90" x="1000" y="1120">
         <parameter key="method" value="Z-transformation"/>
       </operator>
-      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (0-1)" width="90" x="1000" y="950">
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (0-1)" width="90" x="1000" y="1350">
         <parameter key="method" value="range transformation"/>
         <parameter key="min" value="0.0"/>
         <parameter key="max" value="1.0"/>
       </operator>
-      <operator activated="true" class="discretize_by_bins" compatibility="12.1.001" expanded="true" name="Discretize by Binning" width="90" x="1000" y="1100">
+      <operator activated="true" class="discretize_by_bins" compatibility="12.1.001" expanded="true" name="Discretize by Binning" width="90" x="1000" y="1580">
         <parameter key="attribute_filter_type" value="single"/>
         <parameter key="attribute" value="body_mass_g"/>
         <parameter key="number_of_bins" value="3"/>
         <parameter key="range_name_type" value="short"/>
       </operator>
-      <operator activated="true" class="discretize_by_frequency" compatibility="12.1.001" expanded="true" name="Discretize by Frequency" width="90" x="1000" y="1250">
+      <operator activated="true" class="discretize_by_frequency" compatibility="12.1.001" expanded="true" name="Discretize by Frequency" width="90" x="1000" y="1810">
         <parameter key="attribute_filter_type" value="single"/>
         <parameter key="attribute" value="body_mass_g"/>
         <parameter key="number_of_bins" value="3"/>
         <parameter key="range_name_type" value="short"/>
       </operator>
-      <operator activated="true" class="discretize_by_user_specification" compatibility="12.1.001" expanded="true" name="Discretize by User Specification" width="90" x="1000" y="1400">
+      <operator activated="true" class="discretize_by_user_specification" compatibility="12.1.001" expanded="true" name="Discretize by User Specification" width="90" x="1000" y="2040">
         <parameter key="attribute_filter_type" value="single"/>
         <parameter key="attribute" value="body_mass_g"/>
         <list key="classes">
@@ -87,19 +87,19 @@
           <parameter key="High" value="Infinity"/>
         </list>
       </operator>
-      <operator activated="true" class="sample" compatibility="12.1.001" expanded="true" name="Sample (relative)" width="90" x="1000" y="1550">
+      <operator activated="true" class="sample" compatibility="12.1.001" expanded="true" name="Sample (relative)" width="90" x="1000" y="2270">
         <parameter key="sample" value="relative"/>
         <parameter key="sample_ratio" value="0.3"/>
         <parameter key="use_local_random_seed" value="true"/>
         <parameter key="local_random_seed" value="1992"/>
       </operator>
-      <operator activated="true" class="sample_stratified" compatibility="12.1.001" expanded="true" name="Sample (Stratified)" width="90" x="1000" y="1700">
+      <operator activated="true" class="sample_stratified" compatibility="12.1.001" expanded="true" name="Sample (Stratified)" width="90" x="1000" y="2500">
         <parameter key="sample" value="relative"/>
         <parameter key="sample_ratio" value="0.3"/>
         <parameter key="use_local_random_seed" value="true"/>
         <parameter key="local_random_seed" value="1992"/>
       </operator>
-      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="1000" y="1850">
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="1000" y="2730">
         <enumeration key="partitions">
           <parameter key="ratio" value="0.7"/>
           <parameter key="ratio" value="0.3"/>
@@ -108,20 +108,20 @@
         <parameter key="use_local_random_seed" value="true"/>
         <parameter key="local_random_seed" value="1992"/>
       </operator>
-      <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing (train)" width="90" x="1135" y="1850">
+      <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing (train)" width="90" x="1135" y="2730">
         <parameter key="default" value="average"/>
         <parameter key="return_preprocessing_model" value="true"/>
       </operator>
-      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (train)" width="90" x="1270" y="1850">
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (train)" width="90" x="1270" y="2730">
         <parameter key="method" value="Z-transformation"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (missing → test)" width="90" x="1135" y="1928">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (missing → test)" width="90" x="1135" y="2878">
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize → test)" width="90" x="1270" y="1928">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize → test)" width="90" x="1270" y="2878">
       </operator>
-      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="1000" y="2060">
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="1000" y="3080">
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN raw" width="90" x="1135" y="2060">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN raw" width="90" x="1135" y="3080">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -165,7 +165,7 @@
           <connect from_op="Performance (kNN raw)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN normalized" width="90" x="1270" y="2060">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN normalized" width="90" x="1270" y="3080">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -214,12 +214,12 @@
           <connect from_op="Performance (kNN normalized)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="weight_by_information_gain" compatibility="12.1.001" expanded="true" name="Weight by Information Gain" width="90" x="1000" y="2210">
+      <operator activated="true" class="weight_by_information_gain" compatibility="12.1.001" expanded="true" name="Weight by Information Gain" width="90" x="1000" y="3310">
         <parameter key="normalize_weights" value="false"/>
         <parameter key="sort_weights" value="true"/>
         <parameter key="sort_direction" value="descending"/>
       </operator>
-      <operator activated="true" class="select_by_weights" compatibility="12.1.001" expanded="true" name="Select by Weights" width="90" x="1135" y="2210">
+      <operator activated="true" class="select_by_weights" compatibility="12.1.001" expanded="true" name="Select by Weights" width="90" x="1135" y="3310">
         <parameter key="weight_relation" value="top k"/>
         <parameter key="k" value="3"/>
       </operator>
@@ -274,19 +274,19 @@
       <description align="left" color="green" colored="true" height="108" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Declare Missing Value → ค่าที่แปลว่าว่าง เช่น ? (ไม่มี → ลบ operator)&lt;br&gt;2. Set Role → attribute_name = label&lt;br&gt;3. แต่ละแถว: แก้ attribute / attributes ให้ตรงคอลัมน์ของโจทย์ (ดูโน้ตเหลืองของแถวนั้น)&lt;br&gt;§1–§7 = ทำกับทั้งตาราง (สาธิต) · §8 = วิธีถูกต้องตอนสร้างโมเดล (fit บน train / ใน CV เท่านั้น)</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="45" y="138">&lt;b&gt;§0 ข้อมูลดิบ → res 1&lt;/b&gt;&lt;br&gt;res 1 → Statistics: ดูจำนวน Missing ของแต่ละคอลัมน์ · ชนิด (nominal/numeric) · range</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="138">&lt;b&gt;§2 Missing: Replace Missing Values&lt;/b&gt;&lt;br&gt;default = average / minimum / maximum / zero / value (replenishment_value) · ตัดแถวแทน: Filter Examples (attr.is_not_missing.)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="288">&lt;b&gt;§2b Missing: ตัดแถวที่ว่าง&lt;/b&gt;&lt;br&gt;Filter Examples → filters_list: body_mass_g.is_not_missing. (แก้ชื่อคอลัมน์)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="438">&lt;b&gt;§3 Outlier: Detect Outlier (Distances) → ตัดแถว outlier&lt;/b&gt;&lt;br&gt;number_of_neighbors (k) · number_of_outliers (n แถวที่ไกลสุด) · ผลมีคอลัมน์ outlier = true/false → Filter Examples outlier.equals.false</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="588">&lt;b&gt;§4 Encoding: Nominal to Numerical (dummy = one-hot)&lt;/b&gt;&lt;br&gt;coding_type = dummy coding (one-hot) / unique integers (label encoding) / effect coding · attribute_filter_type = all หรือ subset</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="738">&lt;b&gt;§5a Standardization: Normalize (Z-transformation)&lt;/b&gt;&lt;br&gt;method = Z-transformation → mean 0, std 1 (RapidMiner ใช้ n−1)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="888">&lt;b&gt;§5b Normalization: Normalize (range transformation 0–1)&lt;/b&gt;&lt;br&gt;method = range transformation · min = 0 · max = 1</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1038">&lt;b&gt;§6a Discretize by Binning (equal width)&lt;/b&gt;&lt;br&gt;attribute = คอลัมน์ · number_of_bins · range_name_type = short (ชื่อ range1, range2 …)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1188">&lt;b&gt;§6b Discretize by Frequency (equal frequency)&lt;/b&gt;&lt;br&gt;จำนวนต่อช่วงเท่ากัน · ทนข้อมูลเบ้</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1338">&lt;b&gt;§6c Discretize by User Specification (ขอบกำหนดเอง)&lt;/b&gt;&lt;br&gt;classes → Edit List: ชื่อช่วง + upper limit (ค่าบนสุดของช่วง · ช่วงสุดท้ายใส่ Infinity)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1488">&lt;b&gt;§7a Sample (สุ่ม 30%)&lt;/b&gt;&lt;br&gt;sample = relative · sample_ratio = 0.3 · (absolute → sample_size)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1638">&lt;b&gt;§7b Sample (Stratified) — รักษาสัดส่วนคลาส&lt;/b&gt;&lt;br&gt;ต้องมี label · sample = relative · sample_ratio</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1788">&lt;b&gt;§8 ⭐ Split Data ไม่ให้ leak: Replace Missing + Normalize fit บน train → Apply Model (preprocessing model) กับ test&lt;/b&gt;&lt;br&gt;res = train ที่ preprocess แล้ว + test ที่ใช้ค่า mean/std จาก train · Split Data → partitions (0.7 / 0.3) · sampling_type = stratified</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1998">&lt;b&gt;§8b ⭐ เทียบก่อน/หลัง preprocessing: k-NN ไม่ normalize vs normalize (ทุกอย่างอยู่ใน Training pane ของ CV)&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV เพื่อดูข้างใน · เปรียบเทียบ accuracy ใน res · เปลี่ยน learner ได้ (ลาก operator ใหม่แทน k-NN)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="2148">&lt;b&gt;§9 Feature selection: Weight by Information Gain → Select by Weights (top k)&lt;/b&gt;&lt;br&gt;weight_relation = top k · k = จำนวน feature · เปลี่ยนเป็น Weight by Correlation / Gini Index ได้ · ⚠️ ใช้ใน CV ถ้าจะวัดผลโมเดล</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="368">&lt;b&gt;§2b Missing: ตัดแถวที่ว่าง&lt;/b&gt;&lt;br&gt;Filter Examples → filters_list: body_mass_g.is_not_missing. (แก้ชื่อคอลัมน์)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="598">&lt;b&gt;§3 Outlier: Detect Outlier (Distances) → ตัดแถว outlier&lt;/b&gt;&lt;br&gt;number_of_neighbors (k) · number_of_outliers (n แถวที่ไกลสุด) · ผลมีคอลัมน์ outlier = true/false → Filter Examples outlier.equals.false</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="828">&lt;b&gt;§4 Encoding: Nominal to Numerical (dummy = one-hot)&lt;/b&gt;&lt;br&gt;coding_type = dummy coding (one-hot) / unique integers (label encoding) / effect coding · attribute_filter_type = all หรือ subset</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1058">&lt;b&gt;§5a Standardization: Normalize (Z-transformation)&lt;/b&gt;&lt;br&gt;method = Z-transformation → mean 0, std 1 (RapidMiner ใช้ n−1)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1288">&lt;b&gt;§5b Normalization: Normalize (range transformation 0–1)&lt;/b&gt;&lt;br&gt;method = range transformation · min = 0 · max = 1</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1518">&lt;b&gt;§6a Discretize by Binning (equal width)&lt;/b&gt;&lt;br&gt;attribute = คอลัมน์ · number_of_bins · range_name_type = short (ชื่อ range1, range2 …)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1748">&lt;b&gt;§6b Discretize by Frequency (equal frequency)&lt;/b&gt;&lt;br&gt;จำนวนต่อช่วงเท่ากัน · ทนข้อมูลเบ้</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1978">&lt;b&gt;§6c Discretize by User Specification (ขอบกำหนดเอง)&lt;/b&gt;&lt;br&gt;classes → Edit List: ชื่อช่วง + upper limit (ค่าบนสุดของช่วง · ช่วงสุดท้ายใส่ Infinity)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="2208">&lt;b&gt;§7a Sample (สุ่ม 30%)&lt;/b&gt;&lt;br&gt;sample = relative · sample_ratio = 0.3 · (absolute → sample_size)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="2438">&lt;b&gt;§7b Sample (Stratified) — รักษาสัดส่วนคลาส&lt;/b&gt;&lt;br&gt;ต้องมี label · sample = relative · sample_ratio</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="2668">&lt;b&gt;§8 ⭐ Split Data ไม่ให้ leak: Replace Missing + Normalize fit บน train → Apply Model (preprocessing model) กับ test&lt;/b&gt;&lt;br&gt;res = train ที่ preprocess แล้ว + test ที่ใช้ค่า mean/std จาก train · Split Data → partitions (0.7 / 0.3) · sampling_type = stratified</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="3018">&lt;b&gt;§8b ⭐ เทียบก่อน/หลัง preprocessing: k-NN ไม่ normalize vs normalize (ทุกอย่างอยู่ใน Training pane ของ CV)&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV เพื่อดูข้างใน · เปรียบเทียบ accuracy ใน res · เปลี่ยน learner ได้ (ลาก operator ใหม่แทน k-NN)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="3248">&lt;b&gt;§9 Feature selection: Weight by Information Gain → Select by Weights (top k)&lt;/b&gt;&lt;br&gt;weight_relation = top k · k = จำนวน feature · เปลี่ยนเป็น Weight by Correlation / Gini Index ได้ · ⚠️ ใช้ใน CV ถ้าจะวัดผลโมเดล</description>
     </process>
   </operator>
 </process>

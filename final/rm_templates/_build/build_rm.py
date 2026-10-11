@@ -241,7 +241,9 @@ def write(t, name):
     print("wrote", path.name, f"({len(t.m.ops)} operators, {t.n} results)")
 
 
-LANE = 150     # ระยะห่างแนวตั้งระหว่างแถว
+LANE = 230     # ระยะห่างแนวตั้งระหว่างแถว (CV สูง ~165px + โน้ต 56px)
+ROW2 = 210     # แถวที่ 2 ภายใน lane (ใต้ operator 3 port)
+LANE2 = 350    # lane ที่มี 2 แถว
 
 
 # ════════════════════════════ R01 · Data Handling ════════════════════════════
@@ -363,7 +365,7 @@ def r02():
                    "filters_list": ("list", [("filters_entry_key", "body_mass_g.is_not_missing.")])})]), "example set output")
     t.res(lane("§3 Outlier: Detect Outlier (Distances) → ตัดแถว outlier", "number_of_neighbors (k) · number_of_outliers (n แถวที่ไกลสุด) · ผลมีคอลัมน์ outlier = true/false → Filter Examples outlier.equals.false",
                [Op("select_attributes", "Select Attributes (numeric)", {"attribute_filter_type": "value_type", "value_type": "numeric",
-                                                                        "include_special_attributes": True}),
+                                                                        "include_special_attributes": False}),
                 Op("replace_missing_values", "Replace Missing (outlier)", {"default": "average"}),
                 Op("detect_outlier_distances", "Detect Outlier (Distances)", {
                     "number_of_neighbors": 10, "number_of_outliers": 10, "distance_function": "euclidian distance"}),
@@ -403,12 +405,12 @@ def r02():
                    x=x0 + 135, y=yy + 62))
     nm = t.add(norm("Normalize (train)", x=x0 + 270, y=yy + 62))
     t.wire(sp, "partition 1", rmv, "example set input"); chain(t, [rmv, nm])
-    a1 = t.add(Op("apply_model", "Apply Model (missing → test)", {}, x=x0 + 135, y=yy + 140))
-    a2 = t.add(Op("apply_model", "Apply Model (normalize → test)", {}, x=x0 + 270, y=yy + 140))
+    a1 = t.add(Op("apply_model", "Apply Model (missing → test)", {}, x=x0 + 135, y=yy + ROW2))
+    a2 = t.add(Op("apply_model", "Apply Model (normalize → test)", {}, x=x0 + 270, y=yy + ROW2))
     t.wire(rmv, "preprocessing model", a1, "model"); t.wire(sp, "partition 2", a1, "unlabelled data")
     t.wire(nm, "preprocessing model", a2, "model"); t.wire(a1, "labelled data", a2, "unlabelled data")
     t.res(nm, "example set output"); t.res(a2, "labelled data")
-    yy += LANE + 60
+    yy += LANE2
 
     # §8b เทียบก่อน/หลัง normalize ด้วย k-NN ใน CV (preprocessing อยู่ใน Training pane)
     lane_note(t, "§8b ⭐ เทียบก่อน/หลัง preprocessing: k-NN ไม่ normalize vs normalize (ทุกอย่างอยู่ใน Training pane ของ CV)",
@@ -447,7 +449,7 @@ def r03():
     rd = t.add(read_csv("Read CSV", DATA("p4_wine.csv"), y=y))
     role = t.add(set_role("Set Role", "cultivar", x=180, y=y))
     sel = t.add(Op("select_attributes", "Select Attributes", {"attribute_filter_type": "value_type", "value_type": "numeric",
-                                                              "include_special_attributes": True}, x=315, y=y))
+                                                              "include_special_attributes": False}, x=315, y=y))
     mul = t.add(multiply("Multiply", 450, y))
     chain(t, [rd, role, sel, mul])
     lane_note(t, "§2–§3 Normalize → PCA (keep variance 0.95) → res: scores + model (eigenvalues / loadings)",
@@ -561,14 +563,14 @@ def r05():
     nm = t.add(norm("Normalize (hold-out)", x=735, y=yy + 62))
     kn = t.add(knn("k-NN (hold-out)", 3)); kn.x, kn.y = 870, yy + 62
     t.wire(sp, "partition 1", nm, "example set input"); t.wire(nm, "example set output", kn, "training set")
-    a1 = t.add(Op("apply_model", "Apply Model (normalize test)", {}, x=870, y=yy + 150))
-    a2 = t.add(Op("apply_model", "Apply Model (kNN test)", {}, x=1005, y=yy + 150))
+    a1 = t.add(Op("apply_model", "Apply Model (normalize test)", {}, x=870, y=yy + ROW2))
+    a2 = t.add(Op("apply_model", "Apply Model (kNN test)", {}, x=1005, y=yy + ROW2))
     t.wire(nm, "preprocessing model", a1, "model"); t.wire(sp, "partition 2", a1, "unlabelled data")
     t.wire(kn, "model", a2, "model"); t.wire(a1, "labelled data", a2, "unlabelled data")
-    pf = t.add(binom_perf("Performance (hold-out)", positive="Owner", x=1140, y=yy + 150))
+    pf = t.add(binom_perf("Performance (hold-out)", positive="Owner", x=1140, y=yy + ROW2))
     t.wire(a2, "labelled data", pf, "labelled data")
     t.res(pf, "performance"); t.res(pf, "example set")
-    yy += LANE + 80
+    yy += LANE2
     # §4 CV compare
     lane_note(t, "§4 ⭐ CV: baseline vs k-NN ไม่ normalize vs k-NN + normalize (เทียบก่อน/หลัง preprocessing)",
               "number_of_folds ใน CV แต่ละตัว · k ใน k-NN ข้างใน CV", yy, x=600, w=820)
@@ -592,12 +594,12 @@ def r05():
     nf = t.add(norm("Normalize (final)", x=600, y=yy + 62))
     kf = t.add(knn("k-NN (final)", 3)); kf.x, kf.y = 735, yy + 62
     t.wire(mul, "output 5", nf, "example set input"); t.wire(nf, "example set output", kf, "training set")
-    b1 = t.add(Op("apply_model", "Apply Model (normalize new)", {}, x=735, y=yy + 150))
-    b2 = t.add(Op("apply_model", "Apply Model (kNN new)", {}, x=870, y=yy + 150))
+    b1 = t.add(Op("apply_model", "Apply Model (normalize new)", {}, x=735, y=yy + ROW2))
+    b2 = t.add(Op("apply_model", "Apply Model (kNN new)", {}, x=870, y=yy + ROW2))
     t.wire(nf, "preprocessing model", b1, "model"); t.wire(mn, "output 2", b1, "unlabelled data")
     t.wire(kf, "model", b2, "model"); t.wire(b1, "labelled data", b2, "unlabelled data")
     t.res(b2, "labelled data")
-    yy += LANE + 80
+    yy += LANE2
     # §7 KNN regression
     lane_note(t, "§7 KNN Regression (label ตัวเลข) → Performance (Regression): RMSE / MAE / R²",
               "Read CSV (regression) → ไฟล์ · Set Role (regression) → label ตัวเลข · k ใน k-NN", yy, x=45, w=900)
@@ -632,7 +634,7 @@ def r06():
     lane_note(t, "§3 Simple linear regression (x ตัวเดียว) บนข้อมูลทั้งหมด → สมการ y = b0 + b1·x",
               "Select Attributes → attributes = age|charges (x|label)", yy, x=600, w=820)
     s = t.add(Op("select_attributes", "Select Attributes (simple)", {"attribute_filter_type": "subset", "attributes": "age|charges",
-                                                                    "include_special_attributes": True}, x=600, y=yy + 62))
+                                                                    "include_special_attributes": False}, x=600, y=yy + 62))
     l1 = t.add(Op("linear_regression", "Linear Regression (simple)", {"feature_selection": "none", "eliminate_colinear_features": True,
                                                                       "use_bias": True}, x=735, y=yy + 62))
     t.wire(mul, "output 1", s, "example set input"); t.wire(s, "example set output", l1, "training set")
@@ -643,22 +645,22 @@ def r06():
     sp = t.add(Op("split_data", "Split Data", {"partitions": ("enum", [0.8, 0.2], "ratio"), "sampling_type": "shuffled sampling",
                                                "use_local_random_seed": True, "local_random_seed": SEED}, x=600, y=yy + 62))
     t.wire(mul, "output 2", sp, "example set")
-    mtr = t.add(multiply("Multiply (train)", 735, yy + 62)); mte = t.add(multiply("Multiply (test)", 735, yy + 150))
+    mtr = t.add(multiply("Multiply (train)", 735, yy + 62)); mte = t.add(multiply("Multiply (test)", 735, yy + ROW2))
     t.wire(sp, "partition 1", mtr, "input"); t.wire(sp, "partition 2", mte, "input")
     for i, (tag, lr) in enumerate([("Baseline mean", baseline("Default Model (mean)", "average")),
                                    ("Linear Regression", Op("linear_regression", "Linear Regression", {
                                        "feature_selection": "none", "eliminate_colinear_features": True, "use_bias": True}))]):
-        lr.x, lr.y = 870, yy + 62 + 88 * i
+        lr.x, lr.y = 870, yy + 62 + (ROW2 - 62) * i
         t.add(lr)
         t.wire(mtr, f"output {i + 1}", lr, "training set")
-        ap = t.add(Op("apply_model", f"Apply Model ({tag})", {}, x=1005, y=yy + 62 + 88 * i))
+        ap = t.add(Op("apply_model", f"Apply Model ({tag})", {}, x=1005, y=yy + 62 + (ROW2 - 62) * i))
         t.wire(lr, "model", ap, "model"); t.wire(mte, f"output {i + 1}", ap, "unlabelled data")
-        pf = t.add(reg_perf(f"Performance ({tag})", x=1140, y=yy + 62 + 88 * i))
+        pf = t.add(reg_perf(f"Performance ({tag})", x=1140, y=yy + 62 + (ROW2 - 62) * i))
         t.wire(ap, "labelled data", pf, "labelled data")
         t.res(pf, "performance")
         if tag == "Linear Regression":
             t.res(ap, "model")
-    yy += LANE + 90
+    yy += LANE2
     lane_note(t, "§6 เทียบใน CV: LR vs k-NN regression vs Decision Tree regression",
               "ดู RMSE ต่ำสุด / R² สูงสุด", yy, x=600, w=820)
     mm = t.add(multiply("Multiply (compare)", 600, yy + 62))
@@ -674,9 +676,9 @@ def r06():
     lane_note(t, "§7 ทำนายข้อมูลใหม่: dummy coding เดิม (preprocessing model) → Linear Regression (ทั้งชุด)", "", yy, x=600, w=820, h=40)
     lf = t.add(Op("linear_regression", "Linear Regression (final)", {"feature_selection": "none"}, x=600, y=yy + 62))
     t.wire(mul, "output 4", lf, "training set")
-    rn = t.add(read_csv("Read CSV (new)", NEW("new_insurance.csv"), x=600, y=yy + 140))
-    b1 = t.add(Op("apply_model", "Apply Model (dummy new)", {}, x=735, y=yy + 140))
-    b2 = t.add(Op("apply_model", "Apply Model (LR new)", {}, x=870, y=yy + 140))
+    rn = t.add(read_csv("Read CSV (new)", NEW("new_insurance.csv"), x=600, y=yy + ROW2))
+    b1 = t.add(Op("apply_model", "Apply Model (dummy new)", {}, x=735, y=yy + ROW2))
+    b2 = t.add(Op("apply_model", "Apply Model (LR new)", {}, x=870, y=yy + ROW2))
     t.wire(n2n, "preprocessing model", b1, "model"); t.wire(rn, "output", b1, "unlabelled data")
     t.wire(lf, "model", b2, "model"); t.wire(b1, "labelled data", b2, "unlabelled data")
     t.res(b2, "labelled data")
@@ -710,17 +712,17 @@ def r07():
                    x=855, y=y0 + 62))
     lr = t.add(logreg()); lr.x, lr.y = 990, y0 + 62
     t.wire(sp, "partition 1", rmv, "example set input"); t.wire(rmv, "example set output", lr, "training set")
-    a1 = t.add(Op("apply_model", "Apply Model (impute test)", {}, x=990, y=y0 + 140))
-    a2 = t.add(Op("apply_model", "Apply Model (logistic)", {}, x=1125, y=y0 + 140))
+    a1 = t.add(Op("apply_model", "Apply Model (impute test)", {}, x=990, y=y0 + ROW2))
+    a2 = t.add(Op("apply_model", "Apply Model (logistic)", {}, x=1125, y=y0 + ROW2))
     t.wire(rmv, "preprocessing model", a1, "model"); t.wire(sp, "partition 2", a1, "unlabelled data")
     t.wire(lr, "model", a2, "model"); t.wire(a1, "labelled data", a2, "unlabelled data")
     mmod = t.add(multiply("Multiply (model)", 1260, y0 + 62))
     t.wire(a2, "model", mmod, "input")
     t.res(mmod, "output 1")
-    mul = t.add(multiply("Multiply (scored test)", 1260, y0 + 140))
+    mul = t.add(multiply("Multiply (scored test)", 1260, y0 + ROW2))
     t.wire(a2, "labelled data", mul, "input")
     t.res(mul, "output 1")
-    yy = y0 + LANE + 90
+    yy = y0 + LANE2 + 40   # Multiply (scored test) 5 port
     lane_note(t, "§5 ⭐ Threshold: default ของ H2O vs 0.5 vs 0.3 → confusion matrix + precision / recall / F1",
               "เพิ่ม threshold อื่น: copy Create Threshold + Apply Threshold + Performance แล้วต่อจาก Multiply (scored test) port ถัดไป",
               yy, x=720, w=820)
@@ -728,7 +730,7 @@ def r07():
     t.wire(mul, "output 2", pd_, "labelled data")
     t.res(pd_, "performance")
     for j, thv in enumerate([0.5, 0.3]):
-        yj = yy + 140 + 90 * j
+        yj = yy + ROW2 + 150 * j
         thr = t.add(Op("create_threshold", f"Create Threshold {thv}", {"threshold": thv, "first_class": "false",
                                                                      "second_class": "true"}, x=990, y=yj))
         apt = t.add(Op("apply_threshold", f"Apply Threshold {thv}", {}, x=1125, y=yj))
@@ -736,7 +738,7 @@ def r07():
         pf = t.add(binom_perf(f"Performance (t={thv})", positive="true", x=1260, y=yj))
         t.wire(apt, "example set", pf, "labelled data")
         t.res(pf, "performance")
-    yy += LANE + 200
+    yy += ROW2 + 150 + 140
     lane_note(t, "§2 / §6 Baseline vs Logistic ใน 10-fold CV (Replace Missing อยู่ใน Training pane)", "", yy, x=45, w=900, h=40)
     mm = t.add(multiply("Multiply (CV)", 45, yy + 62))
     t.wire(mul0, "output 2", mm, "input")
@@ -821,8 +823,8 @@ def r08():
     lane_note(t, "§5 Random Forest บนข้อมูลทั้งหมด → ทำนายข้อมูลใหม่", "Read CSV (new) → ไฟล์ข้อมูลใหม่ · number_of_trees", yy, x=600, w=820, h=50)
     rff = t.add(rf("Random Forest (final)", trees=100)); rff.x, rff.y = 600, yy + 62
     t.wire(mul, "output 6", rff, "training set")
-    rn = t.add(read_csv("Read CSV (new)", NEW("new_heart.csv"), x=600, y=yy + 140))
-    b = t.add(Op("apply_model", "Apply Model (new)", {}, x=735, y=yy + 100))
+    rn = t.add(read_csv("Read CSV (new)", NEW("new_heart.csv"), x=600, y=yy + ROW2))
+    b = t.add(Op("apply_model", "Apply Model (new)", {}, x=735, y=yy + 136))
     t.wire(rff, "model", b, "model"); t.wire(rn, "output", b, "unlabelled data")
     t.res(b, "labelled data")
     write(t, "R08_decision_tree_rf.rmp")
@@ -859,7 +861,7 @@ def r09():
         c = t.add(cv(tag, lrn, binom_perf(f"Performance ({tag})", positive=pos), steps=steps, folds=10, x=735 + 135 * i, y=yy + 62))
         t.wire(mm, f"output {i + 1}", c, "example set")
         t.res(c, "performance 1")
-    yy += LANE
+    yy += LANE + 40   # Multiply 6 port สูงกว่า CV
     lane_note(t, "§5 ⭐ Optimize k-NN: k = 1…31 (+ Log)", "Edit Parameter Settings เพื่อเปลี่ยนช่วง", yy, x=600, w=900, h=50)
     inner = cv("opt kNN", knn("k-NN"), binom_perf("Performance (opt kNN)", positive=pos), steps=prep())
     optimize(t, mul, "output 2", inner, [("k-NN (opt kNN).k", "[1.0;31.0;15;linear]")],
@@ -877,8 +879,8 @@ def r09():
               "Decision Tree (final) → maximal_depth / criterion ตามผล optimize · Read CSV (new) → ไฟล์ใหม่", yy, x=600, w=900)
     fin = t.add(dt("Decision Tree (final)", 6)); fin.x, fin.y = 600, yy + 62
     t.wire(mul, "output 4", fin, "training set")
-    rn = t.add(read_csv("Read CSV (new)", NEW("new_bank.csv"), x=600, y=yy + 140))
-    b = t.add(Op("apply_model", "Apply Model (new)", {}, x=735, y=yy + 100))
+    rn = t.add(read_csv("Read CSV (new)", NEW("new_bank.csv"), x=600, y=yy + ROW2))
+    b = t.add(Op("apply_model", "Apply Model (new)", {}, x=735, y=yy + 136))
     t.wire(fin, "model", b, "model"); t.wire(rn, "output", b, "unlabelled data")
     t.res(b, "labelled data"); t.res(b, "model")
     write(t, "R09_classification_workflow.rmp")
@@ -911,10 +913,10 @@ def r10():
     t.wire(km, "clustered set", cdp, "example set"); t.wire(km, "cluster model", cdp, "cluster model")
     mc = t.add(multiply("Multiply (clustered)", 870, yy + 62))
     t.wire(cdp, "example set", mc, "input")
-    mcm = t.add(multiply("Multiply (cluster model)", 870, yy + 150))
+    mcm = t.add(multiply("Multiply (cluster model)", 870, yy + ROW2))
     t.wire(cdp, "cluster model", mcm, "input")
     t.res(cdp, "performance"); t.res(mc, "output 1"); t.res(mcm, "output 1")
-    yy += LANE + 80
+    yy += LANE2
     lane_note(t, "§3b Profile แต่ละกลุ่มในหน่วยเดิม: Aggregate average ตาม cluster",
               "group_by = cluster · ค่าเฉลี่ยของ feature (เป็นค่า normalize — อยากได้หน่วยเดิม Join กลับกับข้อมูลดิบด้วย id)", yy, x=600, w=820)
     agg = t.add(Op("aggregate", "Aggregate (profile)", {"use_default_aggregation": True, "default_aggregation_function": "average",
