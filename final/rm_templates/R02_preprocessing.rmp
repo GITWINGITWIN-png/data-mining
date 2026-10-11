@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="198">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p2_penguins.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="declare_missing_value" compatibility="12.1.001" expanded="true" name="Declare Missing Value" width="90" x="180" y="198">
+        <parameter key="attribute_filter_type" value="all"/>
+        <parameter key="mode" value="nominal"/>
+        <parameter key="nominal_value" value="?"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="315" y="198">
+        <parameter key="attribute_name" value="species"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="450" y="198">
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values" width="90" x="1000" y="200">
+        <parameter key="default" value="average"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples (not missing)" width="90" x="1000" y="350">
+        <parameter key="condition_class" value="custom_filters"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="body_mass_g.is_not_missing."/>
+        </list>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes (numeric)" width="90" x="1000" y="500">
+        <parameter key="attribute_filter_type" value="value_type"/>
+        <parameter key="value_type" value="numeric"/>
+        <parameter key="include_special_attributes" value="true"/>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing (outlier)" width="90" x="1135" y="500">
+        <parameter key="default" value="average"/>
+      </operator>
+      <operator activated="true" class="detect_outlier_distances" compatibility="12.1.001" expanded="true" name="Detect Outlier (Distances)" width="90" x="1270" y="500">
+        <parameter key="number_of_neighbors" value="10"/>
+        <parameter key="number_of_outliers" value="10"/>
+        <parameter key="distance_function" value="euclidian distance"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples (no outlier)" width="90" x="1405" y="500">
+        <parameter key="condition_class" value="custom_filters"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="outlier.equals.false"/>
+        </list>
+      </operator>
+      <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical" width="90" x="1000" y="650">
+        <parameter key="coding_type" value="dummy coding"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (Z)" width="90" x="1000" y="800">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (0-1)" width="90" x="1000" y="950">
+        <parameter key="method" value="range transformation"/>
+        <parameter key="min" value="0.0"/>
+        <parameter key="max" value="1.0"/>
+      </operator>
+      <operator activated="true" class="discretize_by_bins" compatibility="12.1.001" expanded="true" name="Discretize by Binning" width="90" x="1000" y="1100">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="body_mass_g"/>
+        <parameter key="number_of_bins" value="3"/>
+        <parameter key="range_name_type" value="short"/>
+      </operator>
+      <operator activated="true" class="discretize_by_frequency" compatibility="12.1.001" expanded="true" name="Discretize by Frequency" width="90" x="1000" y="1250">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="body_mass_g"/>
+        <parameter key="number_of_bins" value="3"/>
+        <parameter key="range_name_type" value="short"/>
+      </operator>
+      <operator activated="true" class="discretize_by_user_specification" compatibility="12.1.001" expanded="true" name="Discretize by User Specification" width="90" x="1000" y="1400">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="body_mass_g"/>
+        <list key="classes">
+          <parameter key="Low" value="3500"/>
+          <parameter key="Mid" value="4500"/>
+          <parameter key="High" value="Infinity"/>
+        </list>
+      </operator>
+      <operator activated="true" class="sample" compatibility="12.1.001" expanded="true" name="Sample (relative)" width="90" x="1000" y="1550">
+        <parameter key="sample" value="relative"/>
+        <parameter key="sample_ratio" value="0.3"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="sample_stratified" compatibility="12.1.001" expanded="true" name="Sample (Stratified)" width="90" x="1000" y="1700">
+        <parameter key="sample" value="relative"/>
+        <parameter key="sample_ratio" value="0.3"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="1000" y="1850">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.7"/>
+          <parameter key="ratio" value="0.3"/>
+        </enumeration>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing (train)" width="90" x="1135" y="1850">
+        <parameter key="default" value="average"/>
+        <parameter key="return_preprocessing_model" value="true"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (train)" width="90" x="1270" y="1850">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (missing → test)" width="90" x="1135" y="1928">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize → test)" width="90" x="1270" y="1928">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="1000" y="2060">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN raw" width="90" x="1135" y="2060">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (kNN raw)" width="90" x="45" y="85">
+            <parameter key="default" value="average"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical (kNN raw)" width="90" x="180" y="85">
+            <parameter key="coding_type" value="dummy coding"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (kNN raw)" width="90" x="315" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (kNN raw)" width="90" x="450" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Replace Missing Values (kNN raw)" to_port="example set input"/>
+          <connect from_op="Replace Missing Values (kNN raw)" from_port="example set output" to_op="Nominal to Numerical (kNN raw)" to_port="example set input"/>
+          <connect from_op="Nominal to Numerical (kNN raw)" from_port="example set output" to_op="k-NN (kNN raw)" to_port="training set"/>
+          <connect from_op="Replace Missing Values (kNN raw)" from_port="preprocessing model" to_op="Group Models (kNN raw)" to_port="models in 1"/>
+          <connect from_op="Nominal to Numerical (kNN raw)" from_port="preprocessing model" to_op="Group Models (kNN raw)" to_port="models in 2"/>
+          <connect from_op="k-NN (kNN raw)" from_port="model" to_op="Group Models (kNN raw)" to_port="models in 3"/>
+          <connect from_op="Group Models (kNN raw)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN raw)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="12.1.001" expanded="true" name="Performance (kNN raw)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="kappa" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (kNN raw)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (kNN raw)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (kNN raw)" from_port="labelled data" to_op="Performance (kNN raw)" to_port="labelled data"/>
+          <connect from_op="Performance (kNN raw)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN normalized" width="90" x="1270" y="2060">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (kNN normalized)" width="90" x="45" y="85">
+            <parameter key="default" value="average"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical (kNN normalized)" width="90" x="180" y="85">
+            <parameter key="coding_type" value="dummy coding"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (kNN normalized)" width="90" x="315" y="85">
+            <parameter key="method" value="Z-transformation"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (kNN normalized)" width="90" x="450" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (kNN normalized)" width="90" x="585" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Replace Missing Values (kNN normalized)" to_port="example set input"/>
+          <connect from_op="Replace Missing Values (kNN normalized)" from_port="example set output" to_op="Nominal to Numerical (kNN normalized)" to_port="example set input"/>
+          <connect from_op="Nominal to Numerical (kNN normalized)" from_port="example set output" to_op="Normalize (kNN normalized)" to_port="example set input"/>
+          <connect from_op="Normalize (kNN normalized)" from_port="example set output" to_op="k-NN (kNN normalized)" to_port="training set"/>
+          <connect from_op="Replace Missing Values (kNN normalized)" from_port="preprocessing model" to_op="Group Models (kNN normalized)" to_port="models in 1"/>
+          <connect from_op="Nominal to Numerical (kNN normalized)" from_port="preprocessing model" to_op="Group Models (kNN normalized)" to_port="models in 2"/>
+          <connect from_op="Normalize (kNN normalized)" from_port="preprocessing model" to_op="Group Models (kNN normalized)" to_port="models in 3"/>
+          <connect from_op="k-NN (kNN normalized)" from_port="model" to_op="Group Models (kNN normalized)" to_port="models in 4"/>
+          <connect from_op="Group Models (kNN normalized)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN normalized)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="12.1.001" expanded="true" name="Performance (kNN normalized)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="kappa" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (kNN normalized)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (kNN normalized)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (kNN normalized)" from_port="labelled data" to_op="Performance (kNN normalized)" to_port="labelled data"/>
+          <connect from_op="Performance (kNN normalized)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="weight_by_information_gain" compatibility="12.1.001" expanded="true" name="Weight by Information Gain" width="90" x="1000" y="2210">
+        <parameter key="normalize_weights" value="false"/>
+        <parameter key="sort_weights" value="true"/>
+        <parameter key="sort_direction" value="descending"/>
+      </operator>
+      <operator activated="true" class="select_by_weights" compatibility="12.1.001" expanded="true" name="Select by Weights" width="90" x="1135" y="2210">
+        <parameter key="weight_relation" value="top k"/>
+        <parameter key="k" value="3"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Declare Missing Value" to_port="example set input"/>
+      <connect from_op="Declare Missing Value" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Replace Missing Values" to_port="example set input"/>
+      <connect from_op="Replace Missing Values" from_port="example set output" to_port="result 2"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Filter Examples (not missing)" to_port="example set input"/>
+      <connect from_op="Filter Examples (not missing)" from_port="example set output" to_port="result 3"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="Select Attributes (numeric)" to_port="example set input"/>
+      <connect from_op="Select Attributes (numeric)" from_port="example set output" to_op="Replace Missing (outlier)" to_port="example set input"/>
+      <connect from_op="Replace Missing (outlier)" from_port="example set output" to_op="Detect Outlier (Distances)" to_port="example set input"/>
+      <connect from_op="Detect Outlier (Distances)" from_port="example set output" to_op="Filter Examples (no outlier)" to_port="example set input"/>
+      <connect from_op="Filter Examples (no outlier)" from_port="example set output" to_port="result 4"/>
+      <connect from_op="Multiply" from_port="output 5" to_op="Nominal to Numerical" to_port="example set input"/>
+      <connect from_op="Nominal to Numerical" from_port="example set output" to_port="result 5"/>
+      <connect from_op="Multiply" from_port="output 6" to_op="Normalize (Z)" to_port="example set input"/>
+      <connect from_op="Normalize (Z)" from_port="example set output" to_port="result 6"/>
+      <connect from_op="Multiply" from_port="output 7" to_op="Normalize (0-1)" to_port="example set input"/>
+      <connect from_op="Normalize (0-1)" from_port="example set output" to_port="result 7"/>
+      <connect from_op="Multiply" from_port="output 8" to_op="Discretize by Binning" to_port="example set input"/>
+      <connect from_op="Discretize by Binning" from_port="example set output" to_port="result 8"/>
+      <connect from_op="Multiply" from_port="output 9" to_op="Discretize by Frequency" to_port="example set input"/>
+      <connect from_op="Discretize by Frequency" from_port="example set output" to_port="result 9"/>
+      <connect from_op="Multiply" from_port="output 10" to_op="Discretize by User Specification" to_port="example set input"/>
+      <connect from_op="Discretize by User Specification" from_port="example set output" to_port="result 10"/>
+      <connect from_op="Multiply" from_port="output 11" to_op="Sample (relative)" to_port="example set input"/>
+      <connect from_op="Sample (relative)" from_port="example set output" to_port="result 11"/>
+      <connect from_op="Multiply" from_port="output 12" to_op="Sample (Stratified)" to_port="example set input"/>
+      <connect from_op="Sample (Stratified)" from_port="example set output" to_port="result 12"/>
+      <connect from_op="Multiply" from_port="output 13" to_op="Split Data" to_port="example set"/>
+      <connect from_op="Split Data" from_port="partition 1" to_op="Replace Missing (train)" to_port="example set input"/>
+      <connect from_op="Replace Missing (train)" from_port="example set output" to_op="Normalize (train)" to_port="example set input"/>
+      <connect from_op="Replace Missing (train)" from_port="preprocessing model" to_op="Apply Model (missing → test)" to_port="model"/>
+      <connect from_op="Split Data" from_port="partition 2" to_op="Apply Model (missing → test)" to_port="unlabelled data"/>
+      <connect from_op="Normalize (train)" from_port="preprocessing model" to_op="Apply Model (normalize → test)" to_port="model"/>
+      <connect from_op="Apply Model (missing → test)" from_port="labelled data" to_op="Apply Model (normalize → test)" to_port="unlabelled data"/>
+      <connect from_op="Normalize (train)" from_port="example set output" to_port="result 13"/>
+      <connect from_op="Apply Model (normalize → test)" from_port="labelled data" to_port="result 14"/>
+      <connect from_op="Multiply" from_port="output 14" to_op="Multiply (compare)" to_port="input"/>
+      <connect from_op="Multiply (compare)" from_port="output 1" to_op="CV kNN raw" to_port="example set"/>
+      <connect from_op="CV kNN raw" from_port="performance 1" to_port="result 15"/>
+      <connect from_op="Multiply (compare)" from_port="output 2" to_op="CV kNN normalized" to_port="example set"/>
+      <connect from_op="CV kNN normalized" from_port="performance 1" to_port="result 16"/>
+      <connect from_op="Multiply" from_port="output 15" to_op="Weight by Information Gain" to_port="example set"/>
+      <connect from_op="Weight by Information Gain" from_port="example set" to_op="Select by Weights" to_port="example set input"/>
+      <connect from_op="Weight by Information Gain" from_port="weights" to_op="Select by Weights" to_port="weights"/>
+      <connect from_op="Select by Weights" from_port="weights" to_port="result 17"/>
+      <connect from_op="Select by Weights" from_port="example set output" to_port="result 18"/>
+      <description align="left" color="green" colored="true" height="108" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Declare Missing Value → ค่าที่แปลว่าว่าง เช่น ? (ไม่มี → ลบ operator)&lt;br&gt;2. Set Role → attribute_name = label&lt;br&gt;3. แต่ละแถว: แก้ attribute / attributes ให้ตรงคอลัมน์ของโจทย์ (ดูโน้ตเหลืองของแถวนั้น)&lt;br&gt;§1–§7 = ทำกับทั้งตาราง (สาธิต) · §8 = วิธีถูกต้องตอนสร้างโมเดล (fit บน train / ใน CV เท่านั้น)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="45" y="138">&lt;b&gt;§0 ข้อมูลดิบ → res 1&lt;/b&gt;&lt;br&gt;res 1 → Statistics: ดูจำนวน Missing ของแต่ละคอลัมน์ · ชนิด (nominal/numeric) · range</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="138">&lt;b&gt;§2 Missing: Replace Missing Values&lt;/b&gt;&lt;br&gt;default = average / minimum / maximum / zero / value (replenishment_value) · ตัดแถวแทน: Filter Examples (attr.is_not_missing.)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="288">&lt;b&gt;§2b Missing: ตัดแถวที่ว่าง&lt;/b&gt;&lt;br&gt;Filter Examples → filters_list: body_mass_g.is_not_missing. (แก้ชื่อคอลัมน์)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="438">&lt;b&gt;§3 Outlier: Detect Outlier (Distances) → ตัดแถว outlier&lt;/b&gt;&lt;br&gt;number_of_neighbors (k) · number_of_outliers (n แถวที่ไกลสุด) · ผลมีคอลัมน์ outlier = true/false → Filter Examples outlier.equals.false</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="588">&lt;b&gt;§4 Encoding: Nominal to Numerical (dummy = one-hot)&lt;/b&gt;&lt;br&gt;coding_type = dummy coding (one-hot) / unique integers (label encoding) / effect coding · attribute_filter_type = all หรือ subset</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="738">&lt;b&gt;§5a Standardization: Normalize (Z-transformation)&lt;/b&gt;&lt;br&gt;method = Z-transformation → mean 0, std 1 (RapidMiner ใช้ n−1)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="888">&lt;b&gt;§5b Normalization: Normalize (range transformation 0–1)&lt;/b&gt;&lt;br&gt;method = range transformation · min = 0 · max = 1</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1038">&lt;b&gt;§6a Discretize by Binning (equal width)&lt;/b&gt;&lt;br&gt;attribute = คอลัมน์ · number_of_bins · range_name_type = short (ชื่อ range1, range2 …)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1188">&lt;b&gt;§6b Discretize by Frequency (equal frequency)&lt;/b&gt;&lt;br&gt;จำนวนต่อช่วงเท่ากัน · ทนข้อมูลเบ้</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1338">&lt;b&gt;§6c Discretize by User Specification (ขอบกำหนดเอง)&lt;/b&gt;&lt;br&gt;classes → Edit List: ชื่อช่วง + upper limit (ค่าบนสุดของช่วง · ช่วงสุดท้ายใส่ Infinity)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1488">&lt;b&gt;§7a Sample (สุ่ม 30%)&lt;/b&gt;&lt;br&gt;sample = relative · sample_ratio = 0.3 · (absolute → sample_size)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1638">&lt;b&gt;§7b Sample (Stratified) — รักษาสัดส่วนคลาส&lt;/b&gt;&lt;br&gt;ต้องมี label · sample = relative · sample_ratio</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1788">&lt;b&gt;§8 ⭐ Split Data ไม่ให้ leak: Replace Missing + Normalize fit บน train → Apply Model (preprocessing model) กับ test&lt;/b&gt;&lt;br&gt;res = train ที่ preprocess แล้ว + test ที่ใช้ค่า mean/std จาก train · Split Data → partitions (0.7 / 0.3) · sampling_type = stratified</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="1998">&lt;b&gt;§8b ⭐ เทียบก่อน/หลัง preprocessing: k-NN ไม่ normalize vs normalize (ทุกอย่างอยู่ใน Training pane ของ CV)&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV เพื่อดูข้างใน · เปรียบเทียบ accuracy ใน res · เปลี่ยน learner ได้ (ลาก operator ใหม่แทน k-NN)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="780" x="1000" y="2148">&lt;b&gt;§9 Feature selection: Weight by Information Gain → Select by Weights (top k)&lt;/b&gt;&lt;br&gt;weight_relation = top k · k = จำนวน feature · เปลี่ยนเป็น Weight by Correlation / Gini Index ได้ · ⚠️ ใช้ใน CV ถ้าจะวัดผลโมเดล</description>
+    </process>
+  </operator>
+</process>

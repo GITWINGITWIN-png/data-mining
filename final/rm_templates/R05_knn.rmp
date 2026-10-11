@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="198">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/data/riding_mowers.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="198">
+        <parameter key="attribute_name" value="Ownership"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="315" y="198">
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new point)" width="90" x="45" y="318">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_mower.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (new)" width="90" x="180" y="318">
+      </operator>
+      <operator activated="true" class="cross_distances" compatibility="12.1.001" expanded="true" name="Cross Distances" width="90" x="600" y="200">
+        <parameter key="measure_types" value="NumericalMeasures"/>
+        <parameter key="numerical_measure" value="EuclideanDistance"/>
+        <parameter key="only_top_k" value="true"/>
+        <parameter key="k" value="3"/>
+        <parameter key="search_for" value="nearest"/>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="600" y="350">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.7"/>
+          <parameter key="ratio" value="0.3"/>
+        </enumeration>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (hold-out)" width="90" x="735" y="350">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (hold-out)" width="90" x="870" y="350">
+        <parameter key="k" value="3"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize test)" width="90" x="870" y="438">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN test)" width="90" x="1005" y="438">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (hold-out)" width="90" x="1140" y="438">
+        <parameter key="main_criterion" value="f_measure"/>
+        <parameter key="accuracy" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="manually_set_positive_class" value="true"/>
+        <parameter key="positive_class" value="Owner"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="600" y="580">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="735" y="580">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (Baseline)" width="90" x="45" y="85">
+            <parameter key="method" value="mode"/>
+          </operator>
+          <connect from_port="training set" to_op="Default Model (Baseline)" to_port="training set"/>
+          <connect from_op="Default Model (Baseline)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Baseline)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Baseline)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="Owner"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Baseline)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Baseline)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Baseline)" from_port="labelled data" to_op="Performance (Baseline)" to_port="labelled data"/>
+          <connect from_op="Performance (Baseline)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN raw" width="90" x="870" y="580">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (kNN raw)" width="90" x="45" y="85">
+            <parameter key="k" value="3"/>
+          </operator>
+          <connect from_port="training set" to_op="k-NN (kNN raw)" to_port="training set"/>
+          <connect from_op="k-NN (kNN raw)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN raw)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (kNN raw)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="Owner"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (kNN raw)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (kNN raw)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (kNN raw)" from_port="labelled data" to_op="Performance (kNN raw)" to_port="labelled data"/>
+          <connect from_op="Performance (kNN raw)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN normalized" width="90" x="1005" y="580">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (kNN normalized)" width="90" x="45" y="85">
+            <parameter key="method" value="Z-transformation"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (kNN normalized)" width="90" x="180" y="85">
+            <parameter key="k" value="3"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (kNN normalized)" width="90" x="315" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Normalize (kNN normalized)" to_port="example set input"/>
+          <connect from_op="Normalize (kNN normalized)" from_port="example set output" to_op="k-NN (kNN normalized)" to_port="training set"/>
+          <connect from_op="Normalize (kNN normalized)" from_port="preprocessing model" to_op="Group Models (kNN normalized)" to_port="models in 1"/>
+          <connect from_op="k-NN (kNN normalized)" from_port="model" to_op="Group Models (kNN normalized)" to_port="models in 2"/>
+          <connect from_op="Group Models (kNN normalized)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN normalized)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (kNN normalized)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="Owner"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (kNN normalized)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (kNN normalized)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (kNN normalized)" from_port="labelled data" to_op="Performance (kNN normalized)" to_port="labelled data"/>
+          <connect from_op="Performance (kNN normalized)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (k)" width="90" x="600" y="730">
+        <list key="parameters">
+          <parameter key="k-NN (opt).k" value="[1.0;15.0;14;linear]"/>
+        </list>
+        <parameter key="error_handling" value="fail on error"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV opt" width="90" x="450" y="85">
+            <parameter key="split_on_batch_attribute" value="false"/>
+            <parameter key="leave_one_out" value="false"/>
+            <parameter key="number_of_folds" value="5"/>
+            <parameter key="sampling_type" value="stratified sampling"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (opt)" width="90" x="45" y="85">
+                <parameter key="method" value="Z-transformation"/>
+              </operator>
+              <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (opt)" width="90" x="180" y="85">
+                <parameter key="k" value="5"/>
+              </operator>
+              <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (opt)" width="90" x="315" y="85">
+              </operator>
+              <connect from_port="training set" to_op="Normalize (opt)" to_port="example set input"/>
+              <connect from_op="Normalize (opt)" from_port="example set output" to_op="k-NN (opt)" to_port="training set"/>
+              <connect from_op="Normalize (opt)" from_port="preprocessing model" to_op="Group Models (opt)" to_port="models in 1"/>
+              <connect from_op="k-NN (opt)" from_port="model" to_op="Group Models (opt)" to_port="models in 2"/>
+              <connect from_op="Group Models (opt)" from_port="model out" to_port="model"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (opt)" width="90" x="45" y="85">
+              </operator>
+              <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (opt)" width="90" x="180" y="85">
+                <parameter key="main_criterion" value="f_measure"/>
+                <parameter key="accuracy" value="true"/>
+                <parameter key="precision" value="true"/>
+                <parameter key="recall" value="true"/>
+                <parameter key="f_measure" value="true"/>
+                <parameter key="manually_set_positive_class" value="true"/>
+                <parameter key="positive_class" value="Owner"/>
+              </operator>
+              <connect from_port="model" to_op="Apply Model (opt)" to_port="model"/>
+              <connect from_port="test set" to_op="Apply Model (opt)" to_port="unlabelled data"/>
+              <connect from_op="Apply Model (opt)" from_port="labelled data" to_op="Performance (opt)" to_port="labelled data"/>
+              <connect from_op="Performance (opt)" from_port="performance" to_port="performance 1"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log" compatibility="12.1.001" expanded="true" name="Log (k)" width="90" x="180" y="85">
+            <list key="log">
+              <parameter key="k" value="operator.k-NN (opt).parameter.k"/>
+              <parameter key="f_measure" value="operator.CV opt.value.performance main criterion"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="CV opt" to_port="example set"/>
+          <connect from_op="CV opt" from_port="performance 1" to_op="Log (k)" to_port="through 1"/>
+          <connect from_op="Log (k)" from_port="through 1" to_port="performance"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (k)" width="90" x="735" y="730">
+        <parameter key="log_name" value="Log (k)"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (final)" width="90" x="600" y="880">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (final)" width="90" x="735" y="880">
+        <parameter key="k" value="3"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize new)" width="90" x="735" y="968">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN new)" width="90" x="870" y="968">
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (regression)" width="90" x="45" y="1110">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock2_regression_pca/data/housing.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role (regression)" width="90" x="180" y="1110">
+        <parameter key="attribute_name" value="medv"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN regression" width="90" x="315" y="1110">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (kNN regression)" width="90" x="45" y="85">
+            <parameter key="method" value="Z-transformation"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (kNN regression)" width="90" x="180" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (kNN regression)" width="90" x="315" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Normalize (kNN regression)" to_port="example set input"/>
+          <connect from_op="Normalize (kNN regression)" from_port="example set output" to_op="k-NN (kNN regression)" to_port="training set"/>
+          <connect from_op="Normalize (kNN regression)" from_port="preprocessing model" to_op="Group Models (kNN regression)" to_port="models in 1"/>
+          <connect from_op="k-NN (kNN regression)" from_port="model" to_op="Group Models (kNN regression)" to_port="models in 2"/>
+          <connect from_op="Group Models (kNN regression)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN regression)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (kNN regression)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="root_mean_squared_error"/>
+            <parameter key="root_mean_squared_error" value="true"/>
+            <parameter key="absolute_error" value="true"/>
+            <parameter key="squared_error" value="true"/>
+            <parameter key="squared_correlation" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (kNN regression)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (kNN regression)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (kNN regression)" from_port="labelled data" to_op="Performance (kNN regression)" to_port="labelled data"/>
+          <connect from_op="Performance (kNN regression)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Read CSV (new point)" from_port="output" to_op="Multiply (new)" to_port="input"/>
+      <connect from_op="Multiply (new)" from_port="output 1" to_op="Cross Distances" to_port="request set"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Cross Distances" to_port="reference set"/>
+      <connect from_op="Cross Distances" from_port="result set" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Split Data" to_port="example set"/>
+      <connect from_op="Split Data" from_port="partition 1" to_op="Normalize (hold-out)" to_port="example set input"/>
+      <connect from_op="Normalize (hold-out)" from_port="example set output" to_op="k-NN (hold-out)" to_port="training set"/>
+      <connect from_op="Normalize (hold-out)" from_port="preprocessing model" to_op="Apply Model (normalize test)" to_port="model"/>
+      <connect from_op="Split Data" from_port="partition 2" to_op="Apply Model (normalize test)" to_port="unlabelled data"/>
+      <connect from_op="k-NN (hold-out)" from_port="model" to_op="Apply Model (kNN test)" to_port="model"/>
+      <connect from_op="Apply Model (normalize test)" from_port="labelled data" to_op="Apply Model (kNN test)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (kNN test)" from_port="labelled data" to_op="Performance (hold-out)" to_port="labelled data"/>
+      <connect from_op="Performance (hold-out)" from_port="performance" to_port="result 2"/>
+      <connect from_op="Performance (hold-out)" from_port="example set" to_port="result 3"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Multiply (compare)" to_port="input"/>
+      <connect from_op="Multiply (compare)" from_port="output 1" to_op="CV Baseline" to_port="example set"/>
+      <connect from_op="CV Baseline" from_port="performance 1" to_port="result 4"/>
+      <connect from_op="Multiply (compare)" from_port="output 2" to_op="CV kNN raw" to_port="example set"/>
+      <connect from_op="CV kNN raw" from_port="performance 1" to_port="result 5"/>
+      <connect from_op="Multiply (compare)" from_port="output 3" to_op="CV kNN normalized" to_port="example set"/>
+      <connect from_op="CV kNN normalized" from_port="performance 1" to_port="result 6"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="Optimize Parameters (k)" to_port="input 1"/>
+      <connect from_op="Log to Data (k)" from_port="exampleSet" to_port="result 7"/>
+      <connect from_op="Optimize Parameters (k)" from_port="parameter set" to_port="result 8"/>
+      <connect from_op="Multiply" from_port="output 5" to_op="Normalize (final)" to_port="example set input"/>
+      <connect from_op="Normalize (final)" from_port="example set output" to_op="k-NN (final)" to_port="training set"/>
+      <connect from_op="Normalize (final)" from_port="preprocessing model" to_op="Apply Model (normalize new)" to_port="model"/>
+      <connect from_op="Multiply (new)" from_port="output 2" to_op="Apply Model (normalize new)" to_port="unlabelled data"/>
+      <connect from_op="k-NN (final)" from_port="model" to_op="Apply Model (kNN new)" to_port="model"/>
+      <connect from_op="Apply Model (normalize new)" from_port="labelled data" to_op="Apply Model (kNN new)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (kNN new)" from_port="labelled data" to_port="result 9"/>
+      <connect from_op="Read CSV (regression)" from_port="output" to_op="Set Role (regression)" to_port="example set input"/>
+      <connect from_op="Set Role (regression)" from_port="example set output" to_op="CV kNN regression" to_port="example set"/>
+      <connect from_op="CV kNN regression" from_port="performance 1" to_port="result 10"/>
+      <description align="left" color="green" colored="true" height="108" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Set Role → label · (label เป็น 0/1 → เพิ่ม Numerical to Binominal ก่อน Set Role)&lt;br&gt;2. Read CSV (new point) → ไฟล์ข้อมูลใหม่ (คอลัมน์เดียวกัน ไม่ต้องมี label) — สร้างใน Excel/Notepad 1 แถว&lt;br&gt;3. k-NN → k · measure_types = NumericalMeasures · numerical_measure = EuclideanDistance / ManhattanDistance&lt;br&gt;4. Performance → positive_class = คลาสที่สนใจ (ตอนนี้ = Owner)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="138">&lt;b&gt;§2 ระยะจากจุดใหม่ถึงทุกจุด (Cross Distances) → k จุดใกล้สุด&lt;/b&gt;&lt;br&gt;only_top_k = true · k = 3 · ไม่ normalize ตามตำรา (ถ้าโจทย์ให้ normalize ต้อง Normalize ทั้งสองฝั่งด้วยค่าจากข้อมูล train)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="288">&lt;b&gt;§3 Hold-out: Split Data 70/30 → Normalize (fit train) → k-NN → Apply กับ test → Performance&lt;/b&gt;&lt;br&gt;partitions = 0.7 / 0.3 · ไม่ normalize → ลบ Normalize + Apply Model (normalize) แล้วต่อเส้นตรง</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="518">&lt;b&gt;§4 ⭐ CV: baseline vs k-NN ไม่ normalize vs k-NN + normalize (เทียบก่อน/หลัง preprocessing)&lt;/b&gt;&lt;br&gt;number_of_folds ใน CV แต่ละตัว · k ใน k-NN ข้างใน CV</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="668">&lt;b&gt;§5 ⭐ Optimize Parameters (Grid): k = 1…15 + Log → ตาราง k vs F1 · parameter set = k ที่ดีที่สุด&lt;/b&gt;&lt;br&gt;แก้ช่วง: Optimize Parameters → Edit Parameter Settings (k-NN (opt).k: min, max, steps) · กราฟ: Log to Data → Visualizations → Line</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="818">&lt;b&gt;§6 โมเดลสุดท้าย (ทั้งชุด) → ทำนายจุดใหม่ (prediction + confidence = สัดส่วน vote)&lt;/b&gt;&lt;br&gt;k ของ k-NN (final) = ค่าที่ดีที่สุดจาก §5 หรือค่าที่โจทย์กำหนด</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="45" y="1048">&lt;b&gt;§7 KNN Regression (label ตัวเลข) → Performance (Regression): RMSE / MAE / R²&lt;/b&gt;&lt;br&gt;Read CSV (regression) → ไฟล์ · Set Role (regression) → label ตัวเลข · k ใน k-NN</description>
+    </process>
+  </operator>
+</process>

@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (hand)" width="90" x="45" y="215">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/data/weather.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role (hand)" width="90" x="180" y="215">
+        <parameter key="attribute_name" value="Class"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (hand)" width="90" x="315" y="215">
+      </operator>
+      <operator activated="true" class="weight_by_information_gain" compatibility="12.1.001" expanded="true" name="Weight By Information Gain" width="90" x="450" y="217">
+        <parameter key="normalize_weights" value="false"/>
+        <parameter key="sort_weights" value="true"/>
+        <parameter key="sort_direction" value="descending"/>
+      </operator>
+      <operator activated="true" class="weight_by_information_gain_ratio" compatibility="12.1.001" expanded="true" name="Weight By Information Gain Ratio" width="90" x="585" y="217">
+        <parameter key="normalize_weights" value="false"/>
+        <parameter key="sort_weights" value="true"/>
+        <parameter key="sort_direction" value="descending"/>
+      </operator>
+      <operator activated="true" class="weight_by_gini_index" compatibility="12.1.001" expanded="true" name="Weight By Gini Index" width="90" x="720" y="217">
+        <parameter key="normalize_weights" value="false"/>
+        <parameter key="sort_weights" value="true"/>
+        <parameter key="sort_direction" value="descending"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="365">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p6_heart.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="numerical_to_binominal" compatibility="12.1.001" expanded="true" name="Numerical to Binominal" width="90" x="180" y="365">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="target"/>
+        <parameter key="min" value="0.0"/>
+        <parameter key="max" value="0.0"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="315" y="365">
+        <parameter key="attribute_name" value="target"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="450" y="365">
+      </operator>
+      <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (show)" width="90" x="600" y="387">
+        <parameter key="criterion" value="gini_index"/>
+        <parameter key="maximal_depth" value="3"/>
+        <parameter key="apply_pruning" value="false"/>
+        <parameter key="apply_prepruning" value="false"/>
+      </operator>
+      <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (full)" width="90" x="600" y="537">
+        <parameter key="criterion" value="gini_index"/>
+        <parameter key="maximal_depth" value="30"/>
+        <parameter key="apply_pruning" value="false"/>
+        <parameter key="apply_prepruning" value="false"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (train acc)" width="90" x="735" y="537">
+      </operator>
+      <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (train acc)" width="90" x="870" y="537">
+        <parameter key="main_criterion" value="accuracy"/>
+        <parameter key="accuracy" value="true"/>
+        <parameter key="precision" value="true"/>
+        <parameter key="recall" value="true"/>
+        <parameter key="f_measure" value="true"/>
+        <parameter key="manually_set_positive_class" value="true"/>
+        <parameter key="positive_class" value="true"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="600" y="687">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="735" y="687">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (Baseline)" width="90" x="45" y="85">
+            <parameter key="method" value="mode"/>
+          </operator>
+          <connect from_port="training set" to_op="Default Model (Baseline)" to_port="training set"/>
+          <connect from_op="Default Model (Baseline)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Baseline)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Baseline)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Baseline)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Baseline)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Baseline)" from_port="labelled data" to_op="Performance (Baseline)" to_port="labelled data"/>
+          <connect from_op="Performance (Baseline)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Tree full" width="90" x="870" y="687">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (Tree full)" width="90" x="45" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="30"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (Tree full)" to_port="training set"/>
+          <connect from_op="Decision Tree (Tree full)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Tree full)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Tree full)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Tree full)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Tree full)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Tree full)" from_port="labelled data" to_op="Performance (Tree full)" to_port="labelled data"/>
+          <connect from_op="Performance (Tree full)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Tree d3" width="90" x="1005" y="687">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (Tree d3)" width="90" x="45" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="3"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (Tree d3)" to_port="training set"/>
+          <connect from_op="Decision Tree (Tree d3)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Tree d3)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Tree d3)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Tree d3)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Tree d3)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Tree d3)" from_port="labelled data" to_op="Performance (Tree d3)" to_port="labelled data"/>
+          <connect from_op="Performance (Tree d3)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Random Forest" width="90" x="1140" y="687">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_random_forest" compatibility="12.1.001" expanded="true" name="Random Forest (Random Forest)" width="90" x="45" y="85">
+            <parameter key="number_of_trees" value="100"/>
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="10"/>
+            <parameter key="guess_subset_ratio" value="true"/>
+            <parameter key="voting_strategy" value="confidence vote"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+          </operator>
+          <connect from_port="training set" to_op="Random Forest (Random Forest)" to_port="training set"/>
+          <connect from_op="Random Forest (Random Forest)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Random Forest)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Random Forest)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Random Forest)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Random Forest)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Random Forest)" from_port="labelled data" to_op="Performance (Random Forest)" to_port="labelled data"/>
+          <connect from_op="Performance (Random Forest)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (depth)" width="90" x="600" y="837">
+        <list key="parameters">
+          <parameter key="Decision Tree (opt).maximal_depth" value="[1.0;12.0;11;linear]"/>
+        </list>
+        <parameter key="error_handling" value="fail on error"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV opt" width="90" x="450" y="85">
+            <parameter key="split_on_batch_attribute" value="false"/>
+            <parameter key="leave_one_out" value="false"/>
+            <parameter key="number_of_folds" value="10"/>
+            <parameter key="sampling_type" value="stratified sampling"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (opt)" width="90" x="45" y="85">
+                <parameter key="criterion" value="gini_index"/>
+                <parameter key="maximal_depth" value="3"/>
+                <parameter key="apply_pruning" value="false"/>
+                <parameter key="apply_prepruning" value="false"/>
+              </operator>
+              <connect from_port="training set" to_op="Decision Tree (opt)" to_port="training set"/>
+              <connect from_op="Decision Tree (opt)" from_port="model" to_port="model"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (opt)" width="90" x="45" y="85">
+              </operator>
+              <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (opt)" width="90" x="180" y="85">
+                <parameter key="main_criterion" value="accuracy"/>
+                <parameter key="accuracy" value="true"/>
+                <parameter key="precision" value="true"/>
+                <parameter key="recall" value="true"/>
+                <parameter key="f_measure" value="true"/>
+                <parameter key="manually_set_positive_class" value="true"/>
+                <parameter key="positive_class" value="true"/>
+              </operator>
+              <connect from_port="model" to_op="Apply Model (opt)" to_port="model"/>
+              <connect from_port="test set" to_op="Apply Model (opt)" to_port="unlabelled data"/>
+              <connect from_op="Apply Model (opt)" from_port="labelled data" to_op="Performance (opt)" to_port="labelled data"/>
+              <connect from_op="Performance (opt)" from_port="performance" to_port="performance 1"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log" compatibility="12.1.001" expanded="true" name="Log (depth)" width="90" x="180" y="85">
+            <list key="log">
+              <parameter key="depth" value="operator.Decision Tree (opt).parameter.maximal_depth"/>
+              <parameter key="accuracy" value="operator.CV opt.value.performance main criterion"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="CV opt" to_port="example set"/>
+          <connect from_op="CV opt" from_port="performance 1" to_op="Log (depth)" to_port="through 1"/>
+          <connect from_op="Log (depth)" from_port="through 1" to_port="performance"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (depth)" width="90" x="735" y="837">
+        <parameter key="log_name" value="Log (depth)"/>
+      </operator>
+      <operator activated="true" class="concurrency:parallel_random_forest" compatibility="12.1.001" expanded="true" name="Random Forest (final)" width="90" x="600" y="987">
+        <parameter key="number_of_trees" value="100"/>
+        <parameter key="criterion" value="gini_index"/>
+        <parameter key="maximal_depth" value="10"/>
+        <parameter key="guess_subset_ratio" value="true"/>
+        <parameter key="voting_strategy" value="confidence vote"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="1065">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_heart.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (new)" width="90" x="735" y="1025">
+      </operator>
+      <connect from_op="Read CSV (hand)" from_port="output" to_op="Set Role (hand)" to_port="example set input"/>
+      <connect from_op="Set Role (hand)" from_port="example set output" to_op="Multiply (hand)" to_port="input"/>
+      <connect from_op="Multiply (hand)" from_port="output 1" to_op="Weight By Information Gain" to_port="example set"/>
+      <connect from_op="Weight By Information Gain" from_port="weights" to_port="result 1"/>
+      <connect from_op="Multiply (hand)" from_port="output 2" to_op="Weight By Information Gain Ratio" to_port="example set"/>
+      <connect from_op="Weight By Information Gain Ratio" from_port="weights" to_port="result 2"/>
+      <connect from_op="Multiply (hand)" from_port="output 3" to_op="Weight By Gini Index" to_port="example set"/>
+      <connect from_op="Weight By Gini Index" from_port="weights" to_port="result 3"/>
+      <connect from_op="Read CSV" from_port="output" to_op="Numerical to Binominal" to_port="example set input"/>
+      <connect from_op="Numerical to Binominal" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Decision Tree (show)" to_port="training set"/>
+      <connect from_op="Decision Tree (show)" from_port="model" to_port="result 4"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Decision Tree (full)" to_port="training set"/>
+      <connect from_op="Decision Tree (full)" from_port="model" to_op="Apply Model (train acc)" to_port="model"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Apply Model (train acc)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (train acc)" from_port="labelled data" to_op="Performance (train acc)" to_port="labelled data"/>
+      <connect from_op="Performance (train acc)" from_port="performance" to_port="result 5"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="Multiply (compare)" to_port="input"/>
+      <connect from_op="Multiply (compare)" from_port="output 1" to_op="CV Baseline" to_port="example set"/>
+      <connect from_op="CV Baseline" from_port="performance 1" to_port="result 6"/>
+      <connect from_op="Multiply (compare)" from_port="output 2" to_op="CV Tree full" to_port="example set"/>
+      <connect from_op="CV Tree full" from_port="performance 1" to_port="result 7"/>
+      <connect from_op="Multiply (compare)" from_port="output 3" to_op="CV Tree d3" to_port="example set"/>
+      <connect from_op="CV Tree d3" from_port="performance 1" to_port="result 8"/>
+      <connect from_op="Multiply (compare)" from_port="output 4" to_op="CV Random Forest" to_port="example set"/>
+      <connect from_op="CV Random Forest" from_port="performance 1" to_port="result 9"/>
+      <connect from_op="Multiply" from_port="output 5" to_op="Optimize Parameters (depth)" to_port="input 1"/>
+      <connect from_op="Log to Data (depth)" from_port="exampleSet" to_port="result 10"/>
+      <connect from_op="Optimize Parameters (depth)" from_port="parameter set" to_port="result 11"/>
+      <connect from_op="Multiply" from_port="output 6" to_op="Random Forest (final)" to_port="training set"/>
+      <connect from_op="Random Forest (final)" from_port="model" to_op="Apply Model (new)" to_port="model"/>
+      <connect from_op="Read CSV (new)" from_port="output" to_op="Apply Model (new)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (new)" from_port="labelled data" to_port="result 12"/>
+      <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Numerical to Binominal → label 0/1 (label เป็นคำอยู่แล้ว → ลบ) · Set Role → label&lt;br&gt;2. Decision Tree → criterion (gini_index / information_gain / gain_ratio) · maximal_depth · apply_pruning&lt;br&gt;3. Read CSV (hand) + Set Role (hand) → ข้อมูลเล็กที่โจทย์ให้คำนวณ gain ด้วยมือ&lt;br&gt;4. Performance → positive_class = true&lt;br&gt;RapidMiner default = gain_ratio + pruning · ดูต้นไม้: res model → Graph / Description (กฎ IF-THEN)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="450" y="155">&lt;b&gt;§0 คำนวณ impurity: Weight by Information Gain / Gain Ratio / Gini Index → ค่าสูงสุด = root&lt;/b&gt;&lt;br&gt;normalize_weights = false (ค่าจริง) · ใช้กับ attribute หมวดหมู่ · ตรวจคำตอบที่คำนวณมือ</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="325">&lt;b&gt;§2 Decision Tree (depth 3) บนข้อมูลทั้งหมด → ต้นไม้ + กฎ + feature importance (Weight by Tree Importance)&lt;/b&gt;&lt;br&gt;res model → Graph (ต้นไม้) / Description (กฎ IF-THEN)</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="475">&lt;b&gt;§3 Overfitting: train accuracy ของต้นไม้เต็ม (Apply กับข้อมูลเดิม) — เทียบกับ CV ใน §6&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="625">&lt;b&gt;§6 ⭐ CV: baseline vs Tree เต็ม vs Tree depth 3 vs Random Forest&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="775">&lt;b&gt;§4 ⭐ Optimize maximal_depth 1…12 (+ Log) → ตาราง depth vs accuracy (หาจุด overfit)&lt;/b&gt;&lt;br&gt;เพิ่ม parameter: Edit Parameter Settings → criterion / minimal_leaf_size</description>
+      <description align="left" color="yellow" colored="true" height="50" resized="true" width="820" x="600" y="925">&lt;b&gt;§5 Random Forest บนข้อมูลทั้งหมด → ทำนายข้อมูลใหม่&lt;/b&gt;&lt;br&gt;Read CSV (new) → ไฟล์ข้อมูลใหม่ · number_of_trees</description>
+    </process>
+  </operator>
+</process>

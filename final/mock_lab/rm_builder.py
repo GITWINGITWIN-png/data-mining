@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from xml.sax.saxutils import quoteattr
+from xml.sax.saxutils import escape, quoteattr
 
 VERSION = "12.1.001"
 
@@ -68,6 +68,7 @@ class Proc:
     """pane หนึ่งช่อง (process หลัก หรือ subprocess ข้างใน operator)"""
     ops: list[Op] = field(default_factory=list)
     conns: list[tuple] = field(default_factory=list)
+    notes: list[tuple] = field(default_factory=list)   # โน้ตสีบน canvas (workflow annotation)
 
     def add(self, op: Op) -> Op:
         self.ops.append(op)
@@ -77,6 +78,10 @@ class Proc:
         """ต่อเส้น — ใช้ None แทน 'ขอบของ pane' (port ซ้าย = source, port ขวา = sink)"""
         self.conns.append((src, src_port, dst, dst_port))
 
+    def note(self, text, x, y, w=420, h=80, color="yellow"):
+        """โน้ตบน canvas — text เป็น HTML สั้น ๆ (ขึ้นบรรทัดใหม่ด้วย <br>) · color: yellow/orange/red/purple/green/blue/gray"""
+        self.notes.append((text, x, y, w, h, color))
+
     def xml(self, indent: int) -> str:
         pad = " " * indent
         out = [f'{pad}<process expanded="true">']
@@ -85,6 +90,9 @@ class Proc:
             a = f'from_op={quoteattr(src.name)} ' if src is not None else ""
             b = f'to_op={quoteattr(dst.name)} ' if dst is not None else ""
             out.append(f'{pad}  <connect {a}from_port={quoteattr(sp)} {b}to_port={quoteattr(dp)}/>')
+        for text, x, y, w, h, color in self.notes:
+            out.append(f'{pad}  <description align="left" color="{color}" colored="true" height="{h}" '
+                       f'resized="true" width="{w}" x="{x}" y="{y}">{escape(text)}</description>')
         out.append(f"{pad}</process>")
         return "\n".join(out)
 

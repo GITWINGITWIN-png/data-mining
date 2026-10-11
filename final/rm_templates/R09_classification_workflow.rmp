@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="215">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock3_cluster_assoc/data/bank-data.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes" width="90" x="180" y="215">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="id"/>
+        <parameter key="invert_selection" value="true"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="315" y="215">
+        <parameter key="attribute_name" value="pep"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="450" y="215">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (default)" width="90" x="600" y="217">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Baseline" width="90" x="735" y="217">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (Baseline)" width="90" x="45" y="85">
+            <parameter key="method" value="mode"/>
+          </operator>
+          <connect from_port="training set" to_op="Default Model (Baseline)" to_port="training set"/>
+          <connect from_op="Default Model (Baseline)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Baseline)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Baseline)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="YES"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Baseline)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Baseline)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Baseline)" from_port="labelled data" to_op="Performance (Baseline)" to_port="labelled data"/>
+          <connect from_op="Performance (Baseline)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN" width="90" x="870" y="217">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (kNN)" width="90" x="45" y="85">
+            <parameter key="default" value="average"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical (kNN)" width="90" x="180" y="85">
+            <parameter key="coding_type" value="dummy coding"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (kNN)" width="90" x="315" y="85">
+            <parameter key="method" value="Z-transformation"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (kNN)" width="90" x="450" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (kNN)" width="90" x="585" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Replace Missing Values (kNN)" to_port="example set input"/>
+          <connect from_op="Replace Missing Values (kNN)" from_port="example set output" to_op="Nominal to Numerical (kNN)" to_port="example set input"/>
+          <connect from_op="Nominal to Numerical (kNN)" from_port="example set output" to_op="Normalize (kNN)" to_port="example set input"/>
+          <connect from_op="Normalize (kNN)" from_port="example set output" to_op="k-NN (kNN)" to_port="training set"/>
+          <connect from_op="Replace Missing Values (kNN)" from_port="preprocessing model" to_op="Group Models (kNN)" to_port="models in 1"/>
+          <connect from_op="Nominal to Numerical (kNN)" from_port="preprocessing model" to_op="Group Models (kNN)" to_port="models in 2"/>
+          <connect from_op="Normalize (kNN)" from_port="preprocessing model" to_op="Group Models (kNN)" to_port="models in 3"/>
+          <connect from_op="k-NN (kNN)" from_port="model" to_op="Group Models (kNN)" to_port="models in 4"/>
+          <connect from_op="Group Models (kNN)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (kNN)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="YES"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (kNN)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (kNN)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (kNN)" from_port="labelled data" to_op="Performance (kNN)" to_port="labelled data"/>
+          <connect from_op="Performance (kNN)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV LogReg" width="90" x="1005" y="217">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (LogReg)" width="90" x="45" y="85">
+            <parameter key="default" value="average"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical (LogReg)" width="90" x="180" y="85">
+            <parameter key="coding_type" value="dummy coding"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="h2o:logistic_regression" compatibility="12.1.001" expanded="true" name="Logistic Regression (LogReg)" width="90" x="315" y="85">
+            <parameter key="solver" value="AUTO"/>
+            <parameter key="reproducible" value="true"/>
+            <parameter key="use_regularization" value="false"/>
+            <parameter key="standardize" value="true"/>
+            <parameter key="compute_p-values" value="true"/>
+            <parameter key="remove_collinear_columns" value="true"/>
+            <parameter key="add_intercept" value="true"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (LogReg)" width="90" x="450" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Replace Missing Values (LogReg)" to_port="example set input"/>
+          <connect from_op="Replace Missing Values (LogReg)" from_port="example set output" to_op="Nominal to Numerical (LogReg)" to_port="example set input"/>
+          <connect from_op="Nominal to Numerical (LogReg)" from_port="example set output" to_op="Logistic Regression (LogReg)" to_port="training set"/>
+          <connect from_op="Replace Missing Values (LogReg)" from_port="preprocessing model" to_op="Group Models (LogReg)" to_port="models in 1"/>
+          <connect from_op="Nominal to Numerical (LogReg)" from_port="preprocessing model" to_op="Group Models (LogReg)" to_port="models in 2"/>
+          <connect from_op="Logistic Regression (LogReg)" from_port="model" to_op="Group Models (LogReg)" to_port="models in 3"/>
+          <connect from_op="Group Models (LogReg)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (LogReg)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (LogReg)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="YES"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (LogReg)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (LogReg)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (LogReg)" from_port="labelled data" to_op="Performance (LogReg)" to_port="labelled data"/>
+          <connect from_op="Performance (LogReg)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Tree" width="90" x="1140" y="217">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (Tree)" width="90" x="45" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="10"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (Tree)" to_port="training set"/>
+          <connect from_op="Decision Tree (Tree)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Tree)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (Tree)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="YES"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Tree)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Tree)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Tree)" from_port="labelled data" to_op="Performance (Tree)" to_port="labelled data"/>
+          <connect from_op="Performance (Tree)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV RF" width="90" x="1275" y="217">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="10"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_random_forest" compatibility="12.1.001" expanded="true" name="Random Forest (RF)" width="90" x="45" y="85">
+            <parameter key="number_of_trees" value="100"/>
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="10"/>
+            <parameter key="guess_subset_ratio" value="true"/>
+            <parameter key="voting_strategy" value="confidence vote"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+          </operator>
+          <connect from_port="training set" to_op="Random Forest (RF)" to_port="training set"/>
+          <connect from_op="Random Forest (RF)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (RF)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (RF)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="YES"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (RF)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (RF)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (RF)" from_port="labelled data" to_op="Performance (RF)" to_port="labelled data"/>
+          <connect from_op="Performance (RF)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (kNN)" width="90" x="600" y="367">
+        <list key="parameters">
+          <parameter key="k-NN (opt kNN).k" value="[1.0;31.0;15;linear]"/>
+        </list>
+        <parameter key="error_handling" value="fail on error"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV opt kNN" width="90" x="450" y="85">
+            <parameter key="split_on_batch_attribute" value="false"/>
+            <parameter key="leave_one_out" value="false"/>
+            <parameter key="number_of_folds" value="10"/>
+            <parameter key="sampling_type" value="stratified sampling"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (opt kNN)" width="90" x="45" y="85">
+                <parameter key="default" value="average"/>
+                <parameter key="return_preprocessing_model" value="true"/>
+              </operator>
+              <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical (opt kNN)" width="90" x="180" y="85">
+                <parameter key="coding_type" value="dummy coding"/>
+                <parameter key="return_preprocessing_model" value="true"/>
+              </operator>
+              <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (opt kNN)" width="90" x="315" y="85">
+                <parameter key="method" value="Z-transformation"/>
+              </operator>
+              <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (opt kNN)" width="90" x="450" y="85">
+                <parameter key="k" value="5"/>
+              </operator>
+              <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (opt kNN)" width="90" x="585" y="85">
+              </operator>
+              <connect from_port="training set" to_op="Replace Missing Values (opt kNN)" to_port="example set input"/>
+              <connect from_op="Replace Missing Values (opt kNN)" from_port="example set output" to_op="Nominal to Numerical (opt kNN)" to_port="example set input"/>
+              <connect from_op="Nominal to Numerical (opt kNN)" from_port="example set output" to_op="Normalize (opt kNN)" to_port="example set input"/>
+              <connect from_op="Normalize (opt kNN)" from_port="example set output" to_op="k-NN (opt kNN)" to_port="training set"/>
+              <connect from_op="Replace Missing Values (opt kNN)" from_port="preprocessing model" to_op="Group Models (opt kNN)" to_port="models in 1"/>
+              <connect from_op="Nominal to Numerical (opt kNN)" from_port="preprocessing model" to_op="Group Models (opt kNN)" to_port="models in 2"/>
+              <connect from_op="Normalize (opt kNN)" from_port="preprocessing model" to_op="Group Models (opt kNN)" to_port="models in 3"/>
+              <connect from_op="k-NN (opt kNN)" from_port="model" to_op="Group Models (opt kNN)" to_port="models in 4"/>
+              <connect from_op="Group Models (opt kNN)" from_port="model out" to_port="model"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (opt kNN)" width="90" x="45" y="85">
+              </operator>
+              <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (opt kNN)" width="90" x="180" y="85">
+                <parameter key="main_criterion" value="f_measure"/>
+                <parameter key="accuracy" value="true"/>
+                <parameter key="precision" value="true"/>
+                <parameter key="recall" value="true"/>
+                <parameter key="f_measure" value="true"/>
+                <parameter key="manually_set_positive_class" value="true"/>
+                <parameter key="positive_class" value="YES"/>
+              </operator>
+              <connect from_port="model" to_op="Apply Model (opt kNN)" to_port="model"/>
+              <connect from_port="test set" to_op="Apply Model (opt kNN)" to_port="unlabelled data"/>
+              <connect from_op="Apply Model (opt kNN)" from_port="labelled data" to_op="Performance (opt kNN)" to_port="labelled data"/>
+              <connect from_op="Performance (opt kNN)" from_port="performance" to_port="performance 1"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log" compatibility="12.1.001" expanded="true" name="Log (kNN)" width="90" x="180" y="85">
+            <list key="log">
+              <parameter key="k" value="operator.k-NN (opt kNN).parameter.k"/>
+              <parameter key="f_measure" value="operator.CV opt kNN.value.performance main criterion"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="CV opt kNN" to_port="example set"/>
+          <connect from_op="CV opt kNN" from_port="performance 1" to_op="Log (kNN)" to_port="through 1"/>
+          <connect from_op="Log (kNN)" from_port="through 1" to_port="performance"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (kNN)" width="90" x="735" y="367">
+        <parameter key="log_name" value="Log (kNN)"/>
+      </operator>
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (Tree)" width="90" x="600" y="517">
+        <list key="parameters">
+          <parameter key="Decision Tree (opt Tree).maximal_depth" value="[2.0;12.0;10;linear]"/>
+          <parameter key="Decision Tree (opt Tree).criterion" value="gini_index,information_gain,gain_ratio"/>
+        </list>
+        <parameter key="error_handling" value="fail on error"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV opt Tree" width="90" x="450" y="85">
+            <parameter key="split_on_batch_attribute" value="false"/>
+            <parameter key="leave_one_out" value="false"/>
+            <parameter key="number_of_folds" value="10"/>
+            <parameter key="sampling_type" value="stratified sampling"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (opt Tree)" width="90" x="45" y="85">
+                <parameter key="criterion" value="gini_index"/>
+                <parameter key="maximal_depth" value="5"/>
+                <parameter key="apply_pruning" value="false"/>
+                <parameter key="apply_prepruning" value="false"/>
+              </operator>
+              <connect from_port="training set" to_op="Decision Tree (opt Tree)" to_port="training set"/>
+              <connect from_op="Decision Tree (opt Tree)" from_port="model" to_port="model"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (opt Tree)" width="90" x="45" y="85">
+              </operator>
+              <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (opt Tree)" width="90" x="180" y="85">
+                <parameter key="main_criterion" value="f_measure"/>
+                <parameter key="accuracy" value="true"/>
+                <parameter key="precision" value="true"/>
+                <parameter key="recall" value="true"/>
+                <parameter key="f_measure" value="true"/>
+                <parameter key="manually_set_positive_class" value="true"/>
+                <parameter key="positive_class" value="YES"/>
+              </operator>
+              <connect from_port="model" to_op="Apply Model (opt Tree)" to_port="model"/>
+              <connect from_port="test set" to_op="Apply Model (opt Tree)" to_port="unlabelled data"/>
+              <connect from_op="Apply Model (opt Tree)" from_port="labelled data" to_op="Performance (opt Tree)" to_port="labelled data"/>
+              <connect from_op="Performance (opt Tree)" from_port="performance" to_port="performance 1"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log" compatibility="12.1.001" expanded="true" name="Log (Tree)" width="90" x="180" y="85">
+            <list key="log">
+              <parameter key="depth" value="operator.Decision Tree (opt Tree).parameter.maximal_depth"/>
+              <parameter key="criterion" value="operator.Decision Tree (opt Tree).parameter.criterion"/>
+              <parameter key="f_measure" value="operator.CV opt Tree.value.performance main criterion"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="CV opt Tree" to_port="example set"/>
+          <connect from_op="CV opt Tree" from_port="performance 1" to_op="Log (Tree)" to_port="through 1"/>
+          <connect from_op="Log (Tree)" from_port="through 1" to_port="performance"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (Tree)" width="90" x="735" y="517">
+        <parameter key="log_name" value="Log (Tree)"/>
+      </operator>
+      <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (final)" width="90" x="600" y="667">
+        <parameter key="criterion" value="gini_index"/>
+        <parameter key="maximal_depth" value="6"/>
+        <parameter key="apply_pruning" value="false"/>
+        <parameter key="apply_prepruning" value="false"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="745">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_bank.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (new)" width="90" x="735" y="705">
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Multiply (default)" to_port="input"/>
+      <connect from_op="Multiply (default)" from_port="output 1" to_op="CV Baseline" to_port="example set"/>
+      <connect from_op="CV Baseline" from_port="performance 1" to_port="result 1"/>
+      <connect from_op="Multiply (default)" from_port="output 2" to_op="CV kNN" to_port="example set"/>
+      <connect from_op="CV kNN" from_port="performance 1" to_port="result 2"/>
+      <connect from_op="Multiply (default)" from_port="output 3" to_op="CV LogReg" to_port="example set"/>
+      <connect from_op="CV LogReg" from_port="performance 1" to_port="result 3"/>
+      <connect from_op="Multiply (default)" from_port="output 4" to_op="CV Tree" to_port="example set"/>
+      <connect from_op="CV Tree" from_port="performance 1" to_port="result 4"/>
+      <connect from_op="Multiply (default)" from_port="output 5" to_op="CV RF" to_port="example set"/>
+      <connect from_op="CV RF" from_port="performance 1" to_port="result 5"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Optimize Parameters (kNN)" to_port="input 1"/>
+      <connect from_op="Log to Data (kNN)" from_port="exampleSet" to_port="result 6"/>
+      <connect from_op="Optimize Parameters (kNN)" from_port="parameter set" to_port="result 7"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Optimize Parameters (Tree)" to_port="input 1"/>
+      <connect from_op="Log to Data (Tree)" from_port="exampleSet" to_port="result 8"/>
+      <connect from_op="Optimize Parameters (Tree)" from_port="parameter set" to_port="result 9"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="Decision Tree (final)" to_port="training set"/>
+      <connect from_op="Decision Tree (final)" from_port="model" to_op="Apply Model (new)" to_port="model"/>
+      <connect from_op="Read CSV (new)" from_port="output" to_op="Apply Model (new)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (new)" from_port="labelled data" to_port="result 10"/>
+      <connect from_op="Apply Model (new)" from_port="model" to_port="result 11"/>
+      <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Select Attributes → ตัด id / คอลัมน์ leak (invert_selection = true)&lt;br&gt;2. Set Role → label · (label 0/1 → เพิ่ม Numerical to Binominal ก่อน)&lt;br&gt;3. ทุก Performance → positive_class (ตอนนี้ = YES) · main_criterion (f_measure / accuracy / recall)&lt;br&gt;4. ไม่ใช้โมเดลไหน → ลบ CV ของโมเดลนั้น · hold-out แทน CV → ดู R05 §3&lt;br&gt;ผล: res ของแต่ละ CV = performance (เทียบกันในตารางคำตอบ) · ดับเบิลคลิก CV เพื่อแก้พารามิเตอร์ของโมเดล</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="600" y="155">&lt;b&gt;§4 ⭐ Baseline vs โมเดล default (10-fold CV) — preprocessing ทั้งหมดอยู่ใน Training pane&lt;/b&gt;&lt;br&gt;KNN / Logistic: Replace Missing + dummy + Normalize · Tree / RF: ไม่ต้อง normalize</description>
+      <description align="left" color="yellow" colored="true" height="50" resized="true" width="900" x="600" y="305">&lt;b&gt;§5 ⭐ Optimize k-NN: k = 1…31 (+ Log)&lt;/b&gt;&lt;br&gt;Edit Parameter Settings เพื่อเปลี่ยนช่วง</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="900" x="600" y="455">&lt;b&gt;§5 ⭐ Optimize Decision Tree: maximal_depth 2…12 × criterion (+ Log)&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="600" y="605">&lt;b&gt;§6–§8 โมเดลสุดท้าย (ใส่ค่าที่ดีที่สุดจาก §5 เอง) → ทำนายข้อมูลใหม่&lt;/b&gt;&lt;br&gt;Decision Tree (final) → maximal_depth / criterion ตามผล optimize · Read CSV (new) → ไฟล์ใหม่</description>
+    </process>
+  </operator>
+</process>

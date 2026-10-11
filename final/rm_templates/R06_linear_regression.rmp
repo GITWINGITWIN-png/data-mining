@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="215">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p7_insurance.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="215">
+        <parameter key="attribute_name" value="charges"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical" width="90" x="315" y="215">
+        <parameter key="coding_type" value="dummy coding"/>
+        <parameter key="use_comparison_groups" value="true"/>
+        <parameter key="return_preprocessing_model" value="true"/>
+        <list key="comparison_groups">
+          <parameter key="sex" value="female"/>
+          <parameter key="smoker" value="no"/>
+          <parameter key="region" value="northeast"/>
+        </list>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="450" y="215">
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes (simple)" width="90" x="600" y="217">
+        <parameter key="attribute_filter_type" value="subset"/>
+        <parameter key="attributes" value="age|charges"/>
+        <parameter key="include_special_attributes" value="true"/>
+      </operator>
+      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression (simple)" width="90" x="735" y="217">
+        <parameter key="feature_selection" value="none"/>
+        <parameter key="eliminate_colinear_features" value="true"/>
+        <parameter key="use_bias" value="true"/>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="600" y="367">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.8"/>
+          <parameter key="ratio" value="0.2"/>
+        </enumeration>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (train)" width="90" x="735" y="367">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (test)" width="90" x="735" y="455">
+      </operator>
+      <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (mean)" width="90" x="870" y="367">
+        <parameter key="method" value="average"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Baseline mean)" width="90" x="1005" y="367">
+      </operator>
+      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (Baseline mean)" width="90" x="1140" y="367">
+        <parameter key="main_criterion" value="root_mean_squared_error"/>
+        <parameter key="root_mean_squared_error" value="true"/>
+        <parameter key="absolute_error" value="true"/>
+        <parameter key="squared_error" value="true"/>
+        <parameter key="squared_correlation" value="true"/>
+      </operator>
+      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression" width="90" x="870" y="455">
+        <parameter key="feature_selection" value="none"/>
+        <parameter key="eliminate_colinear_features" value="true"/>
+        <parameter key="use_bias" value="true"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Linear Regression)" width="90" x="1005" y="455">
+      </operator>
+      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (Linear Regression)" width="90" x="1140" y="455">
+        <parameter key="main_criterion" value="root_mean_squared_error"/>
+        <parameter key="root_mean_squared_error" value="true"/>
+        <parameter key="absolute_error" value="true"/>
+        <parameter key="squared_error" value="true"/>
+        <parameter key="squared_correlation" value="true"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (compare)" width="90" x="600" y="607">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV LR" width="90" x="735" y="607">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression (LR)" width="90" x="45" y="85">
+            <parameter key="feature_selection" value="none"/>
+          </operator>
+          <connect from_port="training set" to_op="Linear Regression (LR)" to_port="training set"/>
+          <connect from_op="Linear Regression (LR)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (LR)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (CV LR)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="root_mean_squared_error"/>
+            <parameter key="root_mean_squared_error" value="true"/>
+            <parameter key="absolute_error" value="true"/>
+            <parameter key="squared_error" value="true"/>
+            <parameter key="squared_correlation" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (LR)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (LR)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (LR)" from_port="labelled data" to_op="Performance (CV LR)" to_port="labelled data"/>
+          <connect from_op="Performance (CV LR)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV kNN reg" width="90" x="870" y="607">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (kNN reg)" width="90" x="45" y="85">
+            <parameter key="method" value="Z-transformation"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (kNN reg)" width="90" x="180" y="85">
+            <parameter key="k" value="10"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (kNN reg)" width="90" x="315" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Normalize (kNN reg)" to_port="example set input"/>
+          <connect from_op="Normalize (kNN reg)" from_port="example set output" to_op="k-NN (kNN reg)" to_port="training set"/>
+          <connect from_op="Normalize (kNN reg)" from_port="preprocessing model" to_op="Group Models (kNN reg)" to_port="models in 1"/>
+          <connect from_op="k-NN (kNN reg)" from_port="model" to_op="Group Models (kNN reg)" to_port="models in 2"/>
+          <connect from_op="Group Models (kNN reg)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (kNN reg)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (CV kNN reg)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="root_mean_squared_error"/>
+            <parameter key="root_mean_squared_error" value="true"/>
+            <parameter key="absolute_error" value="true"/>
+            <parameter key="squared_error" value="true"/>
+            <parameter key="squared_correlation" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (kNN reg)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (kNN reg)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (kNN reg)" from_port="labelled data" to_op="Performance (CV kNN reg)" to_port="labelled data"/>
+          <connect from_op="Performance (CV kNN reg)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Tree reg" width="90" x="1005" y="607">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (Tree reg)" width="90" x="45" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="5"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (Tree reg)" to_port="training set"/>
+          <connect from_op="Decision Tree (Tree reg)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (Tree reg)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (CV Tree reg)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="root_mean_squared_error"/>
+            <parameter key="root_mean_squared_error" value="true"/>
+            <parameter key="absolute_error" value="true"/>
+            <parameter key="squared_error" value="true"/>
+            <parameter key="squared_correlation" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (Tree reg)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (Tree reg)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (Tree reg)" from_port="labelled data" to_op="Performance (CV Tree reg)" to_port="labelled data"/>
+          <connect from_op="Performance (CV Tree reg)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression (final)" width="90" x="600" y="757">
+        <parameter key="feature_selection" value="none"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="835">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_insurance.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (dummy new)" width="90" x="735" y="835">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (LR new)" width="90" x="870" y="835">
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Nominal to Numerical" to_port="example set input"/>
+      <connect from_op="Nominal to Numerical" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Select Attributes (simple)" to_port="example set input"/>
+      <connect from_op="Select Attributes (simple)" from_port="example set output" to_op="Linear Regression (simple)" to_port="training set"/>
+      <connect from_op="Linear Regression (simple)" from_port="model" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Split Data" to_port="example set"/>
+      <connect from_op="Split Data" from_port="partition 1" to_op="Multiply (train)" to_port="input"/>
+      <connect from_op="Split Data" from_port="partition 2" to_op="Multiply (test)" to_port="input"/>
+      <connect from_op="Multiply (train)" from_port="output 1" to_op="Default Model (mean)" to_port="training set"/>
+      <connect from_op="Default Model (mean)" from_port="model" to_op="Apply Model (Baseline mean)" to_port="model"/>
+      <connect from_op="Multiply (test)" from_port="output 1" to_op="Apply Model (Baseline mean)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (Baseline mean)" from_port="labelled data" to_op="Performance (Baseline mean)" to_port="labelled data"/>
+      <connect from_op="Performance (Baseline mean)" from_port="performance" to_port="result 2"/>
+      <connect from_op="Multiply (train)" from_port="output 2" to_op="Linear Regression" to_port="training set"/>
+      <connect from_op="Linear Regression" from_port="model" to_op="Apply Model (Linear Regression)" to_port="model"/>
+      <connect from_op="Multiply (test)" from_port="output 2" to_op="Apply Model (Linear Regression)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (Linear Regression)" from_port="labelled data" to_op="Performance (Linear Regression)" to_port="labelled data"/>
+      <connect from_op="Performance (Linear Regression)" from_port="performance" to_port="result 3"/>
+      <connect from_op="Apply Model (Linear Regression)" from_port="model" to_port="result 4"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Multiply (compare)" to_port="input"/>
+      <connect from_op="Multiply (compare)" from_port="output 1" to_op="CV LR" to_port="example set"/>
+      <connect from_op="CV LR" from_port="performance 1" to_port="result 5"/>
+      <connect from_op="Multiply (compare)" from_port="output 2" to_op="CV kNN reg" to_port="example set"/>
+      <connect from_op="CV kNN reg" from_port="performance 1" to_port="result 6"/>
+      <connect from_op="Multiply (compare)" from_port="output 3" to_op="CV Tree reg" to_port="example set"/>
+      <connect from_op="CV Tree reg" from_port="performance 1" to_port="result 7"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="Linear Regression (final)" to_port="training set"/>
+      <connect from_op="Nominal to Numerical" from_port="preprocessing model" to_op="Apply Model (dummy new)" to_port="model"/>
+      <connect from_op="Read CSV (new)" from_port="output" to_op="Apply Model (dummy new)" to_port="unlabelled data"/>
+      <connect from_op="Linear Regression (final)" from_port="model" to_op="Apply Model (LR new)" to_port="model"/>
+      <connect from_op="Apply Model (dummy new)" from_port="labelled data" to_op="Apply Model (LR new)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (LR new)" from_port="labelled data" to_port="result 8"/>
+      <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Set Role → label (ตัวเลขที่จะทำนาย)&lt;br&gt;2. Nominal to Numerical → comparison_groups: คอลัมน์หมวดหมู่ + ค่าอ้างอิง (reference) · ไม่มีคอลัมน์หมวดหมู่ → ลบ&lt;br&gt;3. Select Attributes (simple) → x ตัวเดียว + label&lt;br&gt;4. Read CSV (new) → ข้อมูลใหม่ (คอลัมน์เดียวกัน)&lt;br&gt;สมการ: res model → แท็บ Description/Data: Coefficient · p-value · y = intercept + Σ coef × x</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="155">&lt;b&gt;§3 Simple linear regression (x ตัวเดียว) บนข้อมูลทั้งหมด → สมการ y = b0 + b1·x&lt;/b&gt;&lt;br&gt;Select Attributes → attributes = age|charges (x|label)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="305">&lt;b&gt;§4–§5 ⭐ Multiple LR + baseline (mean) บน hold-out 80/20 → MAE / RMSE / R² (squared_correlation)&lt;/b&gt;&lt;br&gt;Split Data → partitions · Linear Regression → feature_selection = none (ใช้ทุกตัว) / M5 prime · model = สมการเต็ม</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="545">&lt;b&gt;§6 เทียบใน CV: LR vs k-NN regression vs Decision Tree regression&lt;/b&gt;&lt;br&gt;ดู RMSE ต่ำสุด / R² สูงสุด</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="695">&lt;b&gt;§7 ทำนายข้อมูลใหม่: dummy coding เดิม (preprocessing model) → Linear Regression (ทั้งชุด)&lt;/b&gt;&lt;br&gt;</description>
+    </process>
+  </operator>
+</process>

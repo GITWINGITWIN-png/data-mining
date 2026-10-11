@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="198">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/data/utilities.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="198">
+        <parameter key="attribute_name" value="Company"/>
+        <parameter key="target_role" value="id"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize" width="90" x="315" y="198">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="450" y="198">
+      </operator>
+      <operator activated="true" class="concurrency:k_means" compatibility="12.1.001" expanded="true" name="Clustering" width="90" x="600" y="200">
+        <parameter key="add_cluster_attribute" value="true"/>
+        <parameter key="k" value="4"/>
+        <parameter key="max_runs" value="50"/>
+        <parameter key="determine_good_start_values" value="true"/>
+        <parameter key="measure_types" value="NumericalMeasures"/>
+        <parameter key="numerical_measure" value="EuclideanDistance"/>
+        <parameter key="max_optimization_steps" value="100"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="cluster_distance_performance" compatibility="12.1.001" expanded="true" name="Cluster Distance Performance" width="90" x="735" y="200">
+        <parameter key="main_criterion" value="Avg. within centroid distance"/>
+        <parameter key="main_criterion_only" value="false"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (clustered)" width="90" x="870" y="200">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (cluster model)" width="90" x="870" y="288">
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="12.1.001" expanded="true" name="Aggregate (profile)" width="90" x="600" y="430">
+        <parameter key="use_default_aggregation" value="true"/>
+        <parameter key="default_aggregation_function" value="average"/>
+        <parameter key="group_by_attributes" value="cluster"/>
+      </operator>
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (k)" width="90" x="600" y="580">
+        <list key="parameters">
+          <parameter key="Clustering (opt).k" value="[2.0;10.0;8;linear]"/>
+        </list>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:k_means" compatibility="12.1.001" expanded="true" name="Clustering (opt)" width="90" x="45" y="85">
+            <parameter key="add_cluster_attribute" value="true"/>
+            <parameter key="k" value="2"/>
+            <parameter key="max_runs" value="50"/>
+            <parameter key="determine_good_start_values" value="true"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+          </operator>
+          <operator activated="true" class="cluster_distance_performance" compatibility="12.1.001" expanded="true" name="Cluster Distance Performance (opt)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="Avg. within centroid distance"/>
+            <parameter key="main_criterion_only" value="false"/>
+          </operator>
+          <operator activated="true" class="log" compatibility="12.1.001" expanded="true" name="Log (k)" width="90" x="315" y="85">
+            <list key="log">
+              <parameter key="k" value="operator.Clustering (opt).parameter.k"/>
+              <parameter key="avg_within" value="operator.Cluster Distance Performance (opt).value.avg_within_distance"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="Clustering (opt)" to_port="example set"/>
+          <connect from_op="Clustering (opt)" from_port="clustered set" to_op="Cluster Distance Performance (opt)" to_port="example set"/>
+          <connect from_op="Clustering (opt)" from_port="cluster model" to_op="Cluster Distance Performance (opt)" to_port="cluster model"/>
+          <connect from_op="Cluster Distance Performance (opt)" from_port="performance" to_op="Log (k)" to_port="through 1"/>
+          <connect from_op="Log (k)" from_port="through 1" to_port="performance"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (k)" width="90" x="735" y="580">
+        <parameter key="log_name" value="Log (k)"/>
+      </operator>
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="730">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_utility.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role (new)" width="90" x="735" y="730">
+        <parameter key="attribute_name" value="Company"/>
+        <parameter key="target_role" value="id"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize new)" width="90" x="870" y="730">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (cluster new)" width="90" x="1005" y="730">
+      </operator>
+      <operator activated="true" class="principal_component_analysis" compatibility="12.1.001" expanded="true" name="PCA (2D)" width="90" x="600" y="880">
+        <parameter key="dimensionality_reduction" value="fixed number"/>
+        <parameter key="number_of_components" value="2"/>
+      </operator>
+      <operator activated="true" class="agglomerative_clustering" compatibility="12.1.001" expanded="true" name="Clustering (Agglomerative)" width="90" x="600" y="1030">
+        <parameter key="mode" value="CompleteLink"/>
+        <parameter key="measure_types" value="NumericalMeasures"/>
+        <parameter key="numerical_measure" value="EuclideanDistance"/>
+      </operator>
+      <operator activated="true" class="flatten_clustering" compatibility="12.1.001" expanded="true" name="Flatten Clustering" width="90" x="735" y="1030">
+        <parameter key="number_of_clusters" value="4"/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Normalize" to_port="example set input"/>
+      <connect from_op="Normalize" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Clustering" to_port="example set"/>
+      <connect from_op="Clustering" from_port="clustered set" to_op="Cluster Distance Performance" to_port="example set"/>
+      <connect from_op="Clustering" from_port="cluster model" to_op="Cluster Distance Performance" to_port="cluster model"/>
+      <connect from_op="Cluster Distance Performance" from_port="example set" to_op="Multiply (clustered)" to_port="input"/>
+      <connect from_op="Cluster Distance Performance" from_port="cluster model" to_op="Multiply (cluster model)" to_port="input"/>
+      <connect from_op="Cluster Distance Performance" from_port="performance" to_port="result 1"/>
+      <connect from_op="Multiply (clustered)" from_port="output 1" to_port="result 2"/>
+      <connect from_op="Multiply (cluster model)" from_port="output 1" to_port="result 3"/>
+      <connect from_op="Multiply (clustered)" from_port="output 2" to_op="Aggregate (profile)" to_port="example set input"/>
+      <connect from_op="Aggregate (profile)" from_port="example set output" to_port="result 4"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Optimize Parameters (k)" to_port="input 1"/>
+      <connect from_op="Log to Data (k)" from_port="exampleSet" to_port="result 5"/>
+      <connect from_op="Read CSV (new)" from_port="output" to_op="Set Role (new)" to_port="example set input"/>
+      <connect from_op="Normalize" from_port="preprocessing model" to_op="Apply Model (normalize new)" to_port="model"/>
+      <connect from_op="Set Role (new)" from_port="example set output" to_op="Apply Model (normalize new)" to_port="unlabelled data"/>
+      <connect from_op="Multiply (cluster model)" from_port="output 2" to_op="Apply Model (cluster new)" to_port="model"/>
+      <connect from_op="Apply Model (normalize new)" from_port="labelled data" to_op="Apply Model (cluster new)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (cluster new)" from_port="labelled data" to_port="result 6"/>
+      <connect from_op="Multiply (clustered)" from_port="output 3" to_op="PCA (2D)" to_port="example set input"/>
+      <connect from_op="PCA (2D)" from_port="example set output" to_port="result 7"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="Clustering (Agglomerative)" to_port="example set"/>
+      <connect from_op="Clustering (Agglomerative)" from_port="cluster model" to_op="Flatten Clustering" to_port="hierarchical"/>
+      <connect from_op="Clustering (Agglomerative)" from_port="example set" to_op="Flatten Clustering" to_port="example set"/>
+      <connect from_op="Flatten Clustering" from_port="example set" to_port="result 8"/>
+      <connect from_op="Flatten Clustering" from_port="flat" to_port="result 9"/>
+      <description align="left" color="green" colored="true" height="108" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Set Role → id = ชื่อ/รหัสแถว (ไม่ใช้คำนวณ) · มี label จริง → Set Role (label) หรือ Select Attributes ตัดออก&lt;br&gt;2. Clustering (k-Means) → k · max_runs · measure_types = NumericalMeasures / EuclideanDistance&lt;br&gt;3. Read CSV (new) → จุดใหม่ (คอลัมน์ feature เดียวกัน)&lt;br&gt;centroid: res cluster model → Centroid Table (ค่า normalize แล้ว: + สูงกว่าค่าเฉลี่ย, − ต่ำกว่า) · กราฟ: Visualizations / Centroid Chart</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="138">&lt;b&gt;§3 ⭐ k-Means (k = 4) → Cluster Distance Performance (avg within centroid distance + Davies–Bouldin)&lt;/b&gt;&lt;br&gt;res: clustered set (คอลัมน์ cluster) · cluster model (centroid) · performance (cohesion) · main_criterion เปลี่ยนได้</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="368">&lt;b&gt;§3b Profile แต่ละกลุ่มในหน่วยเดิม: Aggregate average ตาม cluster&lt;/b&gt;&lt;br&gt;group_by = cluster · ค่าเฉลี่ยของ feature (เป็นค่า normalize — อยากได้หน่วยเดิม Join กลับกับข้อมูลดิบด้วย id)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="518">&lt;b&gt;§2 ⭐ เลือก k: Optimize Parameters k = 2…10 + Log (avg within centroid distance → หา elbow)&lt;/b&gt;&lt;br&gt;Log to Data → Visualizations → Line (x = k) · Davies–Bouldin ของ k ที่เลือก ดูใน performance ของ §3 (RapidMiner แสดงค่าติดลบ: ใกล้ 0 = ดี)</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="668">&lt;b&gt;§4 จุดใหม่อยู่ cluster ไหน: Normalize ด้วยค่าเดิม (preprocessing model) → Apply cluster model&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="818">&lt;b&gt;§6 ภาพ cluster บน PCA 2D → Visualizations → Scatter pc_1 × pc_2 color = cluster&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="968">&lt;b&gt;§7 Hierarchical (Agglomerative) → dendrogram (res: Dendrogram) → Flatten Clustering = ตัดเป็น k กลุ่ม&lt;/b&gt;&lt;br&gt;mode = SingleLink / CompleteLink / AverageLink · number_of_clusters</description>
+    </process>
+  </operator>
+</process>

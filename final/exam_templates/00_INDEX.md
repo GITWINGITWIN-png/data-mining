@@ -198,6 +198,8 @@
 
 ## 6 · ถ้าโจทย์บังคับ RapidMiner
 
+> ⭐ **ชุด process สำเร็จรูป R01–R11 (เลขบท/§ ตรงกับ T01–T11):** [`../rm_templates/00_INDEX.md`](../rm_templates/00_INDEX.md) · คู่มือ [`../rm_templates/01_MANUAL.md`](../rm_templates/01_MANUAL.md)
+
 | ต้องการ | เปิด |
 |---|---|
 | process สำเร็จรูป (.rmp) Import ผ่าน File → Import Process | `../mock_lab/recipes/*.rmp` (join/pivot, PCA, KNN+CV, optimize k, logreg threshold, tree vs RF, elbow, k-means, FP-Growth, linreg, SMOTE) |
