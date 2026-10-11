@@ -86,7 +86,11 @@ md(r"""
 code(r'''FILTER = "total_bill > 20 and smoker == 'Yes'"     # ✏️ เงื่อนไข
 DROP_MISSING_ROWS_IN = []                          # ✏️ ตัดแถวที่คอลัมน์เหล่านี้ว่าง (= Filter: is not missing)
 
-flt = df.query(FILTER) if FILTER else df.copy()
+try:
+    flt = df.query(FILTER) if FILTER else df.copy()
+except Exception as e:
+    print(f"⚠️ FILTER ใช้กับข้อมูลนี้ไม่ได้ ({type(e).__name__}: {e}) → แก้ ✏️ FILTER ให้ตรงคอลัมน์ · ตอนนี้ไม่กรอง")
+    flt = df.copy()
 if DROP_MISSING_ROWS_IN:
     flt = flt.dropna(subset=DROP_MISSING_ROWS_IN)
 print(f"แถวก่อนกรอง {len(df)} → หลังกรอง {len(flt)} ({len(flt)/len(df):.1%})")
@@ -147,6 +151,8 @@ md(r"""
 code(r'''GROUP_BY = ["day"]                                    # ✏️ จัดกลุ่มตาม (1 หรือหลายคอลัมน์)
 AGG = {"total_bill": ["count", "mean", "sum"], "tip": ["mean", "max"]}   # ✏️ คอลัมน์: [ฟังก์ชัน]
 
+GROUP_BY = [fix_col(df, c, "cat", i) for i, c in enumerate(GROUP_BY)]
+AGG = {fix_col(df, c, "num", i): f for i, (c, f) in enumerate(AGG.items())}
 agg = df.groupby(GROUP_BY).agg(AGG)
 agg.columns = ["_".join(c) for c in agg.columns]       # ชื่อคอลัมน์แบบชั้นเดียว เช่น total_bill_mean
 agg = agg.reset_index().sort_values(agg.columns[1], ascending=False)
@@ -161,6 +167,8 @@ md(r"""
 code(r'''PIV_INDEX, PIV_COLUMNS, PIV_VALUES, PIV_FUNC = "day", "time", "tip", "mean"   # ✏️ แถว, คอลัมน์, ค่า, ฟังก์ชัน (mean/sum/count/max)
 RATE_OF = None                 # ✏️ หา "สัดส่วน" ของคลาส เช่น ("income", ">50K") → ใช้แทน PIV_VALUES · None = ไม่ใช้
 
+PIV_INDEX, PIV_COLUMNS = fix_col(df, PIV_INDEX, "cat", 0), fix_col(df, PIV_COLUMNS, "cat", 1)
+PIV_VALUES = fix_col(df, PIV_VALUES, "num")
 data_p = df.copy()
 values = PIV_VALUES
 if RATE_OF:
@@ -179,10 +187,13 @@ md(r"""**✍️ คำตอบ §7:** จาก pivot `…` × `…` ค่า 
 md(r"""
 ## §8 Generate Attributes (สร้างคอลัมน์ใหม่) + แปลงชนิด
 """),
-code(r'''# ✏️ แก้/เพิ่มสูตรตามโจทย์
-df["tip_pct"] = df["tip"] / df["total_bill"] * 100                          # คำนวณจากคอลัมน์อื่น
-df["big_bill"] = np.where(df["total_bill"] > df["total_bill"].median(), "Yes", "No")   # if-else
-df["bill_level"] = pd.cut(df["total_bill"], bins=[0, 15, 30, np.inf], labels=["low", "mid", "high"])  # แบ่งช่วง
+code(r'''# ✏️ แก้/เพิ่มสูตรตามโจทย์ (ตัวอย่างใช้คอลัมน์ของข้อมูล tips — ข้อมูลอื่นให้เปลี่ยนชื่อคอลัมน์)
+try:
+    df["tip_pct"] = df["tip"] / df["total_bill"] * 100                          # คำนวณจากคอลัมน์อื่น
+    df["big_bill"] = np.where(df["total_bill"] > df["total_bill"].median(), "Yes", "No")   # if-else
+    df["bill_level"] = pd.cut(df["total_bill"], bins=[0, 15, 30, np.inf], labels=["low", "mid", "high"])  # แบ่งช่วง
+except KeyError as e:
+    print(f"⚠️ สูตรตัวอย่างใช้คอลัมน์ {e} ที่ไม่มีในข้อมูลนี้ → แก้สูตร ✏️ ให้ตรงโจทย์")
 # df["date"] = pd.to_datetime(df["date"]); df["month"] = df["date"].dt.month   # วันที่
 # df["col"] = df["col"].astype(float)  /  .astype(str)                       # แปลงชนิด
 # df = df.rename(columns={"old": "new"})                                     # เปลี่ยนชื่อ
@@ -204,6 +215,8 @@ CAT_COL = "day"          # ✏️ หมวดหมู่ที่จะแย�
 X_COL, Y_COL = "total_bill", "tip"   # ✏️ scatter
 HUE = "smoker"           # ✏️ ระบายสีตาม (เช่น label) · None ได้
 
+NUM_COL, CAT_COL = fix_col(df, NUM_COL, "num", 0), fix_col(df, CAT_COL, "cat", 0)
+X_COL, Y_COL, HUE = fix_col(df, X_COL, "num", 0), fix_col(df, Y_COL, "num", 1), fix_col(df, HUE, "cat", 1)
 fig, ax = plt.subplots(2, 2, figsize=(12, 8))
 sns.histplot(df[NUM_COL], kde=True, ax=ax[0, 0]); ax[0, 0].set_title(f"Histogram of {NUM_COL}")
 ax[0, 0].axvline(df[NUM_COL].mean(), color="r", ls="--", label="mean"); ax[0, 0].axvline(df[NUM_COL].median(), color="g", ls=":", label="median"); ax[0, 0].legend()
@@ -220,6 +233,7 @@ print("✍️ ค่ากลางตามกลุ่ม:", df.groupby(CAT_CO
 print(f"✍️ correlation({X_COL}, {Y_COL}) = {df[X_COL].corr(df[Y_COL]):.3f}")'''),
 code(r'''# สัดส่วนคลาสในแต่ละกลุ่ม (stacked bar 100%) — เหมาะกับ "สัดส่วน label ตามหมวด"
 STACK_GROUP, STACK_CLASS = "day", "smoker"     # ✏️ กลุ่ม (แกน x), คลาสที่จะดูสัดส่วน
+STACK_GROUP, STACK_CLASS = fix_col(df, STACK_GROUP, "cat", 0), fix_col(df, STACK_CLASS, "cat", 1)
 ct = pd.crosstab(df[STACK_GROUP], df[STACK_CLASS], normalize="index")
 ct.plot(kind="bar", stacked=True, figsize=(7, 4), colormap="tab20c"); plt.ylabel("proportion")
 plt.title(f"{STACK_CLASS} proportion by {STACK_GROUP}"); plt.legend(bbox_to_anchor=(1, 1)); plt.tight_layout(); plt.show()

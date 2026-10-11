@@ -165,6 +165,9 @@ N_BINS   = 3                         # ✏️ จำนวนช่วง
 LABELS   = ["Low", "Mid", "High"]    # ✏️ ชื่อช่วง (ต้องยาว = N_BINS) · None = แสดงช่วงตัวเลข
 USER_BINS = [0, 3500, 4500, np.inf]  # ✏️ ขอบเขตกำหนดเอง (ขวาปิด: (a, b])
 
+if DISC_COL not in clean:
+    DISC_COL = fix_col(clean, DISC_COL, "num")
+    USER_BINS = [-np.inf] + clean[DISC_COL].quantile([1 / 3, 2 / 3]).round(2).tolist() + [np.inf]   # ขอบชั่วคราว
 x = clean[DISC_COL]
 d = pd.DataFrame({DISC_COL: x,
                   "equal_width": pd.cut(x, bins=N_BINS, labels=LABELS),

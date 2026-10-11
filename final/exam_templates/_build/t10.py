@@ -11,6 +11,7 @@ cohesion / separation · วาดบน PCA 2D · hierarchical clustering + den
 |---|---|
 | 1 | แก้ **⚙️ CONFIG** — `ID_COL`, `FEATURES`, `K_FINAL` (k ที่โจทย์กำหนด หรือ None = เลือกอัตโนมัติจาก silhouette) |
 | 2 | Run All · ตาราง k §2 · centroid §3 · จุดใหม่ §4 |
+| 3 | โจทย์ให้คำนวณ K-Means มือ (จุดเล็ก ๆ + seed) → §9 แก้ `HAND_POINTS`, `HAND_INIT` |
 """
 
 CONFIG = r'''# ════════ ⚙️ CONFIG — แก้ cell นี้ให้ตรงโจทย์ ════════
@@ -168,6 +169,43 @@ code(r'''if LABEL_COL and LABEL_COL in data:
 else:
     print("ไม่มี LABEL_COL → ข้าม")
 data.to_csv("t10_clusters.csv", index=False); print("saved t10_clusters.csv")'''),
+
+md(r"""
+## §9 K-Means ทีละรอบด้วยมือ (โจทย์ให้จุดเล็ก ๆ + centroid เริ่มต้น)
+✏️ ใส่จุดใน `HAND_POINTS` และ `HAND_INIT` (ชื่อจุดที่เป็น seed หรือพิกัด centroid เริ่มต้น) · ไม่ scale (ตามตำรา) ·
+แต่ละรอบ: คำนวณระยะทุกจุด → จัดเข้า centroid ที่ใกล้สุด → คำนวณ centroid ใหม่ = ค่าเฉลี่ยสมาชิก → หยุดเมื่อสมาชิกไม่เปลี่ยน
+"""),
+code(r'''HAND_POINTS = {"A1": (3, 8), "A2": (9, 4), "A3": (4, 9), "A4": (2, 2), "A5": (10, 5),   # ✏️ ชื่อ: (x, y, ...)
+               "A6": (2, 4), "A7": (6, 8), "A8": (4, 3), "A9": (4, 7)}
+HAND_INIT   = ["A1", "A4", "A7"]      # ✏️ ชื่อจุดที่เป็น seed · หรือพิกัดตรง ๆ เช่น [(2, 10), (5, 8), (1, 2)]
+HAND_DIST   = "euclidean"             # ✏️ "euclidean" | "manhattan"
+HAND_SHOW_SQUARED = False             # ✏️ True = แสดงระยะยกกำลังสอง (ไม่ถอดราก) แบบที่บางโจทย์ใช้
+
+hn = list(HAND_POINTS); HP = np.array(list(HAND_POINTS.values()), dtype=float)
+cent = np.array([HAND_POINTS[c] if isinstance(c, str) else c for c in HAND_INIT], dtype=float)
+kh = len(cent); prev = None
+for it in range(1, 21):
+    diff = HP[:, None, :] - cent[None, :, :]
+    dist = np.abs(diff).sum(-1) if HAND_DIST == "manhattan" else ((diff ** 2).sum(-1) if HAND_SHOW_SQUARED else np.sqrt((diff ** 2).sum(-1)))
+    lab = dist.argmin(axis=1)
+    tab = pd.DataFrame(dist, index=hn, columns=[f"d(C{j + 1}={tuple(np.round(cent[j], 2).tolist())})" for j in range(kh)]).round(3)
+    tab["→ cluster"] = [f"C{l + 1}" for l in lab]
+    print(f"══ Iteration {it}"); display(tab)
+    new = np.array([HP[lab == j].mean(axis=0) if (lab == j).any() else cent[j] for j in range(kh)])
+    sse = sum(((HP[lab == j] - new[j]) ** 2).sum() for j in range(kh))
+    for j in range(kh):
+        print(f"   C{j + 1}: {[n for n, l in zip(hn, lab) if l == j]} → centroid ใหม่ = {tuple(np.round(new[j], 3).tolist())}")
+    print(f"   SSE (กับ centroid ใหม่) = {sse:.4f}")
+    if prev is not None and (lab == prev).all():
+        print(f"✍️ สมาชิกไม่เปลี่ยนจากรอบก่อน → converge ที่ iteration {it}"); break
+    prev, cent = lab, new
+if HP.shape[1] == 2:
+    plt.figure(figsize=(5, 4))
+    for j in range(kh):
+        plt.scatter(*HP[lab == j].T, s=60, label=f"C{j + 1}"); plt.scatter(*new[j], marker="X", s=200, c="k")
+    for n, (x0, y0) in zip(hn, HP):
+        plt.annotate(n, (x0, y0), xytext=(4, 4), textcoords="offset points")
+    plt.title("Final clusters (X = centroid)"); plt.legend(); plt.show()'''),
 ]
 
 if __name__ == "__main__":

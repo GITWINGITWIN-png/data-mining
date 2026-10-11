@@ -10,3 +10,4 @@ for t in "$@"; do
       --ExecutePreprocessor.kernel_name=dm-exam --ExecutePreprocessor.timeout=900 "$out" 2>&1 | grep -v -E 'TCP without|Converting' || true)
 done
 rm -f ../t0*_*.csv ../t1*_*.csv
+"$PY" make_cellmap.py
