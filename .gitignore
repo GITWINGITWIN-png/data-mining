@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.ipynb_checkpoints/
+
+# Obsidian: per-machine UI state (changes every time the vault is opened)
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json

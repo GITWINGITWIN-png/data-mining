@@ -1,0 +1,4 @@
+07.10.2026 17:17:13 Results of ResultWriter 'Write Model as Text' [1]: 
+07.10.2026 17:17:13   5.438 * rm
+- 0.587 * lstat
+- 4.289

@@ -1,0 +1,6 @@
+"Criterion","Value","Standard Deviation","Variance"
+"Avg. within centroid distance",-7.139039973661796,,
+"Avg. within centroid distance_cluster_0",-6.220940465086867,,
+"Avg. within centroid distance_cluster_1",-8.595340132158515,,
+"Avg. within centroid distance_cluster_2",-6.3990921154139295,,
+"Davies Bouldin",-1.389187977718187,,

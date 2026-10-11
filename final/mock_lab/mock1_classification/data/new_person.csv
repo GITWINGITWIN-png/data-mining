@@ -1,0 +1,2 @@
+person_id,age,workclass,fnlwgt,education,educational-num,marital-status,occupation,relationship,race,gender,capital-gain,capital-loss,hours-per-week,native-country
+10001,47,Private,281401,5th-6th,3,Divorced,Sales,Other-relative,White,Female,0,0,32,Mexico

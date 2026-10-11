@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p3_breast_cancer_imbalanced.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="85">
+        <parameter key="attribute_name" value="diagnosis"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="315" y="85">
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p3_baseline" width="90" x="450" y="34">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (p3_baseline)" width="90" x="45" y="85">
+            <parameter key="method" value="mode"/>
+          </operator>
+          <connect from_port="training set" to_op="Default Model (p3_baseline)" to_port="training set"/>
+          <connect from_op="Default Model (p3_baseline)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p3_baseline)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (p3_baseline)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="malignant"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p3_baseline)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p3_baseline)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p3_baseline)" from_port="labelled data" to_op="Performance (p3_baseline)" to_port="labelled data"/>
+          <connect from_op="Performance (p3_baseline)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p3_baseline)" width="90" x="585" y="34">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p3_baseline)" width="90" x="720" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p3_baseline.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p3_tree" width="90" x="450" y="136">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (p3_tree)" width="90" x="45" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="4"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Decision Tree (p3_tree)" to_port="training set"/>
+          <connect from_op="Decision Tree (p3_tree)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p3_tree)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (p3_tree)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="malignant"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p3_tree)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p3_tree)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p3_tree)" from_port="labelled data" to_op="Performance (p3_tree)" to_port="labelled data"/>
+          <connect from_op="Performance (p3_tree)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p3_tree)" width="90" x="585" y="136">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p3_tree)" width="90" x="720" y="136">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p3_tree.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p3_rus" width="90" x="450" y="238">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="sample" compatibility="12.1.001" expanded="true" name="Sample (p3_rus)" width="90" x="45" y="85">
+            <parameter key="sample" value="absolute"/>
+            <parameter key="balance_data" value="true"/>
+            <list key="sample_size_per_class">
+              <parameter key="benign" value="32"/>
+              <parameter key="malignant" value="32"/>
+            </list>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+          </operator>
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (p3_rus)" width="90" x="180" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="4"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="Sample (p3_rus)" to_port="example set input"/>
+          <connect from_op="Sample (p3_rus)" from_port="example set output" to_op="Decision Tree (p3_rus)" to_port="training set"/>
+          <connect from_op="Decision Tree (p3_rus)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p3_rus)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (p3_rus)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="malignant"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p3_rus)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p3_rus)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p3_rus)" from_port="labelled data" to_op="Performance (p3_rus)" to_port="labelled data"/>
+          <connect from_op="Performance (p3_rus)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p3_rus)" width="90" x="585" y="238">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p3_rus)" width="90" x="720" y="238">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p3_rus.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p3_smote" width="90" x="450" y="340">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="operator_toolbox:smote" compatibility="12.1.001" expanded="true" name="SMOTE Upsampling (p3_smote)" width="90" x="45" y="85">
+            <parameter key="number_of_neighbours" value="5"/>
+            <parameter key="normalize" value="true"/>
+            <parameter key="equalize_classes" value="true"/>
+            <parameter key="auto_detect_minority_class" value="true"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+          </operator>
+          <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (p3_smote)" width="90" x="180" y="85">
+            <parameter key="criterion" value="gini_index"/>
+            <parameter key="maximal_depth" value="4"/>
+            <parameter key="apply_pruning" value="false"/>
+            <parameter key="apply_prepruning" value="false"/>
+          </operator>
+          <connect from_port="training set" to_op="SMOTE Upsampling (p3_smote)" to_port="exa"/>
+          <connect from_op="SMOTE Upsampling (p3_smote)" from_port="ups" to_op="Decision Tree (p3_smote)" to_port="training set"/>
+          <connect from_op="Decision Tree (p3_smote)" from_port="model" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p3_smote)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_binominal_classification" compatibility="12.1.001" expanded="true" name="Performance (p3_smote)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="f_measure"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="precision" value="true"/>
+            <parameter key="recall" value="true"/>
+            <parameter key="f_measure" value="true"/>
+            <parameter key="manually_set_positive_class" value="true"/>
+            <parameter key="positive_class" value="malignant"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p3_smote)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p3_smote)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p3_smote)" from_port="labelled data" to_op="Performance (p3_smote)" to_port="labelled data"/>
+          <connect from_op="Performance (p3_smote)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p3_smote)" width="90" x="585" y="340">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p3_smote)" width="90" x="720" y="340">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p3_smote.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="CV p3_baseline" to_port="example set"/>
+      <connect from_op="CV p3_baseline" from_port="performance 1" to_op="Performance to Data (p3_baseline)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p3_baseline)" from_port="example set" to_op="Write CSV (p3_baseline)" to_port="input"/>
+      <connect from_op="Performance to Data (p3_baseline)" from_port="performance vector" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="CV p3_tree" to_port="example set"/>
+      <connect from_op="CV p3_tree" from_port="performance 1" to_op="Performance to Data (p3_tree)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p3_tree)" from_port="example set" to_op="Write CSV (p3_tree)" to_port="input"/>
+      <connect from_op="Performance to Data (p3_tree)" from_port="performance vector" to_port="result 2"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="CV p3_rus" to_port="example set"/>
+      <connect from_op="CV p3_rus" from_port="performance 1" to_op="Performance to Data (p3_rus)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p3_rus)" from_port="example set" to_op="Write CSV (p3_rus)" to_port="input"/>
+      <connect from_op="Performance to Data (p3_rus)" from_port="performance vector" to_port="result 3"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="CV p3_smote" to_port="example set"/>
+      <connect from_op="CV p3_smote" from_port="performance 1" to_op="Performance to Data (p3_smote)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p3_smote)" from_port="example set" to_op="Write CSV (p3_smote)" to_port="input"/>
+      <connect from_op="Performance to Data (p3_smote)" from_port="performance vector" to_port="result 4"/>
+    </process>
+  </operator>
+</process>

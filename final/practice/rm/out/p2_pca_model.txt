@@ -1,0 +1,9 @@
+10.10.2026 21:23:26 Results of ResultWriter 'Write as Text (p2_pca_model)' [1]: 
+10.10.2026 21:23:26 
+Principal Components:
+Number of Components: 2
+PC 1:  + 0.455 * bill_length_mm - 0.400 * bill_depth_mm + 0.576 * flipper_length_mm + 0.548 * body_mass_g
+PC 2:  - 0.597 * bill_length_mm - 0.798 * bill_depth_mm - 0.002 * flipper_length_mm - 0.084 * body_mass_g
+PC 3:  + 0.644 * bill_length_mm - 0.418 * bill_depth_mm - 0.232 * flipper_length_mm - 0.597 * body_mass_g
+PC 4:  + 0.146 * bill_length_mm - 0.168 * bill_depth_mm - 0.784 * flipper_length_mm + 0.580 * body_mass_g
+

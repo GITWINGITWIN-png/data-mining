@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p2_penguins.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples" width="90" x="180" y="85">
+        <parameter key="condition_class" value="custom_filters"/>
+        <list key="filters_list">
+          <parameter key="filters_entry_key" value="body_mass_g.is_not_missing."/>
+        </list>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="315" y="85">
+        <parameter key="attribute_name" value="species"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="450" y="85">
+      </operator>
+      <operator activated="true" class="select_attributes" compatibility="12.1.001" expanded="true" name="Select Attributes" width="90" x="585" y="34">
+        <parameter key="attribute_filter_type" value="value_type"/>
+        <parameter key="value_type" value="numeric"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize" width="90" x="720" y="34">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="principal_component_analysis" compatibility="12.1.001" expanded="true" name="PCA" width="90" x="855" y="34">
+        <parameter key="dimensionality_reduction" value="fixed number"/>
+        <parameter key="number_of_components" value="2"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p2_pca_scores)" width="90" x="990" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p2_pca_scores.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="write_as_text" compatibility="12.1.001" expanded="true" name="Write as Text (p2_pca_model)" width="90" x="990" y="136">
+        <parameter key="result_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p2_pca_model.txt"/>
+      </operator>
+      <operator activated="true" class="discretize_by_frequency" compatibility="12.1.001" expanded="true" name="Discretize by Frequency" width="90" x="585" y="238">
+        <parameter key="attribute_filter_type" value="single"/>
+        <parameter key="attribute" value="body_mass_g"/>
+        <parameter key="number_of_bins" value="3"/>
+        <parameter key="range_name_type" value="short"/>
+      </operator>
+      <operator activated="true" class="aggregate" compatibility="12.1.001" expanded="true" name="Aggregate" width="90" x="720" y="238">
+        <parameter key="use_default_aggregation" value="false"/>
+        <parameter key="group_by_attributes" value="body_mass_g|species"/>
+        <list key="aggregation_attributes">
+          <parameter key="island" value="count"/>
+        </list>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p2_mass_bins)" width="90" x="855" y="238">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p2_mass_bins.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p2_knn" width="90" x="585" y="340">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (p2_knn)" width="90" x="45" y="85">
+            <parameter key="default" value="average"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical (p2_knn)" width="90" x="180" y="85">
+            <parameter key="coding_type" value="dummy coding"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (p2_knn)" width="90" x="315" y="85">
+            <parameter key="method" value="Z-transformation"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (p2_knn)" width="90" x="450" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (p2_knn)" width="90" x="585" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Replace Missing Values (p2_knn)" to_port="example set input"/>
+          <connect from_op="Replace Missing Values (p2_knn)" from_port="example set output" to_op="Nominal to Numerical (p2_knn)" to_port="example set input"/>
+          <connect from_op="Nominal to Numerical (p2_knn)" from_port="example set output" to_op="Normalize (p2_knn)" to_port="example set input"/>
+          <connect from_op="Normalize (p2_knn)" from_port="example set output" to_op="k-NN (p2_knn)" to_port="training set"/>
+          <connect from_op="Replace Missing Values (p2_knn)" from_port="preprocessing model" to_op="Group Models (p2_knn)" to_port="models in 1"/>
+          <connect from_op="Nominal to Numerical (p2_knn)" from_port="preprocessing model" to_op="Group Models (p2_knn)" to_port="models in 2"/>
+          <connect from_op="Normalize (p2_knn)" from_port="preprocessing model" to_op="Group Models (p2_knn)" to_port="models in 3"/>
+          <connect from_op="k-NN (p2_knn)" from_port="model" to_op="Group Models (p2_knn)" to_port="models in 4"/>
+          <connect from_op="Group Models (p2_knn)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p2_knn)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="12.1.001" expanded="true" name="Performance (p2_knn)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="kappa" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p2_knn)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p2_knn)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p2_knn)" from_port="labelled data" to_op="Performance (p2_knn)" to_port="labelled data"/>
+          <connect from_op="Performance (p2_knn)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p2_knn)" width="90" x="720" y="340">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p2_knn)" width="90" x="855" y="340">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p2_knn.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p2_knn_raw" width="90" x="585" y="442">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="stratified sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="replace_missing_values" compatibility="12.1.001" expanded="true" name="Replace Missing Values (p2_knn_raw)" width="90" x="45" y="85">
+            <parameter key="default" value="average"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical (p2_knn_raw)" width="90" x="180" y="85">
+            <parameter key="coding_type" value="dummy coding"/>
+            <parameter key="return_preprocessing_model" value="true"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (p2_knn_raw)" width="90" x="315" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (p2_knn_raw)" width="90" x="450" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Replace Missing Values (p2_knn_raw)" to_port="example set input"/>
+          <connect from_op="Replace Missing Values (p2_knn_raw)" from_port="example set output" to_op="Nominal to Numerical (p2_knn_raw)" to_port="example set input"/>
+          <connect from_op="Nominal to Numerical (p2_knn_raw)" from_port="example set output" to_op="k-NN (p2_knn_raw)" to_port="training set"/>
+          <connect from_op="Replace Missing Values (p2_knn_raw)" from_port="preprocessing model" to_op="Group Models (p2_knn_raw)" to_port="models in 1"/>
+          <connect from_op="Nominal to Numerical (p2_knn_raw)" from_port="preprocessing model" to_op="Group Models (p2_knn_raw)" to_port="models in 2"/>
+          <connect from_op="k-NN (p2_knn_raw)" from_port="model" to_op="Group Models (p2_knn_raw)" to_port="models in 3"/>
+          <connect from_op="Group Models (p2_knn_raw)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p2_knn_raw)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_classification" compatibility="12.1.001" expanded="true" name="Performance (p2_knn_raw)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="accuracy"/>
+            <parameter key="accuracy" value="true"/>
+            <parameter key="kappa" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (p2_knn_raw)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (p2_knn_raw)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (p2_knn_raw)" from_port="labelled data" to_op="Performance (p2_knn_raw)" to_port="labelled data"/>
+          <connect from_op="Performance (p2_knn_raw)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p2_knn_raw)" width="90" x="720" y="442">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p2_knn_raw)" width="90" x="855" y="442">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p2_knn_raw.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Filter Examples" to_port="example set input"/>
+      <connect from_op="Filter Examples" from_port="example set output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Select Attributes" to_port="example set input"/>
+      <connect from_op="Select Attributes" from_port="example set output" to_op="Normalize" to_port="example set input"/>
+      <connect from_op="Normalize" from_port="example set output" to_op="PCA" to_port="example set input"/>
+      <connect from_op="PCA" from_port="example set output" to_op="Write CSV (p2_pca_scores)" to_port="input"/>
+      <connect from_op="Write CSV (p2_pca_scores)" from_port="through" to_port="result 1"/>
+      <connect from_op="PCA" from_port="preprocessing model" to_op="Write as Text (p2_pca_model)" to_port="input 1"/>
+      <connect from_op="Write as Text (p2_pca_model)" from_port="input 1" to_port="result 2"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="Discretize by Frequency" to_port="example set input"/>
+      <connect from_op="Discretize by Frequency" from_port="example set output" to_op="Aggregate" to_port="example set input"/>
+      <connect from_op="Aggregate" from_port="example set output" to_op="Write CSV (p2_mass_bins)" to_port="input"/>
+      <connect from_op="Write CSV (p2_mass_bins)" from_port="through" to_port="result 3"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="CV p2_knn" to_port="example set"/>
+      <connect from_op="CV p2_knn" from_port="performance 1" to_op="Performance to Data (p2_knn)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p2_knn)" from_port="example set" to_op="Write CSV (p2_knn)" to_port="input"/>
+      <connect from_op="Performance to Data (p2_knn)" from_port="performance vector" to_port="result 4"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="CV p2_knn_raw" to_port="example set"/>
+      <connect from_op="CV p2_knn_raw" from_port="performance 1" to_op="Performance to Data (p2_knn_raw)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p2_knn_raw)" from_port="example set" to_op="Write CSV (p2_knn_raw)" to_port="input"/>
+      <connect from_op="Performance to Data (p2_knn_raw)" from_port="performance vector" to_port="result 5"/>
+    </process>
+  </operator>
+</process>

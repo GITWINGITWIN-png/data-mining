@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read housing" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock2_regression_pca/data/housing.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="85">
+        <parameter key="attribute_name" value="medv"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply" width="90" x="315" y="85">
+      </operator>
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="450" y="34">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.8"/>
+          <parameter key="ratio" value="0.2"/>
+        </enumeration>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression" width="90" x="585" y="34">
+        <parameter key="feature_selection" value="none"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (LinReg)" width="90" x="720" y="34">
+      </operator>
+      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (LinReg)" width="90" x="855" y="34">
+        <parameter key="root_mean_squared_error" value="true"/>
+        <parameter key="absolute_error" value="true"/>
+        <parameter key="squared_error" value="true"/>
+        <parameter key="squared_correlation" value="true"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (LinReg)" width="90" x="990" y="34">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (LinReg)" width="90" x="1125" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock2_regression_pca/rm_out/linreg_holdout.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV k-NN raw" width="90" x="450" y="187">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (raw)" width="90" x="45" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (raw)" width="90" x="180" y="85">
+          </operator>
+          <connect from_port="training set" to_op="k-NN (raw)" to_port="training set"/>
+          <connect from_op="k-NN (raw)" from_port="model" to_op="Group Models (raw)" to_port="models in 1"/>
+          <connect from_op="Group Models (raw)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (raw)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (raw)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="root_mean_squared_error"/>
+            <parameter key="root_mean_squared_error" value="true"/>
+            <parameter key="absolute_error" value="true"/>
+            <parameter key="squared_correlation" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (raw)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (raw)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (raw)" from_port="labelled data" to_op="Performance (raw)" to_port="labelled data"/>
+          <connect from_op="Performance (raw)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV k-NN scaled" width="90" x="450" y="340">
+        <parameter key="split_on_batch_attribute" value="false"/>
+        <parameter key="leave_one_out" value="false"/>
+        <parameter key="number_of_folds" value="5"/>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+        <parameter key="enable_parallel_execution" value="true"/>
+        <process expanded="true">
+          <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (scaled)" width="90" x="45" y="85">
+            <parameter key="method" value="Z-transformation"/>
+          </operator>
+          <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (scaled)" width="90" x="180" y="85">
+            <parameter key="k" value="5"/>
+          </operator>
+          <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (scaled)" width="90" x="315" y="85">
+          </operator>
+          <connect from_port="training set" to_op="Normalize (scaled)" to_port="example set input"/>
+          <connect from_op="Normalize (scaled)" from_port="example set output" to_op="k-NN (scaled)" to_port="training set"/>
+          <connect from_op="Normalize (scaled)" from_port="preprocessing model" to_op="Group Models (scaled)" to_port="models in 1"/>
+          <connect from_op="k-NN (scaled)" from_port="model" to_op="Group Models (scaled)" to_port="models in 2"/>
+          <connect from_op="Group Models (scaled)" from_port="model out" to_port="model"/>
+        </process>
+        <process expanded="true">
+          <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (scaled)" width="90" x="45" y="85">
+          </operator>
+          <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (scaled)" width="90" x="180" y="85">
+            <parameter key="main_criterion" value="root_mean_squared_error"/>
+            <parameter key="root_mean_squared_error" value="true"/>
+            <parameter key="absolute_error" value="true"/>
+            <parameter key="squared_correlation" value="true"/>
+          </operator>
+          <connect from_port="model" to_op="Apply Model (scaled)" to_port="model"/>
+          <connect from_port="test set" to_op="Apply Model (scaled)" to_port="unlabelled data"/>
+          <connect from_op="Apply Model (scaled)" from_port="labelled data" to_op="Performance (scaled)" to_port="labelled data"/>
+          <connect from_op="Performance (scaled)" from_port="performance" to_port="performance 1"/>
+        </process>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (kNN raw)" width="90" x="585" y="187">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (kNN raw)" width="90" x="720" y="187">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock2_regression_pca/rm_out/knn_raw_cv.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (kNN scaled)" width="90" x="585" y="340">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (kNN scaled)" width="90" x="720" y="340">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock2_regression_pca/rm_out/knn_scaled_cv.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (PCA)" width="90" x="450" y="493">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="principal_component_analysis" compatibility="12.1.001" expanded="true" name="PCA" width="90" x="585" y="493">
+        <parameter key="dimensionality_reduction" value="keep variance"/>
+        <parameter key="variance_threshold" value="0.8"/>
+      </operator>
+      <operator activated="true" class="write_as_text" compatibility="12.1.001" expanded="true" name="Write PCA as Text" width="90" x="720" y="493">
+        <parameter key="result_file" value="/home/panguin/Projects/data mining/final/mock_lab/mock2_regression_pca/rm_out/pca_model.txt"/>
+      </operator>
+      <connect from_op="Read housing" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Multiply" to_port="input"/>
+      <connect from_op="Multiply" from_port="output 1" to_op="Split Data" to_port="example set"/>
+      <connect from_op="Split Data" from_port="partition 1" to_op="Linear Regression" to_port="training set"/>
+      <connect from_op="Linear Regression" from_port="model" to_op="Apply Model (LinReg)" to_port="model"/>
+      <connect from_op="Split Data" from_port="partition 2" to_op="Apply Model (LinReg)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (LinReg)" from_port="labelled data" to_op="Performance (LinReg)" to_port="labelled data"/>
+      <connect from_op="Performance (LinReg)" from_port="performance" to_op="Performance to Data (LinReg)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (LinReg)" from_port="example set" to_op="Write CSV (LinReg)" to_port="input"/>
+      <connect from_op="Performance to Data (LinReg)" from_port="performance vector" to_port="result 1"/>
+      <connect from_op="Multiply" from_port="output 2" to_op="CV k-NN raw" to_port="example set"/>
+      <connect from_op="Multiply" from_port="output 3" to_op="CV k-NN scaled" to_port="example set"/>
+      <connect from_op="CV k-NN raw" from_port="performance 1" to_op="Performance to Data (kNN raw)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (kNN raw)" from_port="example set" to_op="Write CSV (kNN raw)" to_port="input"/>
+      <connect from_op="Performance to Data (kNN raw)" from_port="performance vector" to_port="result 2"/>
+      <connect from_op="CV k-NN scaled" from_port="performance 1" to_op="Performance to Data (kNN scaled)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (kNN scaled)" from_port="example set" to_op="Write CSV (kNN scaled)" to_port="input"/>
+      <connect from_op="Performance to Data (kNN scaled)" from_port="performance vector" to_port="result 3"/>
+      <connect from_op="Multiply" from_port="output 4" to_op="Normalize (PCA)" to_port="example set input"/>
+      <connect from_op="Normalize (PCA)" from_port="example set output" to_op="PCA" to_port="example set input"/>
+      <connect from_op="PCA" from_port="preprocessing model" to_op="Write PCA as Text" to_port="input 1"/>
+      <connect from_op="Write PCA as Text" from_port="input 1" to_port="result 4"/>
+      <connect from_op="PCA" from_port="example set output" to_port="result 5"/>
+    </process>
+  </operator>
+</process>

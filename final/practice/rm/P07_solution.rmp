@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="12.1.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="12.1.001" expanded="true" name="Process" width="90" x="45" y="85">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="1992"/>
+    <process expanded="true">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV" width="90" x="45" y="85">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/data/p7_insurance.csv"/>
+        <parameter key="column_separators" value=","/>
+        <parameter key="first_row_as_names" value="true"/>
+        <parameter key="parse_numbers" value="true"/>
+        <parameter key="decimal_character" value="."/>
+        <parameter key="encoding" value="UTF-8"/>
+      </operator>
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role" width="90" x="180" y="85">
+        <parameter key="attribute_name" value="charges"/>
+        <parameter key="target_role" value="label"/>
+      </operator>
+      <operator activated="true" class="nominal_to_numerical" compatibility="12.1.001" expanded="true" name="Nominal to Numerical" width="90" x="315" y="85">
+        <parameter key="coding_type" value="dummy coding"/>
+        <parameter key="use_comparison_groups" value="true"/>
+        <list key="comparison_groups">
+          <parameter key="sex" value="female"/>
+          <parameter key="smoker" value="no"/>
+          <parameter key="region" value="northeast"/>
+        </list>
+      </operator>
+      <operator activated="true" class="split_data" compatibility="12.1.001" expanded="true" name="Split Data" width="90" x="450" y="85">
+        <enumeration key="partitions">
+          <parameter key="ratio" value="0.8"/>
+          <parameter key="ratio" value="0.2"/>
+        </enumeration>
+        <parameter key="sampling_type" value="shuffled sampling"/>
+        <parameter key="use_local_random_seed" value="true"/>
+        <parameter key="local_random_seed" value="1992"/>
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (train)" width="90" x="585" y="34">
+      </operator>
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (test)" width="90" x="585" y="238">
+      </operator>
+      <operator activated="true" class="default_model" compatibility="12.1.001" expanded="true" name="Default Model (p7_baseline)" width="90" x="720" y="34">
+        <parameter key="method" value="average"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p7_baseline)" width="90" x="855" y="34">
+      </operator>
+      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (p7_baseline)" width="90" x="990" y="34">
+        <parameter key="main_criterion" value="root_mean_squared_error"/>
+        <parameter key="root_mean_squared_error" value="true"/>
+        <parameter key="absolute_error" value="true"/>
+        <parameter key="squared_correlation" value="true"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p7_baseline)" width="90" x="1125" y="34">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p7_baseline)" width="90" x="1260" y="34">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p7_baseline.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="linear_regression" compatibility="12.1.001" expanded="true" name="Linear Regression (p7_linreg)" width="90" x="720" y="187">
+        <parameter key="feature_selection" value="none"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p7_linreg)" width="90" x="855" y="187">
+      </operator>
+      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (p7_linreg)" width="90" x="990" y="187">
+        <parameter key="main_criterion" value="root_mean_squared_error"/>
+        <parameter key="root_mean_squared_error" value="true"/>
+        <parameter key="absolute_error" value="true"/>
+        <parameter key="squared_correlation" value="true"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p7_linreg)" width="90" x="1125" y="187">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p7_linreg)" width="90" x="1260" y="187">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p7_linreg.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="write_as_text" compatibility="12.1.001" expanded="true" name="Write as Text (p7_linreg_model)" width="90" x="990" y="289">
+        <parameter key="result_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p7_linreg_model.txt"/>
+      </operator>
+      <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize" width="90" x="720" y="340">
+        <parameter key="method" value="Z-transformation"/>
+      </operator>
+      <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (p7)" width="90" x="855" y="340">
+        <parameter key="k" value="10"/>
+        <parameter key="weighted_vote" value="true"/>
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize test)" width="90" x="855" y="442">
+      </operator>
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (knn)" width="90" x="990" y="442">
+      </operator>
+      <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (p7_knn)" width="90" x="1125" y="442">
+        <parameter key="main_criterion" value="root_mean_squared_error"/>
+        <parameter key="root_mean_squared_error" value="true"/>
+        <parameter key="absolute_error" value="true"/>
+        <parameter key="squared_correlation" value="true"/>
+      </operator>
+      <operator activated="true" class="performance_to_data" compatibility="12.1.001" expanded="true" name="Performance to Data (p7_knn)" width="90" x="1260" y="442">
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p7_knn)" width="90" x="1395" y="442">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p7_knn.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (p7_opt_log)" width="90" x="720" y="544">
+        <list key="parameters">
+          <parameter key="k-NN (p7_opt).k" value="[1.0;30.0;29;linear]"/>
+        </list>
+        <process expanded="true">
+          <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV p7_opt" width="90" x="600" y="85">
+            <parameter key="split_on_batch_attribute" value="false"/>
+            <parameter key="leave_one_out" value="false"/>
+            <parameter key="number_of_folds" value="5"/>
+            <parameter key="sampling_type" value="shuffled sampling"/>
+            <parameter key="use_local_random_seed" value="true"/>
+            <parameter key="local_random_seed" value="1992"/>
+            <parameter key="enable_parallel_execution" value="true"/>
+            <process expanded="true">
+              <operator activated="true" class="normalize" compatibility="12.1.001" expanded="true" name="Normalize (p7_opt)" width="90" x="45" y="85">
+                <parameter key="method" value="Z-transformation"/>
+              </operator>
+              <operator activated="true" class="k_nn" compatibility="12.1.001" expanded="true" name="k-NN (p7_opt)" width="90" x="180" y="85">
+                <parameter key="k" value="5"/>
+                <parameter key="weighted_vote" value="true"/>
+              </operator>
+              <operator activated="true" class="group_models" compatibility="12.1.001" expanded="true" name="Group Models (p7_opt)" width="90" x="315" y="85">
+              </operator>
+              <connect from_port="training set" to_op="Normalize (p7_opt)" to_port="example set input"/>
+              <connect from_op="Normalize (p7_opt)" from_port="example set output" to_op="k-NN (p7_opt)" to_port="training set"/>
+              <connect from_op="Normalize (p7_opt)" from_port="preprocessing model" to_op="Group Models (p7_opt)" to_port="models in 1"/>
+              <connect from_op="k-NN (p7_opt)" from_port="model" to_op="Group Models (p7_opt)" to_port="models in 2"/>
+              <connect from_op="Group Models (p7_opt)" from_port="model out" to_port="model"/>
+            </process>
+            <process expanded="true">
+              <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (p7_opt)" width="90" x="45" y="85">
+              </operator>
+              <operator activated="true" class="performance_regression" compatibility="12.1.001" expanded="true" name="Performance (p7_opt)" width="90" x="180" y="85">
+                <parameter key="main_criterion" value="root_mean_squared_error"/>
+                <parameter key="root_mean_squared_error" value="true"/>
+                <parameter key="absolute_error" value="true"/>
+                <parameter key="squared_correlation" value="true"/>
+              </operator>
+              <connect from_port="model" to_op="Apply Model (p7_opt)" to_port="model"/>
+              <connect from_port="test set" to_op="Apply Model (p7_opt)" to_port="unlabelled data"/>
+              <connect from_op="Apply Model (p7_opt)" from_port="labelled data" to_op="Performance (p7_opt)" to_port="labelled data"/>
+              <connect from_op="Performance (p7_opt)" from_port="performance" to_port="performance 1"/>
+            </process>
+          </operator>
+          <operator activated="true" class="log" compatibility="12.1.001" expanded="true" name="Log" width="90" x="180" y="85">
+            <list key="log">
+              <parameter key="k" value="operator.k-NN (p7_opt).parameter.k"/>
+              <parameter key="rmse" value="operator.CV p7_opt.value.performance main criterion"/>
+            </list>
+            <parameter key="sorting_type" value="none"/>
+            <parameter key="persistent" value="false"/>
+          </operator>
+          <connect from_port="input 1" to_op="CV p7_opt" to_port="example set"/>
+          <connect from_op="CV p7_opt" from_port="performance 1" to_op="Log" to_port="through 1"/>
+          <connect from_op="Log" from_port="through 1" to_port="performance"/>
+        </process>
+      </operator>
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (p7_opt_log)" width="90" x="855" y="544">
+        <parameter key="log_name" value="Log"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="12.1.001" expanded="true" name="Write CSV (p7_opt_log)" width="90" x="990" y="544">
+        <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/practice/rm/out/p7_opt_log.csv"/>
+        <parameter key="column_separator" value=","/>
+      </operator>
+      <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
+      <connect from_op="Set Role" from_port="example set output" to_op="Nominal to Numerical" to_port="example set input"/>
+      <connect from_op="Nominal to Numerical" from_port="example set output" to_op="Split Data" to_port="example set"/>
+      <connect from_op="Split Data" from_port="partition 1" to_op="Multiply (train)" to_port="input"/>
+      <connect from_op="Split Data" from_port="partition 2" to_op="Multiply (test)" to_port="input"/>
+      <connect from_op="Multiply (train)" from_port="output 1" to_op="Default Model (p7_baseline)" to_port="training set"/>
+      <connect from_op="Default Model (p7_baseline)" from_port="model" to_op="Apply Model (p7_baseline)" to_port="model"/>
+      <connect from_op="Multiply (test)" from_port="output 1" to_op="Apply Model (p7_baseline)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (p7_baseline)" from_port="labelled data" to_op="Performance (p7_baseline)" to_port="labelled data"/>
+      <connect from_op="Performance (p7_baseline)" from_port="performance" to_op="Performance to Data (p7_baseline)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p7_baseline)" from_port="example set" to_op="Write CSV (p7_baseline)" to_port="input"/>
+      <connect from_op="Performance to Data (p7_baseline)" from_port="performance vector" to_port="result 1"/>
+      <connect from_op="Multiply (train)" from_port="output 2" to_op="Linear Regression (p7_linreg)" to_port="training set"/>
+      <connect from_op="Linear Regression (p7_linreg)" from_port="model" to_op="Apply Model (p7_linreg)" to_port="model"/>
+      <connect from_op="Multiply (test)" from_port="output 2" to_op="Apply Model (p7_linreg)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (p7_linreg)" from_port="labelled data" to_op="Performance (p7_linreg)" to_port="labelled data"/>
+      <connect from_op="Performance (p7_linreg)" from_port="performance" to_op="Performance to Data (p7_linreg)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p7_linreg)" from_port="example set" to_op="Write CSV (p7_linreg)" to_port="input"/>
+      <connect from_op="Performance to Data (p7_linreg)" from_port="performance vector" to_port="result 2"/>
+      <connect from_op="Apply Model (p7_linreg)" from_port="model" to_op="Write as Text (p7_linreg_model)" to_port="input 1"/>
+      <connect from_op="Write as Text (p7_linreg_model)" from_port="input 1" to_port="result 3"/>
+      <connect from_op="Multiply (train)" from_port="output 3" to_op="Normalize" to_port="example set input"/>
+      <connect from_op="Normalize" from_port="example set output" to_op="k-NN (p7)" to_port="training set"/>
+      <connect from_op="Normalize" from_port="preprocessing model" to_op="Apply Model (normalize test)" to_port="model"/>
+      <connect from_op="Multiply (test)" from_port="output 3" to_op="Apply Model (normalize test)" to_port="unlabelled data"/>
+      <connect from_op="k-NN (p7)" from_port="model" to_op="Apply Model (knn)" to_port="model"/>
+      <connect from_op="Apply Model (normalize test)" from_port="labelled data" to_op="Apply Model (knn)" to_port="unlabelled data"/>
+      <connect from_op="Apply Model (knn)" from_port="labelled data" to_op="Performance (p7_knn)" to_port="labelled data"/>
+      <connect from_op="Performance (p7_knn)" from_port="performance" to_op="Performance to Data (p7_knn)" to_port="performance vector"/>
+      <connect from_op="Performance to Data (p7_knn)" from_port="example set" to_op="Write CSV (p7_knn)" to_port="input"/>
+      <connect from_op="Performance to Data (p7_knn)" from_port="performance vector" to_port="result 4"/>
+      <connect from_op="Multiply (train)" from_port="output 4" to_op="Optimize Parameters (p7_opt_log)" to_port="input 1"/>
+      <connect from_op="Log to Data (p7_opt_log)" from_port="exampleSet" to_op="Write CSV (p7_opt_log)" to_port="input"/>
+      <connect from_op="Write CSV (p7_opt_log)" from_port="through" to_port="result 5"/>
+      <connect from_op="Optimize Parameters (p7_opt_log)" from_port="performance" to_port="result 6"/>
+    </process>
+  </operator>
+</process>

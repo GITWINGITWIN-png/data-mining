@@ -1,0 +1,103 @@
+10.10.2026 21:24:06 Results of ResultWriter 'Write as Text (p9_itemsets)' [1]: 
+10.10.2026 21:24:06 Frequent Item Sets (122):
+whole milk / 0.256
+other vegetables / 0.193
+rolls/buns / 0.184
+soda / 0.174
+yogurt / 0.140
+bottled water / 0.111
+root vegetables / 0.109
+tropical fruit / 0.105
+shopping bags / 0.099
+sausage / 0.094
+pastry / 0.089
+citrus fruit / 0.083
+bottled beer / 0.081
+newspapers / 0.080
+canned beer / 0.078
+pip fruit / 0.076
+fruit/vegetable juice / 0.072
+whipped/sour cream / 0.072
+brown bread / 0.065
+domestic eggs / 0.063
+frankfurter / 0.059
+margarine / 0.059
+coffee / 0.058
+pork / 0.058
+butter / 0.055
+curd / 0.053
+beef / 0.052
+napkins / 0.052
+chocolate / 0.050
+frozen vegetables / 0.048
+chicken / 0.043
+white bread / 0.042
+cream cheese / 0.040
+waffles / 0.038
+salty snack / 0.038
+long life bakery product / 0.037
+dessert / 0.037
+sugar / 0.034
+UHT-milk / 0.033
+berries / 0.033
+hamburger meat / 0.033
+hygiene articles / 0.033
+onions / 0.031
+specialty chocolate / 0.030
+candy / 0.030
+frozen meals / 0.028
+misc. beverages / 0.028
+oil / 0.028
+butter milk / 0.028
+specialty bar / 0.027
+beverages / 0.026
+ham / 0.026
+meat / 0.026
+ice cream / 0.025
+hard cheese / 0.025
+sliced cheese / 0.025
+cat food / 0.023
+grapes / 0.022
+chewing gum / 0.021
+whole milk, other vegetables / 0.075
+whole milk, rolls/buns / 0.057
+whole milk, soda / 0.040
+whole milk, yogurt / 0.056
+whole milk, bottled water / 0.034
+whole milk, root vegetables / 0.049
+whole milk, tropical fruit / 0.042
+whole milk, shopping bags / 0.025
+whole milk, sausage / 0.030
+whole milk, pastry / 0.033
+whole milk, citrus fruit / 0.031
+whole milk, bottled beer / 0.020
+whole milk, newspapers / 0.027
+whole milk, pip fruit / 0.030
+whole milk, fruit/vegetable juice / 0.027
+whole milk, whipped/sour cream / 0.032
+whole milk, brown bread / 0.025
+whole milk, domestic eggs / 0.030
+whole milk, frankfurter / 0.021
+whole milk, margarine / 0.024
+whole milk, pork / 0.022
+whole milk, butter / 0.028
+whole milk, curd / 0.026
+whole milk, beef / 0.021
+whole milk, frozen vegetables / 0.020
+other vegetables, rolls/buns / 0.043
+other vegetables, soda / 0.033
+other vegetables, yogurt / 0.043
+other vegetables, bottled water / 0.025
+other vegetables, root vegetables / 0.047
+other vegetables, tropical fruit / 0.036
+other vegetables, shopping bags / 0.023
+other vegetables, sausage / 0.027
+other vegetables, pastry / 0.023
+other vegetables, citrus fruit / 0.029
+other vegetables, pip fruit / 0.026
+other vegetables, fruit/vegetable juice / 0.021
+other vegetables, whipped/sour cream / 0.029
+other vegetables, domestic eggs / 0.022
+other vegetables, pork / 0.022
+other vegetables, butter / 0.020
+... 22 additional item sets ...... (22 more)

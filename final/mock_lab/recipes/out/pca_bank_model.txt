@@ -1,0 +1,16 @@
+07.10.2026 17:17:33 Results of ResultWriter 'Write PCA as Text' [1]: 
+07.10.2026 17:17:33 
+Principal Components:
+Number of Components: 2
+PC 1:  - 0.622 * Age - 0.618 * Experience + 0.312 * Income - 0.028 * Family + 0.299 * CCAvg - 0.132 * Education + 0.120 * Mortgage + 0.035 * Securities Account + 0.102 * CD Account + 0.005 * Online + 0.014 * CreditCard
+PC 2:  + 0.327 * Age + 0.334 * Experience + 0.532 * Income - 0.210 * Family + 0.498 * CCAvg - 0.199 * Education + 0.225 * Mortgage + 0.112 * Securities Account + 0.297 * CD Account + 0.080 * Online + 0.094 * CreditCard
+PC 3:  - 0.041 * Age - 0.045 * Experience - 0.181 * Income + 0.215 * Family - 0.178 * CCAvg + 0.159 * Education - 0.041 * Mortgage + 0.473 * Securities Account + 0.625 * CD Account + 0.276 * Online + 0.410 * CreditCard
+PC 4:  - 0.013 * Age - 0.009 * Experience - 0.005 * Income - 0.092 * Family - 0.029 * CCAvg - 0.055 * Education - 0.039 * Mortgage - 0.598 * Securities Account + 0.015 * CD Account - 0.105 * Online + 0.785 * CreditCard
+PC 5:  + 0.029 * Age + 0.016 * Experience + 0.044 * Income + 0.306 * Family + 0.041 * CCAvg + 0.420 * Education + 0.519 * Mortgage + 0.087 * Securities Account + 0.031 * CD Account - 0.665 * Online + 0.070 * CreditCard
+PC 6:  - 0.015 * Age - 0.008 * Experience - 0.050 * Income - 0.365 * Family + 0.002 * CCAvg - 0.245 * Education - 0.473 * Mortgage + 0.408 * Securities Account + 0.017 * CD Account - 0.627 * Online + 0.143 * CreditCard
+PC 7:  - 0.043 * Age - 0.060 * Experience + 0.009 * Income - 0.697 * Family + 0.006 * CCAvg + 0.700 * Education - 0.007 * Mortgage - 0.035 * Securities Account + 0.068 * CD Account + 0.107 * Online - 0.048 * CreditCard
+PC 8:  + 0.039 * Age + 0.024 * Experience + 0.215 * Income + 0.429 * Family + 0.405 * CCAvg + 0.415 * Education - 0.647 * Mortgage - 0.112 * Securities Account - 0.006 * CD Account - 0.020 * Online - 0.024 * CreditCard
+PC 9:  + 0.010 * Age + 0.003 * Experience + 0.027 * Income + 0.024 * Family + 0.168 * CCAvg + 0.107 * Education + 0.103 * Mortgage + 0.462 * Securities Account - 0.706 * CD Account + 0.243 * Online + 0.420 * CreditCard
+PC 10:  + 0.001 * Age - 0.006 * Experience - 0.732 * Income - 0.056 * Family + 0.661 * CCAvg - 0.064 * Education + 0.103 * Mortgage - 0.055 * Securities Account + 0.079 * CD Account - 0.000 * Online - 0.030 * CreditCard
+PC 11:  - 0.707 * Age + 0.707 * Experience - 0.005 * Income + 0.003 * Family + 0.005 * CCAvg + 0.020 * Education + 0.000 * Mortgage + 0.001 * Securities Account - 0.002 * CD Account + 0.001 * Online - 0.000 * CreditCard
+

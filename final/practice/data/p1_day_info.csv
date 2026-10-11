@@ -1,0 +1,5 @@
+day,is_weekend,open_hours
+Thur,No,10
+Fri,No,12
+Sat,Yes,14
+Sun,Yes,12

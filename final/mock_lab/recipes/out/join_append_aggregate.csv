@@ -1,0 +1,4 @@
+"segment","sum(amount)","count(cust_id)"
+"A",410,3
+"B",80,1
+"C",90,1

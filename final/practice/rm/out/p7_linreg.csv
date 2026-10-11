@@ -1,0 +1,4 @@
+"Criterion","Value","Standard Deviation","Variance"
+"root_mean_squared_error",5743.0863274262465,0.0,-2.8450172855880596E7
+"absolute_error",4099.033162002775,4022.5573583321134,1.6180967701071829E7
+"squared_correlation",0.7422590206912073,,

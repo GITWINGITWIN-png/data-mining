@@ -1,0 +1,6 @@
+"Criterion","Value","Standard Deviation","Variance"
+"accuracy",0.6425,0.01207614728849245,1.4583333333336354E-4
+"AUC",0.5,0.0,0.0
+"precision",,,
+"recall",0.0,0.0,0.0
+"f_measure",,,

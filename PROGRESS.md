@@ -2,6 +2,233 @@
 
 ---
 
+# Final Study Vault (folder `final/obsidian/`, `final/mock_lab/`) — เตรียมสอบ Final
+
+## Exams (จาก `final/69_1_Guideline.pdf`)
+- **Lab:** จ. 12 ต.ค. 2569 09:00–12:00 E11-S603 · โน้ตบุ๊กตัวเอง · RapidMiner หรือ Python ตามโจทย์
+- **Lecture:** จ. 19 ต.ค. 2569 16:00–19:00 E11-S603 · 6 หมวด
+
+## Status
+- ✅ **ชุด Lab เสร็จ (2026-10-07):** `final/obsidian/lab/LAB 00–09` (hub · setup · data handling · preprocessing ·
+  workflow/baseline/eval · supervised · clustering/association · reading results · mock guide · cheat sheet)
+- ✅ **โจทย์ฝึกทีละขั้น 9 ชุด (2026-10-10):** `final/obsidian/practice/PR 00–09` — ไกด์ Python 9 + RapidMiner 9
+  ข้อมูลใหม่จากภายนอกใน `final/practice/data/` (tips, penguins, breast cancer, wine, pima, heart, insurance, groceries)
+  ไกด์ Python สร้างโดยรันโค้ดจริง (`final/practice/guidegen.py`, `py_guides_a/b.py`) · ไกด์ RM จาก process เฉลยที่รัน batch จริง
+  (`rm_guides.py` → `rm/P0X_solution.rmp` + `rm/out/` → `rm_guides_md.py`)
+  + ภาพ canvas mermaid หลังทุกขั้น (60 ภาพ) จาก `.rmp` จริง ด้วย `rm_diagrams.py` (กำหนดว่าขั้นไหนเพิ่ม operator อะไรใน `STEPS`) · ตรวจ render ด้วย mermaid-cli ผ่านครบ
+  Findings ใหม่: **H2O Logistic Regression ตัดที่ threshold F1-max ไม่ใช่ 0.5** · SMOTE Upsampling ports `exa`/`ups` ·
+  Operator Toolbox ติดตั้งแล้ว (smote recipe ผ่าน) · Filter Examples list format `attr.equals.val` / `attr.ge.4` / `attr.is_not_missing.`
+- ✅ Mock lab 3 ชุด `final/mock_lab/mock{1,2,3}_*` — question.ipynb / solution.ipynb (executed) / solution*.rmp (batch-run)
+- ✅ RapidMiner recipes 12 ไฟล์ `final/mock_lab/recipes/` (11 batch-run ผ่าน · SMOTE ต้องมี Operator Toolbox)
+- ✅ **ชุด Lecture เสร็จ (2026-10-07):** `final/obsidian/lecture/LEC 00–13` (hub · EDA · preprocessing+leakage · PCA ·
+  imbalanced · evaluation · KNN · lin/logistic · tree/RF · clustering · association · formula · glossary · drills)
+  ตัวเลขยืนยันด้วย `final/obsidian/scripts/lec_numbers.py` · ภาพ 12 ภาพจาก `figs_lecture.py` · ลิงก์ 0 เสีย (24 โน้ต)
+- ⏳ ผู้ใช้ต้องติดตั้ง **Operator Toolbox** ใน AI Studio เอง (Marketplace) แล้วรัน smote recipe
+
+## Decisions (ผู้ใช้เลือก 7 ต.ค.)
+Lab notes ต้องใช้ได้ทั้ง open-file และ closed-book · Python = RapidMiner น้ำหนักเท่ากัน · มี mock notebook ·
+Lecture ไม่รู้รูปแบบ → drill ทุกแบบ · 4–5 ชม./วัน · **ไม่ commit git** (ไฟล์ untracked; commit ลง main ทีหลัง)
+
+## Toolchain
+- Python env สอบ: `final/.venv` (uv, CPython 3.14, pandas 3.0.6, sklearn 1.9.1, imblearn 0.14.2, mlxtend 0.25) +
+  kernel `dm-exam` · โค้ดในโน้ตทดสอบด้วย `final/obsidian/scripts/run_snippets.py [--show] <notes>`
+- ลิงก์: `final/obsidian/scripts/check_links.py` (wikilink + #anchor + ภาพ ทั้ง vault)
+- RapidMiner batch: `bash final/mock_lab/run_rm.sh <files>` — **ต้อง Java 17** (CommandLineLauncher เรียก
+  setSecurityManager; Java 21 ห้าม, 25 ลบ) + copy ไป path ไม่มีช่องว่าง (สคริปต์ใช้ eval) · GUI ใช้ Java 25 ได้
+- .rmp สร้างด้วย `final/mock_lab/rm_builder.py` · operator class: core / `concurrency:` (cross_validation,
+  optimize_parameters_grid, parallel_decision_tree, parallel_random_forest, k_means, fp_growth, join) /
+  `blending:pivot` / `h2o:logistic_regression` · ชื่อ operator ต้องไม่ซ้ำทั้ง process
+- ข้อมูลจากสไลด์: `final/data/make_slide_datasets.py` (utilities, riding_mowers(+probs), weather, tid_cheat)
+
+## Findings ที่ใช้ในโน้ต (ยืนยันด้วยการรันจริง)
+- RapidMiner Normalize z ใช้ n−1 (ตรงกับสไลด์ clustering p.30) · sklearn ใช้ n
+- Linear Regression default feature selection = M5 prime · Decision Tree default = gain_ratio
+- Cluster Distance Performance: avg within centroid distance (= WCSS/n) และ Davies Bouldin แสดง **ติดลบ**;
+  ค่าใน Log ใช้ value `avg_within_distance` (บวก)
+- positive class: ใช้ `manually_set_positive_class` ใน Performance (Binominal) — `Set Positive Value` ไม่มีผล
+- Nominal to Binominal ต้อง `transform_binominal` ก่อน FP-Growth · Excel column "Trans. " RapidMiner ตัดช่องว่างเอง
+- write_as_text ของ AssociationRules ตัดผล ("... N other rules ...")
+- sklearn 1.9: `LogisticRegression(penalty=)` deprecated · pandas 3: dtype `str`, ใช้ `select_dtypes(exclude="number")`,
+  `.values` read-only
+- สไลด์ผิด (ใช้เป็น drill "หาที่ผิด"): Tree p.41 Gini (ที่ถูก 0.408/0.320/0.371), KNN p.36 typo, KNN p.42 ลืม k=12,
+  KNN p.70 "11 records", Imbalanced p.20–21 SMOTE ก่อน CV, KNN p.51/p.56 leakage, Data p.21 d(x1,x3)=2.24
+
+---
+
+# HW10 (folder `HW10/`): Tree-based Classification — hand exercises
+
+## Status: ✅ Complete (2026-09-19) — minimum scope, `.docx`, matches original worksheet styling
+| File | Content |
+|---|---|
+| `6710503739_HW#10.docx` | `65_2_Excercise_Eng.pdf` reproduced to match the source formatting exactly — Times New Roman, black text throughout, no colored headings, plain bordered tables (both data tables in full), underline preserved where the original had it — with **Answer:** blocks placed directly under each (a)/(b) part — Ex1 feature selection (Information Gain by hand for Gender/CarType/ShirtSize + why not Customer ID), Ex2 ID3 decision tree on the Buy-Computer data + prediction for the new example |
+
+## Key results
+- **Ex1(a):** CarType has by far the highest Information Gain (0.620 bits) vs. Gender (0.029) and
+  ShirtSize (0.012) — best predictor of Class.
+- **Ex1(b):** Customer ID gives 20 pure singleton branches (entropy 0, apparent max gain) but doesn't
+  generalize — classic high-cardinality overfitting trap, must be excluded as a split candidate.
+- **Ex2(a):** Root split = age (gain 0.246, highest vs. income 0.029/student 0.151/credit_rating 0.048).
+  age≤30 branch splits perfectly on student; age>40 branch splits perfectly on credit_rating; age 31–40
+  is a pure "yes" leaf.
+- **Ex2(b):** New example (age≤30, income=medium, student=yes, credit_rating=fair) → follows
+  age≤30 → student=yes → **buy = YES**.
+
+## Toolchain note
+Built directly with the `docx` npm package (Node/docx-js) rather than notebooks — no dataset/plots
+needed, just worked calculations and text. `docx` isn't globally installed on this machine; installed
+into the session scratchpad (`npm install docx`) rather than the repo. Verified by converting to PDF
+via the skill's `soffice.py` + `pdftoppm` and visually checking both pages before copying into `HW10/`.
+
+---
+
+# HW9 (folder `HW9/`): K-Means — step-by-step exercise + Cereals lab
+
+## Status: ✅ Complete and verified (2026-09-13) — minimum-requirement scope, answers only
+| File | Content |
+|---|---|
+| `6710503739_HW#9_K-Mean.ipynb` / `.pdf` | Exercise I (`Excercise_K-Mean_60_2.pdf`): 9 points, seeds A1/A4/A7, members + centroid + plot per iteration (4 pp) |
+| `6710503739_creal.ipynb` / `.pdf` | Cereals lab (`Cereals_Labsheet_66_2.pdf`), named per the sheet's `student_id_creal` (4 pp) |
+
+## Key results
+- **K-Mean:** converges after **3 iterations** (iteration 3 = no change).
+  Final C1={A1,A3,A7,A9} (4.25, 8), C2={A4,A6,A8} (2.67, 3), C3={A2,A5} (9.5, 4.5).
+- **Cereals:** this `.xls` has only 12 attributes (no mfr/type/weight/cups). `-1` in carbo/sugars
+  means missing (Quaker_Oatmeal) → 3 cereals removed, 74 left. 9 nutrition attributes, Min-Max;
+  dropped name, shelf, rating. **Best K = 6** (silhouette local peak 0.331, SSE elbow).
+- **Healthy = clusters 3 (puffed/shredded wheat, 9) + 5 (bran, 3)** → 12 cereals; cluster 5 alone
+  is too small for a different cereal every day. Cluster numbers are from `random_state=42`.
+- **2026-09-13 (student edit):** the student trimmed `creal.ipynb` themselves (removed the SSE table,
+  attribute-selection note, best-K note, `n` column and per-cluster stats from b). PDF was re-exported
+  from their executed notebook **without re-running it**. Keep their wording and don't add prose back.
+
+## Rebuild
+Execute with `env -u VIRTUAL_ENV uv run --no-project --with pandas --with xlrd --with scikit-learn
+--with matplotlib --with jupyter --with nbconvert --with ipykernel jupyter nbconvert --execute --inplace`;
+PDF = copy to `nb.ipynb` (`#` in name), `--to latex`, inject `\newcounter{none}` after `\documentclass`,
+xelatex x2 (pandoc from `pypandoc-binary`).
+
+---
+
+# HW#8 (folder `HW8/`): Association Rule Mining — 3 exercises
+
+## Goal
+Answer `HW8/HW#8.pdf` in full: (1) Apriori by hand on 6 transactions, (2) the same in Python,
+(3) PEP customer-profiling case study on `HW8/bank-data.csv` (600 customers).
+
+## Status: ✅ Complete and verified (2026-09-06)
+| Deliverable | Content |
+|---|---|
+| `6710503739_HW#8_Exercise-1.ipynb` / `.pdf` | Hand calculation: C1→L1→C2→L2→C3→L3, C4 pruned. **11 frequent itemsets**, 3 strong rules with support/confidence/lift. |
+| `6710503739_HW#8_Exercise-2.ipynb` / `.pdf` | mlxtend Apriori on the same 6 transactions — matches Ex1 exactly (11 itemsets, 12 strong rules). |
+| `6710503739_HW#8_Exercise-3.ipynb` / `.pdf` | Full A1–A4 + B1–B4 case study, 15 pages. |
+
+## Key results (all verified against executed output)
+- **Ex1/Ex2:** every strong rule has **lift = 1.0** — G and J are in all 6 transactions, so the
+  items are statistically independent. This is the correct finding, not a bug; don't "fix" it.
+- **Ex3 preprocessing:** kept 8 attributes (age, income, married, children, car, save_act,
+  mortgage, pep); dropped `id` (600 unique), `sex` (exactly 50/50), `region` (fragments support),
+  `current_act` (75.8% YES, near-constant). Equal-frequency tertiles for age/income (income is
+  right-skewed, so equal-width would empty the HIGH bin); domain bins for children (0 / 1-2 / 3+).
+  → 19 binary items, 600 transactions.
+- **Ex3 parameters:** min_support 0.10, min_confidence 0.70 → 413 itemsets, 215 rules,
+  26 of them predicting pep. Base rate pep_YES = 0.4567.
+- **Ex3 headline rules:**
+  `children_1-2 & income_HIGH → pep_YES` (sup 0.1450, conf 0.9255, **lift 2.0267**) and
+  `children_0 & married_YES → pep_NO` (sup 0.2350, conf 0.7833, lift 1.4417).
+
+## Toolchain note (this repo's `.venv` is broken — `.venv/bin/python3` does not exist)
+Everything ran through `uv`, never the venv:
+```
+env -u VIRTUAL_ENV uv run --no-project --with pandas --with mlxtend --with jupyter \
+    --with nbconvert --with ipykernel jupyter nbconvert --to notebook --execute --inplace <nb>
+```
+**PDF export needs two workarounds** (see the helper used, reproduced below):
+1. `pandoc` is not installed system-wide → get it from the `pypandoc-binary` wheel and put its
+   directory on `PATH`.
+2. nbconvert + pandoc 3.x emits `longtable` captions that need a `none` counter the template
+   lacks → `! LaTeX Error: No counter 'none' defined.` Fix: convert `--to latex`, inject
+   `\newcounter{none}` after `\documentclass`, then run `xelatex` twice.
+3. XeLaTeX (Latin Modern) **silently drops** ✓ ✗ ✅ ⇒ ≥ ≤ ∉ ∅ ≈ — they vanish from the PDF with
+   no error. Markdown cells use ASCII equivalents instead. `— – → ×` do render fine.
+4. **Grid tables:** pandoc emits booktabs longtables (horizontal rules only, no vertical lines),
+   which do not match the notebook's look. A `gridify.py` pass rewrites each longtable to
+   `{|l|l|}` / `{|p{}|p{}|}` and `\hline` on every row. Two gotchas: subtract
+   `n+1 \arrayrulewidth` from the `p{}` widths or wide tables overflow, and leave pandoc's
+   `\bottomrule` in `\endlastfoot` rather than ruling the last row — longtable can break between
+   the final row and its `\hline`, orphaning a stray rule at the top of the next page.
+
+**2026-09-06 (2nd pass, on the student's instruction):** all `**bold**` / `*italic*` emphasis was
+stripped from every markdown cell (84 + 0 + 72 markers) and the tables re-rendered as grids.
+The student had already rewritten/trimmed the markdown themselves — wording and content are
+theirs, deliberately kept as-is (including typos like "dept"). Do not re-add emphasis or prose.
+
+---
+
+# W10 (folder `W10/`): BeautyCo — Association Rules / Market Basket Analysis
+
+## Goal
+Lab sheet `69_1_Cosmetics_Lab_Sheet_Eng.pdf` on `BeautyCo_68.xls`: answer "which products are
+most frequently purchased together?" via FP-Growth (min support 0.2) → association rules
+(min confidence 0.7). Scope was deliberately **minimum requirement only**.
+
+## Status: ✅ Complete and verified (2026-08-31)
+Both required deliverables exist and are visually checked:
+- `W10/Cosmetic_6710503739.ipynb` — coding, executed end-to-end, no errors
+- `W10/Cosmetic_6710503739.pdf` — answers to questions 3-4-5 (2 pages, XeLaTeX)
+- `W10/Cosmetic_6710503739.tex` — source for the PDF
+
+**Deliberately minimal on the student's instruction:** the PDF carries the bare answers only
+(no extended interpretation), and the notebook is program output plus one-line explanations,
+**with no code comments**. Do not "improve" either by adding prose back.
+
+## Data
+1,000 transactions × 14 binary product columns, no missing values. `Trans.` is the ID
+(header has a **trailing space** — must `.strip()` the columns or the drop fails).
+Mean basket = 4.39 items.
+
+## The answers (all recomputed from raw baskets and matched against mlxtend)
+- **Q3 row meaning**: one customer's basket; 1,000 baskets over 14 products.
+- **Q3 most-bought-together**: `Base_Makeup+Glossy_Lips` support 0.356 but lift only 1.36
+  (both individually popular → co-occur by chance); `Eye_Enhancer+Eye_Palette` support 0.321
+  with lift 2.36 is the genuinely related pair.
+- **Q3 unexpected**: `Nail_Art+Makeup_Tools` lift **3.57** — strongest association in the data,
+  but support 0.149 < 0.2 so FP-Growth never sees it. Also `Lip_Liner+Base_Makeup` lift 0.69
+  (negative association).
+- **Q4 frequent itemsets**: **23** (11 singletons + 12 pairs). Nothing of size ≥3 reaches 0.2,
+  so only 1→1 rules are possible. Dropped below threshold: Makeup_Tools (.149),
+  Travel_Pouch (.054), Brow_Definer (.042).
+- **Q4 maximal**: **16 of 23** — all 12 pairs + 4 singletons that pair with nothing
+  (Lip_Color, Nail_Art, Contouring, Lip_Liner → standalone products, not bundle candidates).
+- **Q5 rules at conf ≥ 0.7**: only **3**. Highest confidence =
+  `Eye_Enhancer → Eye_Palette`: **support 0.321, confidence 0.899, lift 2.36**
+  (321/1000, 321/357, 0.899/0.381). Reverse rule also valid (conf 0.843) → bidirectional.
+- **Q5 marketing**: "Eye Look Set" bundle; eye-look tutorials for TikTok/Shopee Live;
+  cart cross-sell trigger; retarget the 36 mascara buyers who skipped the palette;
+  trial the hidden `Nail_Art+Makeup_Tools` bundle.
+
+## Environment (important)
+`.venv` is still unusable — everything ran through:
+`env -u VIRTUAL_ENV uv run --no-project --with pandas --with xlrd --with mlxtend ...`
+`xlrd` is required to read the legacy `.xls`. FP-Growth via **mlxtend**
+(`fpgrowth` + `association_rules`), which is the Python equivalent of the RapidMiner operators.
+
+## Rebuild
+```bash
+cd W10
+env -u VIRTUAL_ENV uv run --no-project --with pandas --with xlrd --with mlxtend \
+  --with jupyter --with ipykernel --with nbconvert \
+  jupyter nbconvert --to notebook --execute --inplace Cosmetic_6710503739.ipynb
+xelatex -interaction=nonstopmode Cosmetic_6710503739.tex   # run in W10/, then rm *.aux *.log
+```
+
+## Not done (out of scope — "minimum requirement" only)
+- No RapidMiner `.xml` process (the lab accepts *either* `.xml` **or** `.ipynb`; the notebook satisfies it).
+- No support-bar chart / plots in the notebook (trimmed out; tables carry the answers).
+- No extra sensitivity analysis at lower support thresholds, though the `Nail_Art+Makeup_Tools`
+  finding suggests support 0.1 would be an interesting follow-up.
+
+---
+
 # Group Assignment #1: Mini DW & Dashboard — "ElderCare Insight" (นับเป็นงานกลุ่ม 3 คน)
 
 ## Goal
@@ -88,6 +315,45 @@ User explicitly scoped this session to **planning only** ("แค่วางแ
 - [ ] Build ETL → DW → dashboard (nothing written yet).
 - [ ] Condense ภาค 1–4 into the 10–15 page submitted report; record the 8–15 min video;
       keep an AI Usage Log (≥5 prompts) as the brief requires.
+
+---
+
+# HW7 (folder `HW7/`): KNN — car-theft prediction + KNN vs Logistic Regression on Titanic
+
+Answers `HW7/KNN_Exercise_66_2.pdf`. Two notebooks + matching PDFs, named to the
+submission scheme `Student_ID_HW#7_<n>.{ipynb,pdf}` (2026-08-30).
+
+## Status: ✅ Complete — 4 deliverables, PDFs rendered and visually verified (2026-08-30)
+
+| File | Content |
+|---|---|
+| `6710503739_HW#7_1.ipynb` / `.pdf` | Q1 — KNN on the 10-row car dataset (2 pp) |
+| `6710503739_HW#7_2.ipynb` / `.pdf` | Q2 — KNN vs Logistic Regression on Titanic (4 pp) |
+
+- **Q1** — Colour/Type/Origin one-hot encoded, KNN predicts **(Red, SUV, Domestic)**.
+  **Answer: Stolen = No.**
+  ⚠️ Key gotcha: **five** records tie at the minimum distance √2 (each differs by exactly
+  one attribute — rows 0,1,2,7,8). `k=3` would return `Yes` purely because sklearn breaks
+  the tie by row order and silently drops rows 7 and 8. The notebook uses **k=5** so all
+  five equidistant neighbours vote → 3 No vs 2 Yes → **No**.
+  On one-hot vectors Euclidean distance² = 2 × (mismatched attributes), so the only
+  possible distances are √2 (1.414), 2.0 and √6 (2.449) — the tie is structural, not luck.
+- **Q2** — uses the repo's existing `titanic_data.csv` (891 rows). Age→median,
+  Embarked→mode, get_dummies(drop_first), 80/20 stratified split, StandardScaler fit on
+  train only. **KNN (k=5) acc 0.82 / Survived-F1 0.74** vs **LogReg acc 0.80 / F1 0.72**.
+  ~1pp on a 179-row test set ≈ 2 passengers, i.e. inside single-split noise.
+
+### ⚠️ Known gap (user trimmed it, deliberately left alone)
+The lab sheet's step 5 asks to *"Recommend the most suitable model"*. The current Q2
+notebook ends at advantages/disadvantages — the recommendation paragraph was removed
+during the bare-minimum trim. Add one line if marks depend on it.
+(Also two typos in that section's markdown: "Adventages" / "Disaventage".)
+
+## Rebuild
+Notebooks are executed in Jupyter directly. PDFs are a straight nbconvert→XeLaTeX render
+(no added content; only margins 2.2cm + paragraph spacing for legibility). `#` in the
+filename is a LaTeX comment char, so the build copies to a temp name, compiles, renames:
+`bash <scratchpad>/build_all.sh`  (pandoc comes from `--with pypandoc-binary`; no system pandoc)
 
 ---
 
@@ -545,3 +811,61 @@ All explanations/interpretations written in **Thai**.
 ## Remaining (student tasks)
 - [ ] Rename/copy to submission name `6710503739_hw_2_1.ipynb` (student ID inferred from sibling `6710503739_Inclass#1.ipynb`).
 - [ ] Export notebook to `6710503739_hw_2_1.pdf` for the report.
+
+---
+
+# W12: In-Class Decision Trees
+
+## Status: ✅ Done (minimal submission)
+- `W12/6710503739_Kawinphop_DecisionTree.ipynb`: steps 1–6 + short answers, executed.
+- `W12/6710503739_Kawinphop_DecisionTree.pdf`: notebook export = answer document.
+- Setup: features Gender(Male=1)/Age/EstimatedSalary; 10-fold StratifiedKFold shuffle seed 42.
+- Baseline gini d=4 leaf=5 → 0.8775; entropy → 0.8825; grid best entropy d=2 (leaf 1–10 tied 0.9100) → pick leaf=10.
+- Final tree train acc 0.915; new customer (F, 40, 100000) → Purchased=1, conf(0)=0.1591, conf(1)=0.8409.
+
+## Remaining
+- [ ] Submit the two files.
+
+---
+
+# W13: In-Class KNN + PCA (Personal Loan)
+
+## Status: ✅ Done (minimal submission)
+- `W13/6710503739_inclass13.ipynb`: Parts I–VI, executed with outputs; saves `pca_plot.png`.
+- `W13/69_..._ANSWERED.pdf`: the original worksheet with every table/blank filled in.
+  Built by stamping a transparent overlay onto the untouched source pages (Carlito ≈ the
+  document's Aptos), so layout, rules and shading are unchanged. Script: scratchpad `fill.py`.
+- Setup: drop ID/ZIP; 11 predictors; StratifiedKFold(5, shuffle, seed 42); Pipeline puts
+  Normalize (and PCA) inside CV; grid criterion = F1 on class 1.
+- Part I  KNN k=5 → acc 0.9608 / prec 0.9522 / rec 0.6229 / F1 0.7525; CM TN 4505 FP 15 FN 181 TP 299.
+- Part II best k=1 → 0.9604 / 0.8675 / 0.6938 / 0.7706.
+- Part III best components=8, k=1 → 0.9568 / 0.8270 / 0.6958 / 0.7552 (all top-5 rows use max 8 comps).
+- Part IV PC1 0.1862, PC2 0.1688, cumulative 0.3550; PC1 = Age/Experience/Income, PC2 = Income/CCAvg/Experience.
+- Decision: pick optimized KNN k=1; PCA did not help. Part VI customer → Personal Loan = 0.
+
+## Known cosmetic issue
+- The worksheet's `?` placeholders in Part V are covered by an opaque patch and overwritten,
+  so the page renders correctly, but copying text still yields `=8?`. The source fonts are
+  subsetted with no `?` code, so removing the glyph from the content stream is not safe.
+
+## Remaining
+- [ ] Submit the notebook + the ANSWERED PDF.
+
+---
+
+# W14: In-Class Imbalanced Classification (Telco Churn, E0/E1/E2)
+
+## Status: ✅ Done (minimal submission)
+- `W14/6710503739_Imbalanced_InClass.ipynb`: Parts A–D, executed with outputs.
+- `W14/6710503739_Imbalanced_InClass_Report.pdf`: the notebook exported via nbconvert→LaTeX→XeLaTeX.
+- Setup: target Churn, positive = Yes; No 5174 / Yes 1869 → IR 2.768; 11 blank TotalCharges
+  (all tenure 0) → 0; customerID dropped; one-hot → 45 features; StratifiedKFold(5, shuffle, seed 1992).
+- Same tree everywhere: entropy, max_depth 10, min_samples_leaf 2, seed 1992. imblearn Pipeline
+  keeps sampling inside the training folds only.
+- E0 acc 0.7647 / prec 0.5646 / rec 0.4976 / F1 0.5288; CM TN 4456 FP 718 FN 939 TP 930.
+- E1 (RandomUnderSampler 300/300) 0.6947 / 0.4512 / 0.6977 / 0.5477; CM 3589 1585 565 1304.
+- E2 (StandardScaler + SMOTE k=5, auto) 0.7375 / 0.5054 / 0.6977 / 0.5854; CM 3890 1284 565 1304.
+- Decision: E2 SMOTE (best F1; same FN reduction as E1, −374, but +566 FP instead of +867).
+
+## Remaining
+- [ ] Submit the notebook + report PDF.
