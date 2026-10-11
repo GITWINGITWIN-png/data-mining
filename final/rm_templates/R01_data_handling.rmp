@@ -58,7 +58,7 @@
         <parameter key="attribute_name" value="tip"/>
         <parameter key="target_role" value="label"/>
       </operator>
-      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples" width="90" x="1000" y="367">
+      <operator activated="true" class="filter_examples" compatibility="12.1.001" expanded="true" name="Filter Examples" width="90" x="1000" y="447">
         <parameter key="condition_class" value="custom_filters"/>
         <parameter key="filters_logic_and" value="true"/>
         <list key="filters_list">
@@ -66,7 +66,7 @@
           <parameter key="filters_entry_key" value="size.ge.4"/>
         </list>
       </operator>
-      <operator activated="true" class="aggregate" compatibility="12.1.001" expanded="true" name="Aggregate" width="90" x="1000" y="517">
+      <operator activated="true" class="aggregate" compatibility="12.1.001" expanded="true" name="Aggregate" width="90" x="1000" y="677">
         <parameter key="use_default_aggregation" value="false"/>
         <parameter key="group_by_attributes" value="day"/>
         <list key="aggregation_attributes">
@@ -76,12 +76,12 @@
           <parameter key="bill_id" value="count"/>
         </list>
       </operator>
-      <operator activated="true" class="generate_attributes" compatibility="12.1.001" expanded="true" name="Generate Attributes (rate)" width="90" x="1000" y="667">
+      <operator activated="true" class="generate_attributes" compatibility="12.1.001" expanded="true" name="Generate Attributes (rate)" width="90" x="1000" y="907">
         <list key="function_descriptions">
           <parameter key="is_smoker" value='if(smoker=="Yes", 1, 0)'/>
         </list>
       </operator>
-      <operator activated="true" class="blending:pivot" compatibility="12.1.001" expanded="true" name="Pivot" width="90" x="1135" y="667">
+      <operator activated="true" class="blending:pivot" compatibility="12.1.001" expanded="true" name="Pivot" width="90" x="1135" y="907">
         <parameter key="group_by_attributes" value="day"/>
         <parameter key="column_grouping_attribute" value="time"/>
         <list key="aggregation_attributes">
@@ -89,23 +89,23 @@
           <parameter key="is_smoker" value="average"/>
         </list>
       </operator>
-      <operator activated="true" class="generate_attributes" compatibility="12.1.001" expanded="true" name="Generate Attributes" width="90" x="1000" y="817">
+      <operator activated="true" class="generate_attributes" compatibility="12.1.001" expanded="true" name="Generate Attributes" width="90" x="1000" y="1137">
         <list key="function_descriptions">
           <parameter key="tip_pct" value="tip / total_bill * 100"/>
           <parameter key="big_bill" value='if(total_bill &gt; 20, "Yes", "No")'/>
         </list>
       </operator>
-      <operator activated="true" class="sort" compatibility="12.1.001" expanded="true" name="Sort" width="90" x="1000" y="967">
+      <operator activated="true" class="sort" compatibility="12.1.001" expanded="true" name="Sort" width="90" x="1000" y="1367">
         <parameter key="attribute_name" value="total_bill"/>
         <parameter key="sorting_direction" value="decreasing"/>
       </operator>
-      <operator activated="true" class="sample" compatibility="12.1.001" expanded="true" name="Sample (10 rows)" width="90" x="1135" y="967">
+      <operator activated="true" class="sample" compatibility="12.1.001" expanded="true" name="Sample (10 rows)" width="90" x="1135" y="1367">
         <parameter key="sample" value="absolute"/>
         <parameter key="sample_size" value="10"/>
         <parameter key="use_local_random_seed" value="true"/>
         <parameter key="local_random_seed" value="1992"/>
       </operator>
-      <operator activated="true" class="correlation_matrix" compatibility="12.1.001" expanded="true" name="Correlation Matrix" width="90" x="1000" y="1117">
+      <operator activated="true" class="correlation_matrix" compatibility="12.1.001" expanded="true" name="Correlation Matrix" width="90" x="1000" y="1597">
       </operator>
       <connect from_op="Read CSV (หลัก)" from_port="output" to_op="Append" to_port="example set 1"/>
       <connect from_op="Read CSV (append)" from_port="output" to_op="Append" to_port="example set 2"/>
@@ -134,12 +134,12 @@
       <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV (หลัก) → csv_file = ไฟล์โจทย์ (หรือใช้ Import Configuration Wizard)&lt;br&gt;2. Read CSV (append) / Read CSV (lookup) → ไฟล์ที่ 2 / ตาราง lookup · ไม่ใช้ → ลบ operator + ลบ Append/Join แล้วต่อเส้นตรง&lt;br&gt;3. Join → key_attributes (คู่คอลัมน์ key) + join_type (inner / left / right / outer)&lt;br&gt;4. Set Role → attribute_name = คอลัมน์ id / label&lt;br&gt;ดูสถิติ: Results → แท็บ Statistics · กราฟ: Results → Visualizations (Histogram / Boxplot / Bar / Scatter)</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="45" y="155">&lt;b&gt;§1 Import · §4 Append (ต่อแถว) · §5 Join (เพิ่มคอลัมน์ด้วย key) → res 1 = ข้อมูลหลังรวม&lt;/b&gt;&lt;br&gt;คลิก res 1 → Statistics (missing / min / max / mean / ค่าที่พบบ่อย) · Visualizations วาดกราฟ</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="155">&lt;b&gt;§2 Select Attributes + Set Role&lt;/b&gt;&lt;br&gt;Select Attributes → attributes (คั่นด้วย |) · invert_selection = true คือ 'ตัด' · Set Role → id / label</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="305">&lt;b&gt;§3 Filter Examples (กรองแถว)&lt;/b&gt;&lt;br&gt;condition_class = custom_filters → Add Entry: คอลัมน์ · เงื่อนไข (equals / &gt; / ≥ / is missing) · ค่า · filters_logic_and = AND/OR</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="455">&lt;b&gt;§6 Aggregate (group by)&lt;/b&gt;&lt;br&gt;group_by_attributes = คอลัมน์กลุ่ม · aggregation_attributes → Edit List: คอลัมน์ + ฟังก์ชัน (sum / average / count / maximum …)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="605">&lt;b&gt;§7 Pivot&lt;/b&gt;&lt;br&gt;group_by_attributes = แถว · column_grouping_attribute = คอลัมน์ · aggregation_attributes = ค่า + ฟังก์ชัน · สัดส่วนคลาส: Generate Attributes สร้าง 0/1 ก่อนแล้ว average</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="755">&lt;b&gt;§8 Generate Attributes (สร้างคอลัมน์ใหม่)&lt;/b&gt;&lt;br&gt;function_descriptions → Edit List: ชื่อใหม่ = สูตร เช่น tip / total_bill * 100 · if(x &gt; 20, "high", "low")</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="905">&lt;b&gt;§9 Sort + Sample (ดูตัวอย่าง)&lt;/b&gt;&lt;br&gt;Sort → attribute_name + sorting_direction · Sample → sample = absolute / relative</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="1055">&lt;b&gt;§10 Correlation Matrix&lt;/b&gt;&lt;br&gt;ใช้ได้กับคอลัมน์ตัวเลข · ผล = ตาราง r ทุกคู่ (Results → Correlation Matrix / Pairwise Table)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="385">&lt;b&gt;§3 Filter Examples (กรองแถว)&lt;/b&gt;&lt;br&gt;condition_class = custom_filters → Add Entry: คอลัมน์ · เงื่อนไข (equals / &gt; / ≥ / is missing) · ค่า · filters_logic_and = AND/OR</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="615">&lt;b&gt;§6 Aggregate (group by)&lt;/b&gt;&lt;br&gt;group_by_attributes = คอลัมน์กลุ่ม · aggregation_attributes → Edit List: คอลัมน์ + ฟังก์ชัน (sum / average / count / maximum …)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="845">&lt;b&gt;§7 Pivot&lt;/b&gt;&lt;br&gt;group_by_attributes = แถว · column_grouping_attribute = คอลัมน์ · aggregation_attributes = ค่า + ฟังก์ชัน · สัดส่วนคลาส: Generate Attributes สร้าง 0/1 ก่อนแล้ว average</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="1075">&lt;b&gt;§8 Generate Attributes (สร้างคอลัมน์ใหม่)&lt;/b&gt;&lt;br&gt;function_descriptions → Edit List: ชื่อใหม่ = สูตร เช่น tip / total_bill * 100 · if(x &gt; 20, "high", "low")</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="1305">&lt;b&gt;§9 Sort + Sample (ดูตัวอย่าง)&lt;/b&gt;&lt;br&gt;Sort → attribute_name + sorting_direction · Sample → sample = absolute / relative</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="1000" y="1535">&lt;b&gt;§10 Correlation Matrix&lt;/b&gt;&lt;br&gt;ใช้ได้กับคอลัมน์ตัวเลข · ผล = ตาราง r ทุกคู่ (Results → Correlation Matrix / Pairwise Table)</description>
     </process>
   </operator>
 </process>

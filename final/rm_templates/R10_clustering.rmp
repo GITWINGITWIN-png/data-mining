@@ -42,14 +42,14 @@
       </operator>
       <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (clustered)" width="90" x="870" y="200">
       </operator>
-      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (cluster model)" width="90" x="870" y="288">
+      <operator activated="true" class="multiply" compatibility="12.1.001" expanded="true" name="Multiply (cluster model)" width="90" x="870" y="348">
       </operator>
-      <operator activated="true" class="aggregate" compatibility="12.1.001" expanded="true" name="Aggregate (profile)" width="90" x="600" y="430">
+      <operator activated="true" class="aggregate" compatibility="12.1.001" expanded="true" name="Aggregate (profile)" width="90" x="600" y="550">
         <parameter key="use_default_aggregation" value="true"/>
         <parameter key="default_aggregation_function" value="average"/>
         <parameter key="group_by_attributes" value="cluster"/>
       </operator>
-      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (k)" width="90" x="600" y="580">
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (k)" width="90" x="600" y="780">
         <list key="parameters">
           <parameter key="Clustering (opt).k" value="[2.0;10.0;8;linear]"/>
         </list>
@@ -81,10 +81,10 @@
           <connect from_op="Log (k)" from_port="through 1" to_port="performance"/>
         </process>
       </operator>
-      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (k)" width="90" x="735" y="580">
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (k)" width="90" x="735" y="780">
         <parameter key="log_name" value="Log (k)"/>
       </operator>
-      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="730">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="1010">
         <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_utility.csv"/>
         <parameter key="column_separators" value=","/>
         <parameter key="first_row_as_names" value="true"/>
@@ -92,24 +92,24 @@
         <parameter key="decimal_character" value="."/>
         <parameter key="encoding" value="UTF-8"/>
       </operator>
-      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role (new)" width="90" x="735" y="730">
+      <operator activated="true" class="set_role" compatibility="12.1.001" expanded="true" name="Set Role (new)" width="90" x="735" y="1010">
         <parameter key="attribute_name" value="Company"/>
         <parameter key="target_role" value="id"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize new)" width="90" x="870" y="730">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (normalize new)" width="90" x="870" y="1010">
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (cluster new)" width="90" x="1005" y="730">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (cluster new)" width="90" x="1005" y="1010">
       </operator>
-      <operator activated="true" class="principal_component_analysis" compatibility="12.1.001" expanded="true" name="PCA (2D)" width="90" x="600" y="880">
+      <operator activated="true" class="principal_component_analysis" compatibility="12.1.001" expanded="true" name="PCA (2D)" width="90" x="600" y="1240">
         <parameter key="dimensionality_reduction" value="fixed number"/>
         <parameter key="number_of_components" value="2"/>
       </operator>
-      <operator activated="true" class="agglomerative_clustering" compatibility="12.1.001" expanded="true" name="Clustering (Agglomerative)" width="90" x="600" y="1030">
+      <operator activated="true" class="agglomerative_clustering" compatibility="12.1.001" expanded="true" name="Clustering (Agglomerative)" width="90" x="600" y="1470">
         <parameter key="mode" value="CompleteLink"/>
         <parameter key="measure_types" value="NumericalMeasures"/>
         <parameter key="numerical_measure" value="EuclideanDistance"/>
       </operator>
-      <operator activated="true" class="flatten_clustering" compatibility="12.1.001" expanded="true" name="Flatten Clustering" width="90" x="735" y="1030">
+      <operator activated="true" class="flatten_clustering" compatibility="12.1.001" expanded="true" name="Flatten Clustering" width="90" x="735" y="1470">
         <parameter key="number_of_clusters" value="4"/>
       </operator>
       <connect from_op="Read CSV" from_port="output" to_op="Set Role" to_port="example set input"/>
@@ -142,11 +142,11 @@
       <connect from_op="Flatten Clustering" from_port="flat" to_port="result 9"/>
       <description align="left" color="green" colored="true" height="108" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Set Role → id = ชื่อ/รหัสแถว (ไม่ใช้คำนวณ) · มี label จริง → Set Role (label) หรือ Select Attributes ตัดออก&lt;br&gt;2. Clustering (k-Means) → k · max_runs · measure_types = NumericalMeasures / EuclideanDistance&lt;br&gt;3. Read CSV (new) → จุดใหม่ (คอลัมน์ feature เดียวกัน)&lt;br&gt;centroid: res cluster model → Centroid Table (ค่า normalize แล้ว: + สูงกว่าค่าเฉลี่ย, − ต่ำกว่า) · กราฟ: Visualizations / Centroid Chart</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="138">&lt;b&gt;§3 ⭐ k-Means (k = 4) → Cluster Distance Performance (avg within centroid distance + Davies–Bouldin)&lt;/b&gt;&lt;br&gt;res: clustered set (คอลัมน์ cluster) · cluster model (centroid) · performance (cohesion) · main_criterion เปลี่ยนได้</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="368">&lt;b&gt;§3b Profile แต่ละกลุ่มในหน่วยเดิม: Aggregate average ตาม cluster&lt;/b&gt;&lt;br&gt;group_by = cluster · ค่าเฉลี่ยของ feature (เป็นค่า normalize — อยากได้หน่วยเดิม Join กลับกับข้อมูลดิบด้วย id)</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="518">&lt;b&gt;§2 ⭐ เลือก k: Optimize Parameters k = 2…10 + Log (avg within centroid distance → หา elbow)&lt;/b&gt;&lt;br&gt;Log to Data → Visualizations → Line (x = k) · Davies–Bouldin ของ k ที่เลือก ดูใน performance ของ §3 (RapidMiner แสดงค่าติดลบ: ใกล้ 0 = ดี)</description>
-      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="668">&lt;b&gt;§4 จุดใหม่อยู่ cluster ไหน: Normalize ด้วยค่าเดิม (preprocessing model) → Apply cluster model&lt;/b&gt;&lt;br&gt;</description>
-      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="818">&lt;b&gt;§6 ภาพ cluster บน PCA 2D → Visualizations → Scatter pc_1 × pc_2 color = cluster&lt;/b&gt;&lt;br&gt;</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="968">&lt;b&gt;§7 Hierarchical (Agglomerative) → dendrogram (res: Dendrogram) → Flatten Clustering = ตัดเป็น k กลุ่ม&lt;/b&gt;&lt;br&gt;mode = SingleLink / CompleteLink / AverageLink · number_of_clusters</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="488">&lt;b&gt;§3b Profile แต่ละกลุ่มในหน่วยเดิม: Aggregate average ตาม cluster&lt;/b&gt;&lt;br&gt;group_by = cluster · ค่าเฉลี่ยของ feature (เป็นค่า normalize — อยากได้หน่วยเดิม Join กลับกับข้อมูลดิบด้วย id)</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="718">&lt;b&gt;§2 ⭐ เลือก k: Optimize Parameters k = 2…10 + Log (avg within centroid distance → หา elbow)&lt;/b&gt;&lt;br&gt;Log to Data → Visualizations → Line (x = k) · Davies–Bouldin ของ k ที่เลือก ดูใน performance ของ §3 (RapidMiner แสดงค่าติดลบ: ใกล้ 0 = ดี)</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="948">&lt;b&gt;§4 จุดใหม่อยู่ cluster ไหน: Normalize ด้วยค่าเดิม (preprocessing model) → Apply cluster model&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="820" x="600" y="1178">&lt;b&gt;§6 ภาพ cluster บน PCA 2D → Visualizations → Scatter pc_1 × pc_2 color = cluster&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="820" x="600" y="1408">&lt;b&gt;§7 Hierarchical (Agglomerative) → dendrogram (res: Dendrogram) → Flatten Clustering = ตัดเป็น k กลุ่ม&lt;/b&gt;&lt;br&gt;mode = SingleLink / CompleteLink / AverageLink · number_of_clusters</description>
     </process>
   </operator>
 </process>

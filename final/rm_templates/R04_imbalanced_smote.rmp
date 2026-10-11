@@ -55,7 +55,7 @@
           <connect from_op="Performance (Baseline)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Tree" width="90" x="600" y="367">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Tree" width="90" x="600" y="447">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -91,7 +91,7 @@
           <connect from_op="Performance (Tree)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Undersample" width="90" x="600" y="517">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV Undersample" width="90" x="600" y="677">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -138,7 +138,7 @@
           <connect from_op="Performance (Undersample)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV SMOTE" width="90" x="600" y="667">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV SMOTE" width="90" x="600" y="907">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -183,7 +183,7 @@
           <connect from_op="Performance (SMOTE)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="operator_toolbox:smote" compatibility="12.1.001" expanded="true" name="SMOTE (WRONG, before CV)" width="90" x="600" y="817">
+      <operator activated="true" class="operator_toolbox:smote" compatibility="12.1.001" expanded="true" name="SMOTE (WRONG, before CV)" width="90" x="600" y="1137">
         <parameter key="number_of_neighbours" value="5"/>
         <parameter key="normalize" value="true"/>
         <parameter key="equalize_classes" value="true"/>
@@ -191,7 +191,7 @@
         <parameter key="use_local_random_seed" value="true"/>
         <parameter key="local_random_seed" value="1992"/>
       </operator>
-      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV WRONG" width="90" x="735" y="817">
+      <operator activated="true" class="concurrency:cross_validation" compatibility="12.1.001" expanded="true" name="CV WRONG" width="90" x="735" y="1137">
         <parameter key="split_on_batch_attribute" value="false"/>
         <parameter key="leave_one_out" value="false"/>
         <parameter key="number_of_folds" value="5"/>
@@ -244,10 +244,10 @@
       <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Set Role → label&lt;br&gt;2. ทุก Performance (ในแต่ละ CV) → positive_class = คลาสส่วนน้อย/ที่สนใจ (ตอนนี้ = malignant)&lt;br&gt;3. Sample (undersample) → sample_size_per_class: ใส่ชื่อคลาส + จำนวน (= จำนวนของคลาสส่วนน้อยใน training fold)&lt;br&gt;4. SMOTE ต้องติดตั้ง Operator Toolbox (Extensions → Marketplace) · ไม่มี → ลบแถว SMOTE ทั้ง 2 แถว&lt;br&gt;ดู res: recall / precision / F1 ของคลาสส่วนน้อย ไม่ใช่ accuracy อย่างเดียว · resample อยู่ใน Training pane = ไม่แตะ test fold</description>
       <description align="left" color="yellow" colored="true" height="40" resized="true" width="300" x="45" y="155">&lt;b&gt;§1 ดูความไม่สมดุล → res 1 (Statistics ของ label)&lt;/b&gt;&lt;br&gt;</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="155">&lt;b&gt;§2 Baseline (Default Model = mode) → accuracy สูงแต่ recall = 0&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="305">&lt;b&gt;§4a ไม่ resample (Decision Tree)&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="455">&lt;b&gt;§4b Undersampling: Sample (balance_data) ใน Training pane&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="605">&lt;b&gt;§4c SMOTE ใน Training pane (Operator Toolbox)&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
-      <description align="left" color="red" colored="true" height="56" resized="true" width="760" x="600" y="755">&lt;b&gt;§6 ❌ วิธีผิด: SMOTE ทั้งตารางก่อน CV (leak) → ผลดีเกินจริง (ไว้ตอบคำถาม 'ทำไมห้าม')&lt;/b&gt;&lt;br&gt;เทียบ res กับ §4c · synthetic ที่สร้างจากจุดใน test fold รั่วเข้า training</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="385">&lt;b&gt;§4a ไม่ resample (Decision Tree)&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="615">&lt;b&gt;§4b Undersampling: Sample (balance_data) ใน Training pane&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="760" x="600" y="845">&lt;b&gt;§4c SMOTE ใน Training pane (Operator Toolbox)&lt;/b&gt;&lt;br&gt;ดับเบิลคลิก CV → Training pane เห็น resampling + learner · Testing pane = Apply Model + Performance</description>
+      <description align="left" color="red" colored="true" height="56" resized="true" width="760" x="600" y="1075">&lt;b&gt;§6 ❌ วิธีผิด: SMOTE ทั้งตารางก่อน CV (leak) → ผลดีเกินจริง (ไว้ตอบคำถาม 'ทำไมห้าม')&lt;/b&gt;&lt;br&gt;เทียบ res กับ §4c · synthetic ที่สร้างจากจุดใน test fold รั่วเข้า training</description>
     </process>
   </operator>
 </process>

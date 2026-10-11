@@ -244,7 +244,7 @@
           <connect from_op="Performance (RF)" from_port="performance" to_port="performance 1"/>
         </process>
       </operator>
-      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (kNN)" width="90" x="600" y="367">
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (kNN)" width="90" x="600" y="487">
         <list key="parameters">
           <parameter key="k-NN (opt kNN).k" value="[1.0;31.0;15;linear]"/>
         </list>
@@ -316,10 +316,10 @@
           <connect from_op="Log (kNN)" from_port="through 1" to_port="performance"/>
         </process>
       </operator>
-      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (kNN)" width="90" x="735" y="367">
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (kNN)" width="90" x="735" y="487">
         <parameter key="log_name" value="Log (kNN)"/>
       </operator>
-      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (Tree)" width="90" x="600" y="517">
+      <operator activated="true" class="concurrency:optimize_parameters_grid" compatibility="12.1.001" expanded="true" name="Optimize Parameters (Tree)" width="90" x="600" y="717">
         <list key="parameters">
           <parameter key="Decision Tree (opt Tree).maximal_depth" value="[2.0;12.0;10;linear]"/>
           <parameter key="Decision Tree (opt Tree).criterion" value="gini_index,information_gain,gain_ratio"/>
@@ -376,16 +376,16 @@
           <connect from_op="Log (Tree)" from_port="through 1" to_port="performance"/>
         </process>
       </operator>
-      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (Tree)" width="90" x="735" y="517">
+      <operator activated="true" class="log_to_data" compatibility="12.1.001" expanded="true" name="Log to Data (Tree)" width="90" x="735" y="717">
         <parameter key="log_name" value="Log (Tree)"/>
       </operator>
-      <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (final)" width="90" x="600" y="667">
+      <operator activated="true" class="concurrency:parallel_decision_tree" compatibility="12.1.001" expanded="true" name="Decision Tree (final)" width="90" x="600" y="947">
         <parameter key="criterion" value="gini_index"/>
         <parameter key="maximal_depth" value="6"/>
         <parameter key="apply_pruning" value="false"/>
         <parameter key="apply_prepruning" value="false"/>
       </operator>
-      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="745">
+      <operator activated="true" class="read_csv" compatibility="12.1.001" expanded="true" name="Read CSV (new)" width="90" x="600" y="1095">
         <parameter key="csv_file" value="/home/panguin/Projects/data mining/final/rm_templates/data/new_bank.csv"/>
         <parameter key="column_separators" value=","/>
         <parameter key="first_row_as_names" value="true"/>
@@ -393,7 +393,7 @@
         <parameter key="decimal_character" value="."/>
         <parameter key="encoding" value="UTF-8"/>
       </operator>
-      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (new)" width="90" x="735" y="705">
+      <operator activated="true" class="apply_model" compatibility="12.1.001" expanded="true" name="Apply Model (new)" width="90" x="735" y="1021">
       </operator>
       <connect from_op="Read CSV" from_port="output" to_op="Select Attributes" to_port="example set input"/>
       <connect from_op="Select Attributes" from_port="example set output" to_op="Set Role" to_port="example set input"/>
@@ -422,9 +422,9 @@
       <connect from_op="Apply Model (new)" from_port="model" to_port="result 11"/>
       <description align="left" color="green" colored="true" height="125" resized="true" width="900" x="45" y="10">&lt;b&gt;⚙️ แก้ก่อน (CONFIG)&lt;/b&gt;&lt;br&gt;1. Read CSV → csv_file · Select Attributes → ตัด id / คอลัมน์ leak (invert_selection = true)&lt;br&gt;2. Set Role → label · (label 0/1 → เพิ่ม Numerical to Binominal ก่อน)&lt;br&gt;3. ทุก Performance → positive_class (ตอนนี้ = YES) · main_criterion (f_measure / accuracy / recall)&lt;br&gt;4. ไม่ใช้โมเดลไหน → ลบ CV ของโมเดลนั้น · hold-out แทน CV → ดู R05 §3&lt;br&gt;ผล: res ของแต่ละ CV = performance (เทียบกันในตารางคำตอบ) · ดับเบิลคลิก CV เพื่อแก้พารามิเตอร์ของโมเดล</description>
       <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="600" y="155">&lt;b&gt;§4 ⭐ Baseline vs โมเดล default (10-fold CV) — preprocessing ทั้งหมดอยู่ใน Training pane&lt;/b&gt;&lt;br&gt;KNN / Logistic: Replace Missing + dummy + Normalize · Tree / RF: ไม่ต้อง normalize</description>
-      <description align="left" color="yellow" colored="true" height="50" resized="true" width="900" x="600" y="305">&lt;b&gt;§5 ⭐ Optimize k-NN: k = 1…31 (+ Log)&lt;/b&gt;&lt;br&gt;Edit Parameter Settings เพื่อเปลี่ยนช่วง</description>
-      <description align="left" color="yellow" colored="true" height="40" resized="true" width="900" x="600" y="455">&lt;b&gt;§5 ⭐ Optimize Decision Tree: maximal_depth 2…12 × criterion (+ Log)&lt;/b&gt;&lt;br&gt;</description>
-      <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="600" y="605">&lt;b&gt;§6–§8 โมเดลสุดท้าย (ใส่ค่าที่ดีที่สุดจาก §5 เอง) → ทำนายข้อมูลใหม่&lt;/b&gt;&lt;br&gt;Decision Tree (final) → maximal_depth / criterion ตามผล optimize · Read CSV (new) → ไฟล์ใหม่</description>
+      <description align="left" color="yellow" colored="true" height="50" resized="true" width="900" x="600" y="425">&lt;b&gt;§5 ⭐ Optimize k-NN: k = 1…31 (+ Log)&lt;/b&gt;&lt;br&gt;Edit Parameter Settings เพื่อเปลี่ยนช่วง</description>
+      <description align="left" color="yellow" colored="true" height="40" resized="true" width="900" x="600" y="655">&lt;b&gt;§5 ⭐ Optimize Decision Tree: maximal_depth 2…12 × criterion (+ Log)&lt;/b&gt;&lt;br&gt;</description>
+      <description align="left" color="yellow" colored="true" height="56" resized="true" width="900" x="600" y="885">&lt;b&gt;§6–§8 โมเดลสุดท้าย (ใส่ค่าที่ดีที่สุดจาก §5 เอง) → ทำนายข้อมูลใหม่&lt;/b&gt;&lt;br&gt;Decision Tree (final) → maximal_depth / criterion ตามผล optimize · Read CSV (new) → ไฟล์ใหม่</description>
     </process>
   </operator>
 </process>
