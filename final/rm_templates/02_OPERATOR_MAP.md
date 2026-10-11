@@ -292,7 +292,7 @@
 | ↳ Apply Model (kNN reg) | `apply_model` |  |
 | ↳ Performance (CV kNN reg) | `performance_regression` | `main_criterion`=root_mean_squared_error |
 | CV Tree reg | `concurrency:cross_validation` | `number_of_folds`=5 · `sampling_type`=shuffled sampling |
-| ↳ Decision Tree (Tree reg) | `concurrency:parallel_decision_tree` | `criterion`=gini_index · `maximal_depth`=5 · `apply_pruning`=false · `apply_prepruning`=false |
+| ↳ Decision Tree (Tree reg) | `concurrency:parallel_decision_tree` | `criterion`=least_square · `maximal_depth`=5 · `apply_pruning`=false · `apply_prepruning`=false |
 | ↳ Apply Model (Tree reg) | `apply_model` |  |
 | ↳ Performance (CV Tree reg) | `performance_regression` | `main_criterion`=root_mean_squared_error |
 | Linear Regression (final) | `linear_regression` | `feature_selection`=none |

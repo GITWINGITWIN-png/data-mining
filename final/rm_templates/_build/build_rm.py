@@ -667,7 +667,7 @@ def r06():
     t.wire(mul, "output 3", mm, "input")
     for i, (tag, lr, steps) in enumerate([("LR", Op("linear_regression", "Linear Regression", {"feature_selection": "none"}), []),
                                           ("kNN reg", knn(k=10), [norm()]),
-                                          ("Tree reg", dt(depth=5), [])]):
+                                          ("Tree reg", dt(depth=5, criterion="least_square"), [])]):
         c = t.add(cv(tag, lr, reg_perf(f"Performance (CV {tag})"), steps=steps, folds=5, sampling="shuffled sampling",
                      x=735 + 135 * i, y=yy + 62))
         t.wire(mm, f"output {i + 1}", c, "example set")

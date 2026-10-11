@@ -138,6 +138,16 @@ for f in FILES:
             for p in op.find("list[@key='parameters']"):
                 if p.get("key").rsplit(".", 1)[0] not in allnames:
                     errs.append(f"{op.get('name')}: optimize อ้าง '{p.get('key')}' ไม่มี operator นี้")
+    # label ตัวเลข (Performance Regression ใน Testing) → tree ต้องใช้ criterion least_square
+    for op, _ in ops:
+        if op.get("class") == "concurrency:cross_validation":
+            tr, te = op.findall("process")[:2]
+            if any(o.get("class") == "performance_regression" for o in te.iter("operator")):
+                for o in tr.iter("operator"):
+                    if o.get("class") in ("concurrency:parallel_decision_tree", "concurrency:parallel_random_forest"):
+                        c = o.find("parameter[@key='criterion']")
+                        if c is None or c.get("value") != "least_square":
+                            errs.append(f"{o.get('name')}: label ตัวเลข (regression) แต่ criterion ≠ least_square")
     # connections per execution unit
     units = [o for o, _ in ops]
     for u in units:
