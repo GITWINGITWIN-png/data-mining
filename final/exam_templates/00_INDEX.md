@@ -129,7 +129,7 @@
 | entropy, gini, information gain, gain ratio | T08 §0 |
 | explained variance, scree, จำนวน PC | T03 §2 |
 | feature importance | T08 §2, §5 |
-| feature selection, SelectKBest | T02 §9 |
+| feature selection, SelectKBest, ตัด feature | T02 §9 (คะแนน) · §9b (ตัดจริง + save) |
 | filter, เงื่อนไข, query | T01 §3 |
 | FP-Growth | T11 (`ALGO="fpgrowth"`) |
 | frequent itemsets, min support | T11 §3 |

@@ -138,6 +138,7 @@ cell 3… §1, §2, …         : แต่ละ § = markdown อธิบา�
 | "สุ่ม 30% / stratified sample" | §7 `SAMPLE_FRAC` |
 | "แบ่ง train/test ไม่ให้ leak + เทียบก่อน/หลัง scale" | §8 ⭐ (`MODEL_FOR_COMPARE` เปลี่ยนโมเดลได้) |
 | "เลือก feature k ตัว" | §9 `K_BEST` |
+| "ตัด feature แล้วใช้ข้อมูลที่ตัดต่อ / ส่งไฟล์" | §9b `FS_DROP` (ตัดเอง) · `FS_USE_KBEST` (เก็บ top-`K_BEST`) → ได้ `Xtr_fs`/`Xte_fs` + `t02_*_selected.csv` |
 
 ⚠️ §1–§7 = **สาธิตบนทั้งตาราง** (ตอบคำถาม "ทำอย่างไร/ผลเป็นอย่างไร") · ตอนสร้างโมเดลจริงใช้ §8 (fit บน train เท่านั้น)
 

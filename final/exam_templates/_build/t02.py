@@ -258,6 +258,41 @@ sel_pipe = Pipeline([("prep", build_prep(X)), ("select", SelectKBest(f_classif, 
 t = results_table([evaluate("KNN ทุก feature", make_pipe(KNeighborsClassifier(), X), X, y),
                    evaluate(f"KNN top-{K_BEST} (ANOVA)", sel_pipe, X, y)])
 print("✍️ feature สำคัญสุด 3 อันดับ (RF):", list(fs.index[:3]))'''),
+md(r"""### §9b ตัด feature จริง → ได้ตารางใหม่ไปใช้ต่อ
+1. `FS_DROP` = คอลัมน์ดิบที่ตัดเอง (id / leak / ค่าคงที่ / ตัวซ้ำ |r| > 0.9 จากตารางด้านบน)
+2. `FS_USE_KBEST = True` → หลังตัด `FS_DROP` เก็บเฉพาะ top-`K_BEST` ตาม ANOVA F (**fit บน train เท่านั้น** แล้วใช้รายชื่อเดิมกับ test)
+3. ผล: `Xtr_fs` / `Xte_fs` (DataFrame ที่ตัดแล้ว) + CV เทียบก่อน/หลัง + save `t02_*_selected.csv`
+"""),
+code(r'''FS_DROP      = []      # ✏️ ชื่อคอลัมน์ดิบที่จะตัด เช่น ["id", "leak_col"]  ([] = ไม่ตัดเอง)
+FS_USE_KBEST = True    # ✏️ True = เก็บแค่ top-K_BEST (ANOVA F) · False = ตัดแค่ FS_DROP
+
+miss = [c for c in FS_DROP if c not in X.columns]
+if miss: print("⚠️ ไม่พบคอลัมน์:", miss, "→ ข้าม (เช็กชื่อใน X.columns)")
+keep_raw = [c for c in X.columns if c not in FS_DROP]
+print("ตัดเอง:", [c for c in FS_DROP if c in X.columns] or "-")
+
+prep_fs = build_prep(X_train[keep_raw], scale=SCALE)
+Xtr_fs = pd.DataFrame(prep_fs.fit_transform(X_train[keep_raw]), columns=prep_fs.get_feature_names_out(), index=X_train.index)
+Xte_fs = pd.DataFrame(prep_fs.transform(X_test[keep_raw]), columns=Xtr_fs.columns, index=X_test.index)
+
+k_fs = min(K_BEST, Xtr_fs.shape[1])
+if FS_USE_KBEST:
+    skb = SelectKBest(f_classif, k=k_fs).fit(Xtr_fs, ytr_num)          # ✅ fit บน train
+    display(pd.DataFrame({"ANOVA_F": skb.scores_, "p_value": skb.pvalues_, "selected": skb.get_support()},
+                         index=Xtr_fs.columns).sort_values("ANOVA_F", ascending=False).round(4))
+    selected = list(Xtr_fs.columns[skb.get_support()])
+    Xtr_fs, Xte_fs = Xtr_fs[selected], Xte_fs[selected]               # test ใช้รายชื่อเดียวกับ train
+print(f"feature: {len(names)} → {Xtr_fs.shape[1]}")
+print("✍️ feature ที่เหลือ:", list(Xtr_fs.columns))
+
+# CV เทียบก่อน/หลัง (ตัดใน pipeline → เลือกใหม่ทุก fold ไม่ leak)
+steps = [("prep", build_prep(X[keep_raw], scale=SCALE))] + ([("select", SelectKBest(f_classif, k=k_fs))] if FS_USE_KBEST else [])
+t = results_table([evaluate("KNN ทุก feature", make_pipe(KNeighborsClassifier(), X), X, y),
+                   evaluate(f"KNN หลังตัด ({Xtr_fs.shape[1]} features)", Pipeline(steps + [("model", KNeighborsClassifier())]), X[keep_raw], y)])
+
+Xtr_fs.assign(**{TARGET: y_train.values}).to_csv("t02_train_selected.csv", index=False)
+Xte_fs.assign(**{TARGET: y_test.values}).to_csv("t02_test_selected.csv", index=False)
+print("saved t02_train_selected.csv, t02_test_selected.csv")'''),
 md(r"""**✍️ คำตอบ §9:** ตัด … เพราะ … · feature สำคัญสุดคือ … · ใช้ top-… แล้ว F1 … (ดีขึ้น/ใกล้เดิมแต่โมเดลง่ายขึ้น)"""),
 
 md(r"""## §10 Save ข้อมูลที่ preprocess แล้ว (ถ้าโจทย์ให้ส่งไฟล์)"""),

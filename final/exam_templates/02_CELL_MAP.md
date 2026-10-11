@@ -47,7 +47,7 @@
 
 ## T02 · Data Preprocessing (Missing · Outlier · Encoding · Scaling · Discretization · Sampling · Split ไม่ leak · Feature selection)
 
-ไฟล์ `T02_preprocessing.ipynb` · 31 cells
+ไฟล์ `T02_preprocessing.ipynb` · 33 cells
 
 ### ⚙️ CONFIG (cell 1)
 
@@ -78,8 +78,8 @@
 | 17 | §6 Discretization (แบ่งช่วง / binning) | cell 18: `DISC_COL = "body_mass_g"` — คอลัมน์ที่จะแบ่ง<br>cell 18: `N_BINS   = 3` — จำนวนช่วง<br>cell 18: `LABELS   = ["Low", "Mid", "High"]` — ชื่อช่วง (ต้องยาว = N_BINS) · None = แสดงช่วงตัวเลข<br>cell 18: `USER_BINS = [0, 3500, 4500, np.inf]` — ขอบเขตกำหนดเอง (ขวาปิด: (a, b]) |
 | 20 | §7 Sampling (สุ่มตัวอย่าง) | cell 21: `SAMPLE_FRAC = 0.3` — สัดส่วนที่สุ่ม (หรือใช้ n=… แทน) |
 | 22 | §8 แบ่งข้อมูลโดย ไม่เกิด data leakage ⭐ (วิธีที่ถูกต้องตอนสร้างโมเดล) | cell 24: `MODEL_FOR_COMPARE = KNeighborsClassifier(n_neighbors=5)` — เปลี่ยนโมเดลได้ |
-| 26 | §9 Feature selection | cell 27: `K_BEST = 3` — จำนวน feature ที่จะเลือก |
-| 29 | §10 Save ข้อมูลที่ preprocess แล้ว (ถ้าโจทย์ให้ส่งไฟล์) | — (ไม่ต้องแก้ ใช้ค่าจาก CONFIG) |
+| 26 | §9 Feature selection | cell 27: `K_BEST = 3` — จำนวน feature ที่จะเลือก<br>cell 29: `FS_DROP      = []` — ชื่อคอลัมน์ดิบที่จะตัด เช่น ["id", "leak_col"]  ([] = ไม่ตัดเอง)<br>cell 29: `FS_USE_KBEST = True` — True = เก็บแค่ top-K_BEST (ANOVA F) · False = ตัดแค่ FS_DROP |
+| 31 | §10 Save ข้อมูลที่ preprocess แล้ว (ถ้าโจทย์ให้ส่งไฟล์) | — (ไม่ต้องแก้ ใช้ค่าจาก CONFIG) |
 
 ---
 
